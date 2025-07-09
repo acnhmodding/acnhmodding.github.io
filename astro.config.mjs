@@ -34,11 +34,11 @@ export default defineConfig({
 			sidebar: [
 				{
 					label: 'Guides',
-					autogenerate: { directory: "getting-started" },
+					autogenerate: { directory: "guides" },
 				},
 				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					label: 'Documentation',
+					autogenerate: { directory: 'documentation' },
 				},
 			],
 		}),
