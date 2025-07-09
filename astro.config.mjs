@@ -6,6 +6,7 @@ import starlightThemeObsidian from 'starlight-theme-obsidian'
 
 // https://astro.build/config
 export default defineConfig({
+	site: "https://acnhmodding.github.io",
 	integrations: [
 		starlight({
 			title: 'ACNH Modding Wiki',
