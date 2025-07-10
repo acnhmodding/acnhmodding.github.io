@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import starlightLinksValidator from 'starlight-links-validator'
 import starlightSidebarTopics from 'starlight-sidebar-topics'
 
 // https://astro.build/config
@@ -63,8 +62,7 @@ export default defineConfig({
 						}]
 					},
 
-				]),
-				starlightLinksValidator(),
+				])
 			]
 		}),
 	],
