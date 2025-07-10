@@ -48,11 +48,18 @@ export default defineConfig({
 					},
 					{
 						label: 'Documentation',
-						link: '/documentation/overview',
+						link: '/documentation',
 						icon: 'laptop',
 						items: [{
 							label: 'Documentation',
-							autogenerate: { directory: 'documentation' },
+							items:[{
+								label: 'Getting Started',
+								link: '/documentation',
+							}]
+						},
+					 	{
+								label: 'File Formats',
+								autogenerate: { directory: 'documentation/file-formats' },
 						}]
 					},
 

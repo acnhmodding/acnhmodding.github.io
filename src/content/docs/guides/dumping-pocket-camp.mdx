@@ -12,6 +12,7 @@ This tutorial will cover how to dump assets from **Animal Crossing: Pocket Camp*
 Before you can start, make sure you have all this requirements:
 
 - An Android System that can run **Animal Crossing: Pocket Camp**.
+    - You will need to access your files, so you _may_ need a rooted Android or emulator
 - A computer that can run these applications\:
     - [AssetStudioModCLI](#install-assetstudiomodcli) – used to dump **Unity** assets.
     - [Python](<https://www.python.org/downloads/>) – this is needed to run our custom Python script.
@@ -30,32 +31,30 @@ You need to complete the **in-game tutorial** so it download all the game assets
 
 ## Dumping
 <Steps>
-1. On your phone (or emulator) get your files at `/storage/emulated/0/Android/data/com.nintendo.zaca` (you may need a rooted android) and move the content to your PC somehow (I'll not cover this cause there is a lot of ways of doing it)
 
-2. In your PC, create a **input** and a **output** folder
-
-3. It should look like this:
+1. In your PC, create a **input** and a **output** folder. It should look like this:
     <FileTree>
-    - input
-    - output
-    - \_\_main\_\_.py (<a href="./downloads/__main__.py">download</a>)
+    - input/
+    - output/
+    - \_\_main\_\_.py (<a href="../../downloads/__main__.py" download>download</a>)
     </FileTree>
 
-4. Put all the content you got from your phone into the **input** folder.
-5. Using [python](<https://www.python.org/downloads/>), run the script (You can double-click the file or use `python __main__.py` command)
-6. Wait for `Processing complete! Check the output folder.` appear in the console, **do not close the window!**\
-    - *This can take some time (*1~2 minutes*) but will decrypt every file that needs decryption.*
-7. Open a terminal in your **AssetStudioModCLI folder** and run this command:
+2. On your Android get your files at `/storage/emulated/0/Android/data/com.nintendo.zaca` and move the content to the `input` folder in your PC (I'll not cover this cause there is a lot of ways of doing it)
+
+3. Using [python](<https://www.python.org/downloads/>), run the script (You can double-click the file or use `python __main__.py` command)
+4. Wait for `Processing complete! Check the output folder.` appear in the console, **do not close the window!**
+    > _This can take some time (*1~2 minutes*) but will decrypt every file that needs decryption._
+5. Open a terminal in your **AssetStudioModCLI folder** and run this command:
    ```bash
    AssetStudioModCLI.exe "C:\MyStuff\ACPC\output" -o "acpc-assets" -m splitObjects
    ```
-   > <sup>Change the path to your output path (created in Step 2)</sup>
+   > _Change the path to your output path (created in Step 1)_
 
-8. This command will finally extract all **.fbx** and textures! (in a folder called `acpc-assets`)
+6. This command will finally extract all **.fbx** and textures! (in a folder called `acpc-assets`)
 </Steps>
 
 :::note
-When importing a `.fbx` file in **Blender** it can be VERY small, you can either scale it up manually or append this argument `--fbx-scale-factor 10` (into Step 7) to scale all `.fbx` files.
+When importing a `.fbx` file in **Blender** it can be VERY small, you can either scale it up manually or append this argument `--fbx-scale-factor 10` (into Step 5) to scale all `.fbx` files.
 :::
 
 ## Extracting other files

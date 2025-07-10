@@ -7,20 +7,23 @@ This is a working-in-progress page. More info will be added in the future.
 :::
 
 ## What is BCSV?
-BCSV (**B**inary **C**omma-**S**eparated **V**alues) is a file format used in **Animal Crossing: New Horizons**, BCSV is a binary variant of CSV (comma-separated values) that have headers encrypted in **CRC32**.
+BCSV (**B**inary **C**omma-**S**eparated **V**alues) is a file format used in **Animal Crossing: New Horizons**, is a binary variant of CSV (comma-separated values) that have headers encrypted in **CRC32**.
 
-> **BCSV** files can be edited with [Heaven Tool](https://github.com/Rafacasari/HeavenToolACNH)
+:::tip[How to edit?]
+**BCSV** files can be edited with [Heaven Tool](https://github.com/Rafacasari/HeavenToolACNH)
+:::
 
 ## Header
-| Offset | Size | Name | Description |
-| ------ | ---- | ---- | ----------- |
-| 0x0  | 4 | Row Count | Quantity of [Rows](#row-structure) |
-| 0x4  | 4 | Row Size | Size of each [Row](#row-structure) |
-| 0x8  | 2 | Column Count |  Quantity of [Columns](#column-structure) |
-| 0xA  | 1 | HasExtendedHeader | If **1** will have more data, more info below |
-| 0xB  | 2 | Unknown | |
+| Offset | Size | Type | Description | 
+| ------ | ---- | ---- | ----------- | 
+| 0x0  | 4 | uint32 | [Row](#row-structure) Count |
+| 0x4  | 4 | uint32 | Size of _each_ [Row](#row-structure) |
+| 0x8  | 2 | uint16 | [Column](#column-structure) Count |
+| 0xA  | 1 | byte | [Has Extended Header](#extended-header) |
+| 0xB  | 1 | byte | Is Japanese (CRC32 hashes)|
 
-### If `HasExtendedHeader` is `1` 
+### Extended Header
+If `HasExtendedHeader` is 1
 
 | Offset | Size | Name | Description |
 | ------ | ---- | ---- | ----------- |
@@ -34,13 +37,13 @@ Column are stored in a array, comes after the Header and the array size is deter
 | Offset | Size | Description | 
 | ------ | ---- | ----------- |
 | 0x0 | 4 | CRC32 Hash |
-| 0x4 | 4 | Offset to this column in a [row](#row-structure) |
+| 0x4 | 4 | Offset to cell data in a [row](#row-structure) |
 
 ## Row Structure
 | Offset | Size | Description | 
 | ------ | ---- | ----------- |
 | 0x0 | 4 | Offset (Position in the file) |
-| 0x4 | * | Data |
+| 0x4 | * | Cell Data |
 
 ### Special Thanks ❤️
 This page have been updated with some info collected by @kinnay in [this page](https://nintendo-formats.com/games/acnh/bcsv.html).
