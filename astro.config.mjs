@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightLinksValidator from 'starlight-links-validator'
-import starlightThemeObsidian from 'starlight-theme-obsidian'
+import starlightSidebarTopics from 'starlight-sidebar-topics'
 
 // https://astro.build/config
 export default defineConfig({
@@ -10,7 +10,10 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'ACNH Modding Wiki',
-			customCss: ['./src/styles/custom.css'],
+			components: {
+				Pagination: './src/overrides/Pagination.astro',
+			},
+			customCss: ['./src/styles/custom.css', './src/styles/obsidian.css'],
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/acnhmodding/wiki' },
 				{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/4cBd8dD6XS' },
@@ -23,34 +26,39 @@ export default defineConfig({
 				themes: ['dracula', 'one-light'],
 			},
 			plugins: [
+				starlightSidebarTopics([
+					{
+						label: 'Wiki',
+						link: '/getting-started/overview',
+						icon: 'open-book',
+						items: [
+							{
+								label: 'Getting Started',
+								autogenerate: { directory: "getting-started" },
+							},
+							{
+								label: 'Tools',
+								autogenerate: { directory: 'tools' },
+							},
+							{
+								label: 'Guides',
+								autogenerate: { directory: "guides" },
+							},
+						]
+					},
+					{
+						label: 'Documentation',
+						link: '/documentation/overview',
+						icon: 'laptop',
+						items: [{
+							label: 'Documentation',
+							autogenerate: { directory: 'documentation' },
+						}]
+					},
+
+				]),
 				starlightLinksValidator(),
-				starlightThemeObsidian({
-					debug: false,
-					sitemapConfig: {},
-					graphConfig: {},
-					backlinksConfig: {},
-					graph: false,
-					backlinks: false
-				}),
-			],
-			sidebar: [
-				{
-					label: 'Getting Started',
-					autogenerate: { directory: "getting-started" },
-				},
-				{
-					label: 'Tools',
-					autogenerate: { directory: 'tools' },
-				},
-				{
-					label: 'Guides',
-					autogenerate: { directory: "guides" },
-				},
-				{
-					label: 'Documentation',
-					autogenerate: { directory: 'documentation' },
-				},
-			],
+			]
 		}),
 	],
 });
