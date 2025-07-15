@@ -1,19 +1,20 @@
 ---
 title: BCSV
+description: "Binary Comma-Separated Values (bcsv)"
 ---
+
+BCSV (Binary Comma-Separated Values) is a file format used in **Animal Crossing: New Horizons**, is a binary variant of CSV (comma-separated values) that have headers encrypted in **CRC32**.
 
 :::caution
 This is a working-in-progress page. More info will be added in the future.
 :::
 
-## What is BCSV?
-BCSV (**B**inary **C**omma-**S**eparated **V**alues) is a file format used in **Animal Crossing: New Horizons**, is a binary variant of CSV (comma-separated values) that have headers encrypted in **CRC32**.
-
 :::tip[How to edit?]
-**BCSV** files can be edited with [Heaven Tool](https://github.com/Rafacasari/HeavenToolACNH)
+**BCSV** files can be edited with [Heaven Tool](https://github.com/acnhmodding/HeavenTool)
 :::
 
-## Header
+## Structure
+### Header
 | Offset | Size | Type | Description | 
 | ------ | ---- | ---- | ----------- | 
 | 0x0  | 4 | uint32 | [Row](#row-structure) Count |
@@ -22,7 +23,7 @@ BCSV (**B**inary **C**omma-**S**eparated **V**alues) is a file format used in **
 | 0xA  | 1 | byte | [Has Extended Header](#extended-header) |
 | 0xB  | 1 | byte | Is Japanese (CRC32 hashes)|
 
-### Extended Header
+#### Extended Header
 If `HasExtendedHeader` is 1
 
 | Offset | Size | Name | Description |
@@ -31,7 +32,7 @@ If `HasExtendedHeader` is 1
 | 0x10 | 2 | Version | Version |
 | 0x12 | 10 | Padding | 10-byte padding |
 
-## Column Structure
+### Column Structure
 Column are stored in a array, comes after the Header and the array size is determined by "Column Count" ([0x8](#header)).
 
 | Offset | Size | Description | 
@@ -39,11 +40,8 @@ Column are stored in a array, comes after the Header and the array size is deter
 | 0x0 | 4 | CRC32 Hash |
 | 0x4 | 4 | Offset to cell data in a [row](#row-structure) |
 
-## Row Structure
+### Row Structure
 | Offset | Size | Description | 
 | ------ | ---- | ----------- |
 | 0x0 | 4 | Offset (Position in the file) |
 | 0x4 | * | Cell Data |
-
-### Special Thanks ❤️
-This page have been updated with some info collected by @kinnay in [this page](https://nintendo-formats.com/games/acnh/bcsv.html).
