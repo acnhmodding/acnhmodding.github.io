@@ -33,15 +33,19 @@ export default defineConfig({
 						items: [
 							{
 								label: 'Getting Started',
-								autogenerate: { directory: "getting-started" },
+								autogenerate: { directory: "getting-started" }
+							},
+							{
+								label: 'Creating Mods',
+								autogenerate: { directory: "creating-mods" }
 							},
 							{
 								label: 'Tools',
-								autogenerate: { directory: 'tools' },
+								autogenerate: { directory: 'tools' }
 							},
 							{
 								label: 'Guides',
-								autogenerate: { directory: "guides" },
+								autogenerate: { directory: "guides" }
 							},
 						]
 					},

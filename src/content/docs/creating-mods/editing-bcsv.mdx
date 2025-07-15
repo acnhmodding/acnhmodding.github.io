@@ -1,0 +1,43 @@
+---
+title: Editing a BCSV
+description: "A guide on how to edit BCSV files in Animal Crossing: New Horizons."
+sidebar:
+  order: 2
+---
+
+[BCSV (Binary Comma-Separated Values)](/documentation/file-formats/bcsv) files are a common file format used in **Animal Crossing: New Horizons** to store various types of data, such as item information, villager data, and more.
+
+This guide will help you installing **Heaven Tool** and using it to modify BCSV files.
+
+## Installing Heaven Tool
+**[Heaven Tool](/tools/heaven-tool)** is the primarly tool used to edit BCSV files, it provides a user-friendly interface for viewing and editing BCSV files.
+
+import { Steps } from '@astrojs/starlight/components';
+
+<Steps>
+1. Download the latest version of **Heaven Tool** from [GitHub Releases](https://github.com/acnhmodding/HeavenTool/releases/latest).
+2. Extract the downloaded archive to a folder on your computer.
+3. Open the extracted folder and run `Heaven Tool.exe`.
+4. Once the tool is open, click on `Open BCSV Editor`.
+
+    :::tip
+    You can optionally check **Options** > `Associate .BCSV files with this program` to make it easier to open BCSV files in the future!
+    :::
+5. You're now ready to edit BCSV files!
+</Steps>
+
+## Editing BCSV Files
+<Steps>
+1. With `BCSV Editor` in Heaven Tool, click on `File` > `Open` and select the BCSV file you want to edit.
+
+    - *You can also drag and drop a BCSV file into the Heaven Tool window or double-click the file **if you associated it with Heaven Tool**.*
+2. The BCSV file will be loaded, and you will see the data in a table format.
+3. You can edit the values in the table directly. Double-click on a cell to modify its value.
+4. After making your changes, click on `File` > `Save as...` to save the modified BCSV file.
+5. Choose a location to save the modified file and give it the original name.
+
+    - Make sure to keep the `.bcsv` extension.
+    - If you want to replace the original file, you can save it in the same location as the original BCSV file, but it's recommended to keep a backup of the original file.
+    
+6. Copy/move the modified BCSV file to your `romfs/BCSV` folder in your mod directory and test your changes in-game.
+</Steps>

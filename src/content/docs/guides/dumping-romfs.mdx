@@ -15,6 +15,7 @@ Make sure your Nintendo Switch is modded and has homebrew capabilities before pr
 
 <Steps>
 1. [Download the latest release](https://github.com/DarkMatterCore/nxdumptool/releases/latest/download/nxdumptool.nro) and copy it to your Nintendo Switch `switch` folder.
+
 2. Download and install [Zadig](https://zadig.akeo.ie/) on your PC. This tool is for USB communication with your Switch.
 3. Launch **NXDumpTool** on your Nintendo Switch.
 4. Connect your Nintendo Switch to your PC using a USB cable.
@@ -30,21 +31,26 @@ Make sure your Nintendo Switch is modded and has homebrew capabilities before pr
 14. Select `dump base application` (or `dump update` / `dump DLC` if you want to dump those)
 15. Select `Program #0: <string of characters>` and then select `FS section #2: RomFS`
 16. Click on `start nca fs section dump` and make sure your `nxdt_host.exe` is running on your PC.
-17. Wait for the dump to complete. The files will be saved in the output directory you specified in step 10.
+17. Wait for the dump to complete. The files will be saved in the output directory you specified in **step 10**.
 </Steps>
 
 ## Dump RomFS on Emulator
 If you are using an emulator like **Yuzu** or **Ryujinx**, you can dump RomFS directly from the emulator without needing a homebrew application.
 
-Emulators like Sudachi, Suyu can follow the same steps as Yuzu. And emulators like Ryubing can follow the same steps as Ryujinx.
+Emulators like **Sudachi**, **Suyu** can follow the same steps as **Yuzu**. And emulators like **Ryubing** can follow the same steps as **Ryujinx**.
+
+:::caution[Warning]
+This guide will not cover how to install or set up Yuzu or Ryujinx.
+:::
 
 <Tabs>
   <TabItem label="Yuzu">
     <Steps>
       1. Open Yuzu and right-click on Animal Crossing: New Horizons in the game list.
+
       2. Select **Dump RomFS** > **Dump RomFS**.
       3. In the pop-up window, choose `Program` and click **OK**.
-      4. For Dump Mode, choose `Full` and click **OK**.
+      4. For *Dump Mode*, choose `Full` and click **OK**.
       5. Wait for the extraction process to complete.
     </Steps>
   </TabItem>
@@ -52,6 +58,7 @@ Emulators like Sudachi, Suyu can follow the same steps as Yuzu. And emulators li
   <TabItem label="Ryujinx">
     <Steps>
       1. Open Ryujinx and right-click Animal Crossing: New Horizons in the game list.
+
       2. Select **Extract Data** > **RomFS**.
       3. Choose where you want to save the RomFS files.
       4. Wait for the extraction process to complete.

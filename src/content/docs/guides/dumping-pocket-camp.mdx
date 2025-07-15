@@ -18,15 +18,15 @@ Before you can start, make sure you have all this requirements:
 - A computer that can run these applications\:
     - [AssetStudioModCLI](#install-assetstudiomodcli) -- used to dump **Unity** assets.
     - [Python](<https://www.python.org/downloads/>) -- this is needed to run our custom Python script.
+- Completed the **in-game tutorial** and waited all the game assets to be downloaded.
+- Our custom Python script to decrypt the files: <a href="/downloads/__main__.py" download>download</a>
 
 Now that you have everything, you can proceed to [Dumping](#dumping)
-:::note
-You need to complete the **in-game tutorial** so it download all the game assets!
-:::
 
 ### Install AssetStudioModCLI
 <Steps>
-1. Navigate to [AssetStudio GitHub](https://github.com/aelurum/AssetStudio/releases/latest)
+1. Navigate to the [AssetStudio GitHub](https://github.com/aelurum/AssetStudio/releases/latest)
+
 2. Scroll down and find the right download depending on your System (make sure to download AssetStudioMod**CLI** and **not** the **AssetStudioModGUI**)
 3. Extract it to wherever you want
 </Steps>
@@ -36,22 +36,20 @@ You need to complete the **in-game tutorial** so it download all the game assets
 
 1. In your PC, create a **input** and a **output** folder. It should look like this:
     <FileTree>
-    - input/
-    - output/
-    - \_\_main\_\_.py (<a href="../../downloads/__main__.py" download>download</a>)
+    - /input/
+    - /output/
+    - \_\_main\_\_.py (<a href="/downloads/__main__.py" download>download</a>)
     </FileTree>
 
-2. On your Android get your files at `/storage/emulated/0/Android/data/com.nintendo.zaca` and move the content to the `input` folder in your PC (I'll not cover this cause there is a lot of ways of doing it)
-
+2. On your Android get your files at `/storage/emulated/0/Android/data/com.nintendo.zaca` and move the content to the `input` folder in your computer (I'll not cover this cause there is a lot of ways of doing it)
 3. Using [python](<https://www.python.org/downloads/>), run the script (You can double-click the file or use `python __main__.py` command)
 4. Wait for `Processing complete! Check the output folder.` appear in the console, **do not close the window!**
     > _This can take some time (*1~2 minutes*) but will decrypt every file that needs decryption._
 5. Open a terminal in your **AssetStudioModCLI folder** and run this command:
    ```bash
    AssetStudioModCLI.exe "C:\MyStuff\ACPC\output" -o "acpc-assets" -m splitObjects
+   # Change "C:\MyStuff\ACPC\output" with your output path (created in Step 1)
    ```
-   > _Change the path to your output path (created in Step 1)_
-
 6. This command will finally extract all **.fbx** and textures! (in a folder called `acpc-assets`)
 </Steps>
 
