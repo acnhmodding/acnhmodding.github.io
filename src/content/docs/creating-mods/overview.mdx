@@ -15,28 +15,49 @@ This is a working-in-progress page. More info will be added in the future.
 In **Animal-Crossing: New Horizons** there are two main types of mods, **Replacement Mods** and **Additive Mods**. Each type has its own advantages and disadvantages, and the choice of which type to use depends on the modder's goals and the desired outcome of the mod.
 
 ### Replacement Mods
-A Replacement Mod, as the name suggests, is a mod that simply replaces an existing model in the game. It's the most used method in the community, as it's the easiest to develop and use.
+A **Replacement Mod**, as the name suggests, is a mod that simply **replaces an existing model in the game**. It's the most used method in the community, as **it's the easiest to develop** and use.
 
-These mods can change the aesthetics of the game without having to handle complex files such as [BCSV](/documentation/file-formats/bcsv) or **MSBT**. They are also more 'stable' and easier to use, as they do not require (*in most cases*) a mod manager to be installed.
+These mods can change the aesthetics of the game without having to handle complex files. They are also more 'stable' and easier to use, as they do not require (*in most cases*) a mod manager to be installed.
 
 ### Additive Mods
-A Additive Mod adds new content to the game such as: *furniture*, *clothing*, *items* or *even new mechanics*, but are in general more complex to create and require a deeper understanding of the game file types.
+A **Additive Mod**, in the other hand, **adds new content to the game** such as: *furniture*, *clothing*, *items*, *villagers* or *even new mechanics*; **but are in general more complex to create** and require a deeper understanding of the game file types.
 
 They are also more prone to conflicts with other *additive* mods, as they change files that other mods can also be using. 
 
-## Comparison of Mods
-When choosing between Replacement Mods and Additive Mods, it's important to consider the pros and cons of each type. Below is a comparison table that highlights the key differences between the two types of mods.
+#### Comparison
+When comparing both types of mods, we can see that they have different advantages and disadvantages. Here is a table summarizing the main differences:
 
-|                       | Additive Mods                             | Replacement Mods                   |
-| --------------------- | ----------------------------------------- | ---------------------------------- |
-| Original content kept | ✅ Yes                                    | ❌ No                             |
-| Ease of creation      | ⚠️ Need deep understanding of game files  | ✅ Easier                         |
-| Mod conflict risk     | ✅ Low (if installed correctly)           | ⚠️ Medium                         |
-| Stability             | ⚠️ Needs Mod Manager                      | ✅ More Stable                    |
-| Multiplayer           | ❌ All players need the same mods         | ✅ Client Side                    |
-| Tool Support          | ❌ Limited  (BCSV)                        | ✅ Full Support (Model and MSBT)  |
-| Adds **new** content  | ✅ Yes                                    | ❌ No                             |
+|                       | Additive Mods                         | Replacement Mods                   |
+| --------------------- | ------------------------------------- | ---------------------------------- |
+| Ease of creation      | ⚠️ Medium                             | ✅ Easy                           |
+| Conflict Risk         | ✅ Low (*with Mod Manager*)           | ⚠️ Medium                         |
+| Multiplayer           | ❌ All players need the same mods     | ✅ Client Side                    |
+| Can *add* content     | ✅ Yes                                | ❌ No                             |
+| File Types            | BCSV, EventFlow, Model and MSBT       |  Model and MSBT                    |
 
-## How to Create a Mod
-To create a mod, first you will need to extract the files from your game. You can do this by following our [Dumping RomFS Guide](../../guides/dumping-romfs).
+## Getting Started
+Now that you know the types of mods, you first need to decide which type of mod you want to create. If you are new to modding, we recommend starting with a **Replacement Mod**, as it is easier to create and use.
 
+But to begin with you will need to extract the needed files from your game. You can do this by following our [Dumping RomFS Guide](../../guides/dumping-romfs).
+
+import { LinkCard } from '@astrojs/starlight/components';
+
+*What do you want to do next? Check our guides!*
+
+<LinkCard
+  title="Replace a Model"
+  href="/creating-mods/editing-model"
+  description="Want to create your first replacement mod? Check this guide!"
+/>
+
+<LinkCard
+  title="Edit Messages (MSBT)"
+  href="/creating-mods/editing-msbt"
+  description="What about changing the name of an item? or a villager? MSBT handles all the text in the game!"
+/>
+
+<LinkCard
+  title="Edit a BCSCV"
+  href="/creating-mods/editing-bcsv"
+  description="Are you interested in create your first additive mod? BCSV is the way to go!"
+/>

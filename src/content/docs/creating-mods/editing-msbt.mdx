@@ -5,11 +5,14 @@ sidebar:
   order: 3
 ---
 
+import { Steps } from '@astrojs/starlight/components';
+
 MSBT (Message Binary Text) files are used in **Animal Crossing: New Horizons** to store text data, such as dialogue, item names, and other in-game text.
 
-This guide will help you installing **MSBT Editor** and using it to modify MSBT files.
+These files are stored in the `Message` folder of the `RomFS` and are named as `{file}_{language}.sarc.zs`, where `{file}` is the [File Name](#file-names) and `{language}` is the [Language Code](#language-codes).
 
-import { Steps } from '@astrojs/starlight/components';
+In this guide you will learn how to install and setup **MSBT Editor** and how to use it to modify MSBT files.
+
 
 ## Installing MSBT Editor
 **[MSBT Editor](/tools/msbt-editor)** is the primary tool used to edit MSBT files.
@@ -27,3 +30,35 @@ import { Steps } from '@astrojs/starlight/components';
 <Steps>
 1. Coming soon...
 </Steps>
+
+## References
+### File Names
+| File Name                               | Description                                                                  |
+| --------------------------------------- | ---------------------------------------------------------------------------- |
+| `Dialog`<br/> `LayoutMsg`<br/> `System` | Various layouts and menus messages                                           |
+| `Mail`                                  | Mails sent by NPCs                                                           |
+| `String`                                | Name of items and NPCs and catchphrases                                      |
+| `TalkFtr`                               | Furniture interaction messages                                               |
+| `TalkNNpc`                              | Villager dialogues                                                           |
+| `TalkSNpc`                              | *Special* NPC dialogues                                                      |
+| `TalkObj`                               | Objects interaction messages (Lloid, Snowman, etc)                           |
+| `TakSys`                                | Catching creatures text, getting reactions, art pieces and their descrptions |
+| `Tutorials`                             | Tutorial messages up to K.K.'s first live                                    |
+
+### Language Codes
+| Language               | Code |
+| ---------------------- | ---- |
+| North American English | USen |
+| Latin American Spanish | USes |
+| Canadian French        | USfr |
+| German                 | EUde |
+| European English       | EUen |
+| European Spanish       | EUes |
+| European French        | EUfr |
+| Italian                | EUit |
+| Dutch                  | EUnl |
+| Russian                | EUru |
+| Japanese               | JPja |
+| Korean                 | KRko |
+| Simplified Chinese     | CNzh |
+| Traditional Chinese    | TWzh |

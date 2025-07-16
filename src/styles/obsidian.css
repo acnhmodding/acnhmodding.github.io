@@ -9,10 +9,12 @@
 
 :root[data-theme='dark'] {
     --sl-color-bg: #111213;
+    --sl-color-bg-darker: #0c0d0e;
 }
 
 :root[data-theme='light'] {
     --sl-color-bg: #f8f9fa;
+    --sl-color-bg-darker: #eceff1;
     --slsg-graph-bg-color: var(--sl-color-black);
 }
 
