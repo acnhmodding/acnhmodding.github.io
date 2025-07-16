@@ -4,6 +4,14 @@
     --sl-color-accent-high: hsl(118, 45%, 58%);
 }
 
+:root[data-theme='dark'] {
+    --sl-color-bg-darker: #0c0d0e;
+}
+
+:root[data-theme='light'] {
+    --sl-color-bg-darker: #eceff1;
+}
+
 .sidebar-pane {
     border-right: 1px solid var(--sl-color-hairline-shade);
 }

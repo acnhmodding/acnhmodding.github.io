@@ -1,0 +1,27 @@
+---
+import Topics from '../components/Topics.astro'
+const { hasSidebar } = Astro.locals.starlightRoute
+const { isPageWithTopic } = Astro.locals.starlightSidebarTopics
+import Default from '@astrojs/starlight/components/Sidebar.astro'
+import Search from '@astrojs/starlight/components/Search.astro';
+import config from 'virtual:starlight/user-config';
+import SiteTitle from '@astrojs/starlight/components/SiteTitle.astro';
+import MobileMenuFooter from '@astrojs/starlight/components/MobileMenuFooter.astro';
+
+const shouldRenderSearch = config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+---
+
+{/* (STARLIGHT-THEME-OBSIDIAN): Reorder site sidebar to always contain site title */}
+<div class="sidebar-top">
+    <div class="title-wrapper ">
+        <SiteTitle/>
+    </div>
+
+    {shouldRenderSearch && <Search/>}
+
+    <MobileMenuFooter/>
+</div>
+
+{hasSidebar && isPageWithTopic && <Topics />}
+
+<Default><slot /></Default>

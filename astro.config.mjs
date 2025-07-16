@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightSidebarTopics from 'starlight-sidebar-topics'
+import starlightThemeObsidian from 'starlight-theme-obsidian'
 
 // https://astro.build/config
 export default defineConfig({
@@ -10,21 +11,29 @@ export default defineConfig({
 		starlight({
 			title: 'ACNH Modding Wiki',
 			components: {
-				Pagination: './src/overrides/Pagination.astro',
+				Sidebar: './src/overrides/Sidebar.astro',
 			},
-			customCss: ['./src/styles/custom.css', './src/styles/obsidian.css'],
+			customCss: ['./src/styles/custom.css'],
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/acnhmodding/wiki' },
 				{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/4cBd8dD6XS' },
 				{ icon: 'reddit', label: 'Reddit', href: 'https://www.reddit.com/r/acnhmodding/' },
 			],
 			editLink: {
-				baseUrl: "https://github.com/acnhmodding/wiki/edit/main/"
+				baseUrl: "https://github.com/acnhmodding/acnhmodding.github.io/edit/master/"
 			},
 			expressiveCode: {
 				themes: ['dracula', 'one-light'],
 			},
 			plugins: [
+				starlightThemeObsidian({
+					debug: false,
+					sitemapConfig: {},
+					graphConfig: {},
+					backlinksConfig: {},
+					graph: false,
+					backlinks: true,
+				}),
 				starlightSidebarTopics([
 					{
 						label: 'Wiki',
