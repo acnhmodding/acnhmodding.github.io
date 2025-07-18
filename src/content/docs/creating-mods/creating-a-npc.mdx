@@ -1,0 +1,181 @@
+---
+title: Creating a NPC
+description: Learn how to create a custom NPC in your mod.
+---
+
+import { LinkCard, Tabs, TabItem, Steps, FileTree } from '@astrojs/starlight/components';
+
+This guide will help you create a custom NPC (villager) in **Animal Crossing: New Horizons**. We will cover the necessary steps to add a new villager without replacing an existing one, including editing `.bcsv` files, message files, and `StaticParam.pack`, as well as setting up their personality, hobbies, favorite colors, and more.
+
+:::caution[Warning]
+This guide does **not** cover creating textures or models. For those, please refer to existing tutorials.
+:::
+
+## Prerequisites
+
+**Applications:**
+- [Heaven Tool](https://gamebanana.com/wips/87003)
+- [Switch Toolbox](https://github.com/KillzXGaming/Switch-Toolbox)
+- [MSBT Editor](https://gitlab.com/AeonSake/msbt-editor)
+- _Optional:_ [Emuiibo](https://github.com/XorTroll/emuiibo) (for Amiibo testing)
+
+**Files Needed:**
+<FileTree>
+- Bcsv
+    - AmiiboData.bcsv
+    - NmlNpcParam.bcsv
+    - ItemParam.bcsv (optional, for villager photo/poster)
+- Message
+    - String_XXyy.sarc.zs where XXyy is the language (e.g. USen)
+    - TalkSys_XXyy.sarc.zs where XXyy is the language (e.g. USen)
+- Model
+    - NpcNml[label].Nin_NX_NVN.zs where `label` is your villager's label (e.g. **wol13**)
+- Pack
+    - StaticParam.pack
+</FileTree>
+---
+
+## 1. Choose a Unique Label
+
+Pick a *unique label* for your villager to avoid conflicts with vanilla villagers or other mods. You can find the vanilla labels in this [spreadsheet](https://docs.google.com/spreadsheets/d/13d_LAJPlxMa_DubPTuirkIV4DERBMXbrWQsmSh8ReK4/edit?gid=18432501#gid=18432501).
+
+**Example:**  
+If the highest wolf label is `wol12` (Audie), name your new wolf `wol13`. Your model file would be `NpcNmlWol13.Nin_NX_NVN.zs`.
+
+![Label Example](https://github.com/user-attachments/assets/482f6e86-a1d3-4b93-ac9b-a7f7f716bd46)
+
+## 2. Edit NPC Parameters
+
+### 2.1. `NmlNpcParam.bcsv`
+
+Open `NmlNpcParam.bcsv` in **Heaven Tool**. Find a villager similar to your new one, export their row (`File > Export Selection...`), duplicate it, and update the following fields:
+
+- **Clothing Style:**  
+    - `a54f92fd`: Country style (e.g., 4 = Chinese, 10 = Japanese)
+    - `5ef86f1f` & `195815cf`: Preferred clothing style (1 = Simple, 2 = Gorgeous, etc.)
+- **Personality & Hobby:**  
+    - Set according to your villager's traits. See [Hobby](https://nookipedia.com/wiki/Hobby#In_New_Horizons) and [Personality](https://nookipedia.com/wiki/Villager#Personalities).
+- **Apparel:**  
+    - `BromideItemID`, `PosterItemID`, `RainHat`, `RainWear`, `Tops`, `Umbrella` (see linked spreadsheets for item IDs)
+- **Identity:**  
+    - `UniqueID`: Any number above 419
+    - `BirthMDay`, `BirthMonth`
+    - `Color1`, `Color2`: Favorite colors
+    - `LabelID`: Your chosen label (e.g., `wol13`)
+    - `NPCColor`: Name bubble color
+    - `NPCTalkType`: Sub-personality
+    - `ResName`: Model file prefix (e.g., `NpcNmlWol13`)
+
+![Parameter Example](https://github.com/user-attachments/assets/da01f0a6-cb2a-4205-8719-864b67677293)
+
+After editing, import your new row back into `NmlNpcParam.bcsv` and save.
+
+### 2.2. `AmiiboData.bcsv`
+
+This file links your villager to an Amiibo.
+
+--**Manual Method:**  
+- `NumberID`: Matches the `UniqueID` from above
+- `NPCLabel`: Your villager's label (e.g., `wol13`)
+- Copy other columns from a similar villager
+
+> **Tip:** For new entries, increment the last `CharacterID` by 256. For more details, see [this Discord post](https://discord.com/channels/1291243062865039431/1291846660225241088/1292141518370373705).
+
+---
+
+## 3. Add Name, catchphrase, and Motto
+
+Open `romfs/Message` in MSBT Editor:
+
+<Steps>
+1. In `String_USen.sarc.zs` expand `Npc` folder and open the `STR_NNpcName.msbt` and `STR_NNpcPhrase.msbt` files.
+2. Duplicate the last entry (e.g., `wol12`) and update it to your new label and Villager name.
+
+    <small style="font-size: 0.9rem;">*Here is an example:*</small>
+    ![MSBT Editor Example](https://github.com/user-attachments/assets/ac2d0e00-507d-45db-b394-fafd443b7c89)
+3. In `TalkSys_USen.sarc.zs`, edit `SYS_Motto.msbt` the same way.
+4. Save both `String_USen.sarc.zs` and `TalkSys_USen.sarc.zs` by right-clicking them and hitting `Save` button
+
+    ![image](https://github.com/user-attachments/assets/f0dc27d8-8eab-4ad6-ad6d-371198fcb4d0)
+</Steps>
+
+---
+
+## 4. Set Up the House
+
+### 4.1. House Exterior & Interior
+
+
+<Steps>
+    1. Choose which villager's house you want to copy (see [Nookipedia](https://nookipedia.com/wiki/Villager_house/New_Horizons)). 
+    2. Create a temporary folder with two sub-folders `NPCHouse` and `NPCRoom`:
+        <FileTree>
+        - Temporary
+            - NPCHouse/
+            - NPCRoom/
+        </FileTree> 
+</Steps>
+
+**Now, in Switch Toolbox:**
+
+<Steps>
+1. Open `StaticParam.pack` and find the `NPCHouse` and `NPCRoom` folders. 
+2. Extract the desired house and room `.byml` files to your respective temporary folder, and rename them to match your label (e.g., `wol13.byml`).
+
+    ![image](https://github.com/user-attachments/assets/a4d1ffb8-dc6c-418e-b10e-274202bbeb6a)
+3. Add them back to the `StaticParam.pack`.
+    - Right-click the `NPCHouse` and `NPCRoom` folders in Switch Toolbox and select `Add File`, then choose your renamed files.
+4. Double click on the newly added files, it will open a new editor, change it to `Text Editor` and press `Decompile`.
+4. Edit the `!h` field to match your villager's label (e.g., `wol13`).
+    - You'll find it in *line 6* under `root:`.
+    - E.g. `!h flg09` we change to `!h wol13`
+
+    ![image](https://github.com/user-attachments/assets/ae3957b1-6932-4b9d-bb33-2acd9d508164)
+5. Click on `Compile` and then on `Save` to save to your file.
+6. Save the `StaticParam.pack` file.
+</Steps>
+
+:::caution
+Don't forget to edit both `NPCHouse/your_villager.byml` and `NPCRoom/your_villager.byml` files before saving the `StaticParam.pack`.
+:::
+
+### 4.2. House Items
+You can also customize wallpaper, flooring, and music by editing the relevant lines in `NPCRoom/your_villager.byml` (see linked spreadsheets for item IDs).
+
+- [!h mWall:](https://docs.google.com/spreadsheets/d/13d_LAJPlxMa_DubPTuirkIV4DERBMXbrWQsmSh8ReK4/edit?gid=1735913386#gid=1735913386) - towards the top
+- [!h mFloor:](https://docs.google.com/spreadsheets/d/13d_LAJPlxMa_DubPTuirkIV4DERBMXbrWQsmSh8ReK4/edit?gid=1642607665#gid=1642607665) - towards the bottom
+- [!h mMusic:](https://docs.google.com/spreadsheets/d/13d_LAJPlxMa_DubPTuirkIV4DERBMXbrWQsmSh8ReK4/edit?gid=1450768169#gid=1450768169) - towards the bottom
+
+To the right of these lines, you'll see item numbers, they correspond to the item numbers in `ItemParam.bcsv`. So you can change their wallpaper, flooring, and their song while you're in there, to further customize them.
+
+:::note
+A more detailed guide on how to edit house items will be available in the future.
+:::
+
+## 5. Gmo File
+Gmo is the file that contains information about held item position and other parameters for your villager.
+
+<Steps>
+1. With Switch Toolbox, open `StaticParam.pack` again.
+2. In the `Gmo` folder, find a villager with a similar body type to your new villager (e.g., if your villager is a wolf, find another wolf).
+3. Extract the desired `.byml` file to your temporary folder and rename it to match your villager's label (e.g., `Gmo_wol13.byml`).
+
+    ![image](https://github.com/user-attachments/assets/e39be26b-5785-41ff-a337-b87d8c934210)
+4. Add the renamed file back to the `StaticParam.pack` by right-clicking the `Gmo` folder and selecting `Add File`. 
+5. Edit the file if needed, but in most cases you can just go to the next step.
+5. Save the `StaticParam.pack` file.
+</Steps>
+
+---
+
+## 5. Final Steps
+
+Place all your edited files in your ACNH `romfs` folder. 
+
+Boot up the game, go to **Resident Services**, and scan your *Emuiibo* to see your new villager in action!
+
+---
+
+:::success
+    Congratulations! You've created a brand new NPC for Animal Crossing: New Horizons.
+:::
