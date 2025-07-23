@@ -1,0 +1,43 @@
+---
+title: Dumping from The Sims 4
+description: Learn how to dump models and textures from The Sims 4 and add into ACNH.
+sidebar:
+    order: 2
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+In this guide, we will cover how to dump models and textures from **The Sims 4** and add them into **Animal Crossing: New Horizons**. This process involves extracting `.package` files, converting them to a usable format, and then importing them into ACNH with **Switch Toolbox**.
+
+## Requirements
+- **The Sims 4** installed on your PC.
+- [Sims 4 Studio](https://sims4studio.com/) to extract `.package` files.
+- [Switch Toolbox](https://github.com/KillzXGaming/Switch-Toolbox/releases/latest) to convert and import files.
+- [Blender](https://www.blender.org/download/) to edit and convert to `.dae`/`.fbx` format.
+
+### Sims 4 Studio Setup
+On your first time running **Sims 4 Studio**, you will need to set up the application by selecting your Sims 4 installation directory and other preferences.
+
+<Steps>
+1. **Creator Name**: Enter your name or a nickname.
+2. **Sims 4 Path**: Browse to your Sims 4 installation directory.
+3. **Sims 4 Documents**: Set the path to your Sims 4 documents folder (usually `Documents > Electronic Arts > The Sims 4`).
+4. **Blender Directory**: Set the path to your Blender installation.
+5. Save your settings.
+</Steps>
+
+## Dumping Model and Textures
+
+<Steps>
+1. **Open Sims 4 Studio**, check `Create 3d Mesh` (under `Object`) and click on the `Object` button.
+2. It will open a window where you can search for the item you want to extract. You can use the search bar to find specific items.
+3. Once you find the item, select it and click on `Next`.
+4. It will ask you to save the `.package` file. Choose a location and save it.
+    - We will not be using this file, so after saving you can safely delete it.
+
+5. After saving, it will open the item in the editor. Here you can see the 3D model and textures.
+6. In the `Textures` tab, export `Diffus` and `Normal` textures by clicking on them and hitting `Export`.
+7. In the `Meshes` tab, export the 3d model. (as `.blend`)
+8. Open the exported `.blend` file in **Blender**.
+10. Now you can follow our guide on how to import models into ACNH using **Switch Toolbox**.
+</Steps> 

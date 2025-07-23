@@ -1,0 +1,206 @@
+<div class="amiibo-form">
+    <form autocomplete="off" id="amiibo-form">
+        Name
+        <input class="text-input" autocomplete="off" type="text" required id="npcName" placeholder="Canyne" onpaste="return false;" pattern="[a-zA-Z0-9]*"/><br/>
+        Label
+        <input class="text-input" autocomplete="off" type="text" required id="npcLabel" placeholder="wol13" maxlength="8" pattern="[a-zA-Z0-9]*"/><br/>
+        
+        <button class="sl-link-button not-content send-button primary" id="generateButton">Generate</button>
+    </form>
+</div>
+
+<style>
+.amiibo-form .text-input {
+  height: 52px;
+  padding: 0 10px 0 10px;
+  background-color: var(--sl-color-black);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 8px;
+  font-size: 17px;
+  position: relative;
+  appearance: none;
+  -webkit-appearance: none;
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  font-weight: 700;
+  color: var(--sl-color-white);
+  font-weight: 400;
+}
+
+.amiibo-form .send-button {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 999rem;
+  display: inline-flex;
+  gap: .5em;
+  line-height: 1.1875;
+  outline-offset: .25rem;
+  text-decoration: none;
+  padding: .9375rem 1.25rem;
+
+  &.primary {
+      background: var(--sl-color-text-accent);
+      border-color: var(--sl-color-text-accent);
+      color: var(--sl-color-black);
+  }
+
+  &.primary:hover {
+      background-color: var(--sl-color-accent);
+      color: var(--sl-color-black);
+      border-color: transparent;
+  }
+}
+</style>
+
+<script>
+import JSZip from 'jszip';
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("amiibo-form");
+  const npcNameInput = document.getElementById("npcName") as HTMLInputElement;
+  const npcLabelInput = document.getElementById("npcLabel") as HTMLInputElement;
+
+  if (npcLabelInput == null || npcNameInput == null || form == null) return;
+
+  // Block special characters
+  npcLabelInput.addEventListener("keypress", (e) => {
+    const regex = new RegExp("^[a-zA-Z0-9]+$");
+    const str = e.key;
+    if (!regex.test(str)) e.preventDefault();
+  });
+
+  npcLabelInput.addEventListener("paste", (e) => e.preventDefault());
+  npcNameInput.addEventListener("paste", (e) => e.preventDefault());
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const npcName = npcNameInput.value.trim();
+    const npcLabel = npcLabelInput.value.trim();
+
+    if (!npcName || !npcLabel) return;
+
+    const randomValue = getRandomInt(1, 223);
+    const characterId = 663552 + (256 * randomValue);
+    const numberingId = 983 + randomValue;
+
+    SaveBCSVFile(characterId, numberingId, npcLabel);
+    SaveAmiiboZip(characterId, numberingId, npcName);
+  });
+
+  function getRandomInt(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function SaveBCSVFile(characterId: number, numberingId: number, npcLabel: string) {
+    const blobParts = [];
+    const entrySize = 28;
+
+    const fields = [
+      { Hash: 3350015967, Offset: 4 },
+      { Hash: 77885493, Offset: 8 },
+      { Hash: 4138945558, Offset: 10 },
+      { Hash: 2890543941, Offset: 12 },
+      { Hash: 885583573, Offset: 13 },
+      { Hash: 2175024758, Offset: 21 },
+      { Hash: 3701969225, Offset: 22 },
+      { Hash: 1534894258, Offset: 23 },
+      { Hash: 496616723, Offset: 24 },
+      { Hash: 196503666, Offset: 25 },
+    ];
+
+    // Header
+    blobParts.push(new Uint32Array([1]));
+    blobParts.push(new Uint32Array([entrySize]));
+    blobParts.push(new Uint16Array([fields.length]));
+    blobParts.push(new Uint8Array([1]));
+    blobParts.push(new Uint8Array([1]));
+    blobParts.push(new TextEncoder().encode("VSCB"));
+    blobParts.push(new Uint16Array([20100]));
+    blobParts.push(new Uint8Array(10));
+
+    // Fields
+    fields.forEach((field) => {
+      blobParts.push(new Uint32Array([field.Hash]));
+      blobParts.push(new Uint32Array([field.Offset]));
+    });
+
+    // Entry position
+    const entryPos = new Uint32Array([blobParts.reduce((acc, curr) => acc + curr.byteLength, 0)]);
+    blobParts.push(entryPos);
+
+    blobParts.push(new Uint32Array([characterId]));
+    blobParts.push(new Uint16Array([numberingId]));
+    blobParts.push(new Uint16Array([-1]));
+    blobParts.push(new Uint8Array([1]));
+
+    const newText = new TextEncoder().encode(npcLabel);
+    const textData = new Uint8Array(8);
+    newText.forEach((val, idx) => {
+      if (idx < 8) textData[idx] = val;
+    });
+
+    blobParts.push(textData);
+    blobParts.push(new Uint8Array([0, 0, 5, 0, 0, 0, 0]));
+
+    const blob = new Blob(blobParts, { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `AmiiboData_${npcLabel}.bcsv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function SaveAmiiboZip(characterId: number, numberingId: number, npcName: string) {
+    const now = new Date();
+    const currentDate = {
+      y: now.getFullYear(),
+      m: now.getMonth() + 1,
+      d: now.getDate()
+    };
+
+    const amiibo_data = {
+      name: npcName,
+      write_counter: 0,
+      version: 0,
+      mii_charinfo_file: "mii-charinfo.bin",
+      first_write_date: currentDate,
+      last_write_date: currentDate,
+      id: {
+        game_character_id: toAmiiboId(characterId),
+        character_variant: 0,
+        figure_type: 1,
+        series: 5,
+        model_number: numberingId
+      },
+      use_random_uuid: true,
+      uuid: [...Array(8)].map(() => Math.floor(Math.random() * 256)).concat([0, 0, 0])
+    };
+
+    const zip = new JSZip();
+    zip.file("amiibo.json", JSON.stringify(amiibo_data, null, 2));
+    zip.file("amiibo.flag", new Uint8Array());
+    zip.file("amiibo.png", new Uint8Array());
+
+    zip.generateAsync({ type: "blob" }).then((content) => {
+      const a = document.createElement("a");
+      const url = URL.createObjectURL(content);
+      a.href = url;
+      a.download = "amiibo.zip";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  function toAmiiboId(value: number) {
+    value >>= 4;
+    const firstDigit = (value >> 12) & 0xF;
+    const shiftedValue = (value & 0xFFF) << 4;
+    return shiftedValue | firstDigit;
+  }
+});
+</script>

@@ -4,6 +4,7 @@ description: Learn how to create a custom NPC in your mod.
 ---
 
 import { LinkCard, Tabs, TabItem, Steps, FileTree } from '@astrojs/starlight/components';
+import Amiibo from '../../../components/Amiibo.astro';
 
 This guide will help you create a custom NPC (villager) in **Animal Crossing: New Horizons**. We will cover the necessary steps to add a new villager without replacing an existing one, including editing `.bcsv` files, message files, and `StaticParam.pack`, as well as setting up their personality, hobbies, favorite colors, and more.
 
@@ -26,10 +27,10 @@ This guide does **not** cover creating textures or models. For those, please ref
     - NmlNpcParam.bcsv
     - ItemParam.bcsv (optional, for villager photo/poster)
 - Message
-    - String_XXyy.sarc.zs where XXyy is the language (e.g. USen)
-    - TalkSys_XXyy.sarc.zs where XXyy is the language (e.g. USen)
+    - String_[XXyy].sarc.zs where [XXyy] is the language (e.g. USen)
+    - TalkSys_[XXyy].sarc.zs where [XXyy] is the language (e.g. USen)
 - Model
-    - NpcNml[label].Nin_NX_NVN.zs where `label` is your villager's label (e.g. **wol13**)
+    - NpcNml[label].Nin_NX_NVN.zs where [label] is your villager's label (e.g. **wol13**)
 - Pack
     - StaticParam.pack
 </FileTree>
@@ -72,12 +73,17 @@ After editing, import your new row back into `NmlNpcParam.bcsv` and save.
 
 ### 2.2. `AmiiboData.bcsv`
 
-This file links your villager to an Amiibo.
+This step is optional but recommended if you want your villager to be scannable as an Emuiibo. It is good to test your villager in-game. 
 
---**Manual Method:**  
-- `NumberID`: Matches the `UniqueID` from above
-- `NPCLabel`: Your villager's label (e.g., `wol13`)
-- Copy other columns from a similar villager
+<Tabs>
+    <TabItem label="Automatic Method">
+        <Amiibo/>
+    </TabItem>
+    <TabItem label="Manual Method">
+        Coming soon...
+    </TabItem>
+</Tabs>
+
 
 > **Tip:** For new entries, increment the last `CharacterID` by 256. For more details, see [this Discord post](https://discord.com/channels/1291243062865039431/1291846660225241088/1292141518370373705).
 
