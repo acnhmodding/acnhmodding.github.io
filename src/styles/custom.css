@@ -37,3 +37,7 @@
 table tbody tr:nth-child(even) {
     background: var(--sl-color-bg-darker);
 }
+
+.site-title, .hero h1 {
+    font-family: 'Animal Crossing';
+}

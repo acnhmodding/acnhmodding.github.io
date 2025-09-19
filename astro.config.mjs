@@ -13,7 +13,10 @@ export default defineConfig({
 			components: {
 				Sidebar: './src/overrides/Sidebar.astro',
 			},
-			customCss: ['./src/styles/custom.css'],
+			customCss: [
+				'./src/styles/custom.css',
+				'./src/fonts/acnh-font.css',
+			],
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/acnhmodding/wiki' },
 				{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/4cBd8dD6XS' },
@@ -43,6 +46,10 @@ export default defineConfig({
 							{
 								label: 'Getting Started',
 								autogenerate: { directory: "getting-started" }
+							},
+							{
+								label: 'Using Mods',
+								autogenerate: { directory: "using-mods" }
 							},
 							{
 								label: 'Creating Mods',

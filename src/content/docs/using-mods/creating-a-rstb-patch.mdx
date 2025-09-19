@@ -1,0 +1,40 @@
+---
+title: Creating a RSTB Patch
+description: "A guide on how to create your own RSTB patch for Animal Crossing: New Horizons."
+sidebar:
+  order: 5
+---
+
+import { Steps, FileTree } from '@astrojs/starlight/components';
+
+In this guide we'll be covering the steps for creating your own RSTB patch. This is necessary if you're suffering from crashes or items invisible in-game.
+
+## Prerequisites
+- [Heaven Tool](https://github.com/acnhmodding/HeavenTool/releases/latest)
+- All the mods combined into a single `romfs` folder
+- A vanilla `ResourceSizeTable.srsizetable` file. <a href="/downloads/ResourceSizeTable.srsizetable" download>Download it here</a>.
+
+## Creating the Patch
+<Steps>
+1. Combine all of your mods into one "romfs" folder, make sure everything is where it should be.
+
+    Example:
+    <FileTree>
+        - romfs/
+            - Model/ Your model replacements go here
+            - Bcsv/ 
+            - EventFlow/
+            - OtherFolders/
+    </FileTree>
+
+2. Open Heaven Tool and click "Open RSTB Editor."
+3. Click "File" and then click "Open," then open a vanilla `ResourceSizeTable.srsizetable` file.
+4. Now click "File" and click "Update from modded RomFs", then select your combined romfs folder that we made in step 1.
+5. Save the file and make sure to name it `ResourceSizeTable.srsizetable`
+6. If it asks you to compress the file, click "Yes."
+7. In the `RomFs` folder we made in **Step 1**, create a folder called `System`, and `Resource` inside of it. Place our newly patched RSTB into that folder. If done correctly the location for this file should be: `romfs/System/Resource/ResourceSizeTable.srsizetable`
+    
+    **These folder and file names are CASE SENSITIVE, so make sure they are capitalized correctly.** If it asks you to replace an existing RSTB file, click yes.
+8. You're ready! Just move/copy your `romfs` to the Switch or emulator and test in-game!
+</Steps>
+
