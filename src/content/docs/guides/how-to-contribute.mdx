@@ -1,0 +1,78 @@
+---
+title: How to Contribute
+description: Learn how to contribute to the ACNH modding wiki.
+sidebar:
+    order: 99
+---
+
+import { LinkCard, Tabs, TabItem, Steps, FileTree } from '@astrojs/starlight/components';
+
+Want to help out with the wiki? Contributions are always welcome! You can contribute by adding new guides, improving existing ones, or even just fixing typos. 
+
+### Project Structure
+
+This project uses [Starlight](https://starlight.astro.build/) framework which convert the content written in markdown files to webpages.
+
+These are some of the important files and folders in the project:
+
+<FileTree>
+- public/           # Static assets like images and icons
+- src/
+  - assets/
+    - images/       # Images used in the guides
+  - content/
+    - docs/         # The markdown files for the guides and documentation
+- astro.config.mjs  # General configuration, including sidebar structure
+</FileTree>
+
+Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+For example, `src/content/docs/guides/how-to-contribute.mdx` is available at the route `/guides/how-to-contribute`.
+
+### Making changes
+To make changes to the project, you either do it from your browser using the **GitHub Web UI**, or you can **clone the project and run it locally**.
+
+The GitHub Web UI is useful for making small changes, like fixing typos or adding a small section to an existing guide, while running the project locally is useful for making larger changes that require testing, or for adding new guides with images.
+
+<Tabs>
+    <TabItem label="Locally">
+      To run the project locally, you need to have [Node.js](https://nodejs.org/), [Git](https://git-scm.com/) and [Visual Studio Code](https://code.visualstudio.com/) installed on your computer.
+
+      It is recommended to install the [Astro extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=astro-build.astro-vscode) for a better development experience.
+
+      With those installed, you can clone the repository and run the project locally by following these steps:
+      <Steps>
+        1. Open your terminal and navigate to the directory where you want to clone the repository
+            > _`Shift + Right-Click` in the desired folder and select `Open in Terminal`._
+
+        2. Clone the repository: `git clone https://github.com/acnhmodding/acnhmodding.github.io.git`
+        3. Navigate to the project directory: `cd acnhmodding.github.io`
+        4. Install the dependencies: `npm install`
+        5. Start the development server: `npm run dev`
+        6. Navigate to http://localhost:4321/ and you should be able to see the website.
+      </Steps>
+      If you did everything correctly, you should see the website running locally, and any changes you make to the markdown files in `src/content/docs/` should be reflected in the website in real-time.
+    </TabItem>
+    <TabItem label="GitHub">
+      Each page has an `Edit page` button at the very bottom of the page, which will take you to the GitHub web UI where you can edit the associated markdown file.
+    </TabItem>
+</Tabs>
+
+
+### Adding new content
+
+To add content it is recommended to run the project locally, and create a new markdown file (`.mdx`) in `src/content/docs/` with the content you want to add. You can use existing guides as a reference for how to structure your guide. 
+
+If you want to add a new category to the sidebar, you can create a new folder in `src/content/docs/` and edit the `astro.config.mjs` file to include the new category in the sidebar structure.
+
+### Learn more about Starlight
+
+Check out [Starlight's docs](https://starlight.astro.build/) to learn more about everything you can do with Starlight, including default components and styling. 
+
+
+## Our contributors
+
+These are the people who have contributed to the project, whether by adding new guides, improving existing ones, or even just fixing typos.
+
+import ContributorList from "../../../components/ContributorList.astro";
+
+<ContributorList githubRepo="acnhmodding/acnhmodding.github.io" />
