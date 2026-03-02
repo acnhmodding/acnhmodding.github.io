@@ -1,5 +1,6 @@
 {
-    "markdown-image.local.path": "/starlight/src/assets/images/",
+    "markdown-image.local.path": "/src/assets/images/",
     "markdown-image.base.altFormat": "${mdname}/${prompt}",
-    "markdown-image.base.fileNameFormat": "${mdname}/${prompt}"
+    "markdown-image.base.fileNameFormat": "${mdname}/${prompt}",
+    "markdown-image.local.referencePath": ""
 }
