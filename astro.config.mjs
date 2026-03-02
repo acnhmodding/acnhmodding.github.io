@@ -4,6 +4,12 @@ import starlight from '@astrojs/starlight';
 import starlightSidebarTopics from 'starlight-sidebar-topics'
 import starlightThemeObsidian from 'starlight-theme-obsidian'
 
+const NETLIFY_PREVIEW_SITE = process.env.CONTEXT !== 'production' && process.env.DEPLOY_PRIME_URL;
+
+const site = NETLIFY_PREVIEW_SITE || 'https://acnhmodding.github.io/';
+const ogUrl = new URL('banner.jpg?v=1', site).href;
+const ogImageAlt = 'Your place for everything about Animal Crossing: New Horizons modding!';
+
 // https://astro.build/config
 export default defineConfig({
 	site: "https://acnhmodding.github.io",
@@ -21,6 +27,20 @@ export default defineConfig({
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/acnhmodding/acnhmodding.github.io' },
 				{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/4cBd8dD6XS' },
 				{ icon: 'reddit', label: 'Reddit', href: 'https://www.reddit.com/r/acnhmodding/' },
+			],
+			head: [
+				{
+					tag: 'meta',
+					attrs: { property: 'og:image', content: ogUrl },
+				},
+				{
+					tag: 'meta',
+					attrs: { property: 'og:image:alt', content: ogImageAlt },
+				},
+				{
+					tag: 'meta',
+					attrs: { name: 'theme-color', content: '#67c464' },
+				}
 			],
 			editLink: {
 				baseUrl: "https://github.com/acnhmodding/acnhmodding.github.io/edit/master/"
