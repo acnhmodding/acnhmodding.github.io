@@ -1,0 +1,66 @@
+---
+title: Mod Manager
+sidebar:
+  order: 1
+---
+
+A tool created by **Rafa** that merges mods which modify the same file so they can be used together.
+
+## Download
+Currently, Mod Manager shares the same GitHub repository as [Heaven Tool](../../tools/heaven-tool), so to download it just access the [latest release](https://github.com/acnhmodding/HeavenTool/releases/latest) and download the `ModManager-Windows.zip` asset.
+
+## Supported Formats
+
+| **Name**  | **Location / Extension** | **Support** |
+|-----------|--------------------------|:-----------:|
+| BCSV      | BCSV/*.bcsv              |      ✅      |
+| MSBT      | Message/*.sarc.zs        |      ✅      |
+| EventFlow | EventFlow/*.bfevfl       |      ❌      |
+| Model     | Models                   |      ⚠️      |
+
+Model cannot be merged, so avoid having mods that change the same model.
+
+## Usage
+
+Using **Mod Manager** is **very** simple!\
+~~ *The terminal can look a bit scary, but I promise it's very easy to use!*  
+
+import { Steps, FileTree } from '@astrojs/starlight/components';
+
+<Steps>
+1. Download the latest Mod Manager from GitHub: [Windows](https://github.com/acnhmodding/HeavenTool/releases/latest/download/ModManager-Windows.zip)
+2. Extract it to a folder of your choice
+3. Create an empty `mods` folder inside the extracted folder
+4. Drop all your mods into this `mods` folder.
+
+    :::caution
+    Your mods should be in `.zip` format and follow the [expected structure](#expected-structure).
+    :::
+5. Open `HeavenTool.ModManager.CLI.exe`. It will display the **valid** detected mods and ask if you want to merge them.
+6. The merged mods will be created inside the `output` folder (in the extracted folder)
+7. Place the folders inside `output` on your SD card at `atmosphere/contents/01006F8002326000/romFs/`
+8. Make sure to remove the old mods and use only the merged ones on your SD card.
+</Steps>
+
+## Expected Structure
+
+Mod Manager expects all mods to be **zipped** and contain a `romfs` folder inside the archive.
+
+It can be either:
+
+- `my_mod.zip/atmosphere/contents/01006F8002326000/romfs/`
+- `my_mod.zip/romfs/`
+
+Both formats are supported as long as the files are correctly named and placed.
+Full Example:
+
+<FileTree>
+- My_Mod.zip
+    - romfs/
+        - Bcsv/
+            - ItemParam.bcsv
+        - Message/
+            - Dialog_USen.sarc.zs
+        - Model/
+            - MyCustomModel.Nin_NX_NVN.zs
+</FileTree> 
