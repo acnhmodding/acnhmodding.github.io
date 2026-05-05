@@ -1,0 +1,54 @@
+---
+import config from 'virtual:starlight/user-config';
+import { Icon } from '@astrojs/starlight/components';
+
+const links = config.social || [];
+---
+{
+	links.length > 0 && (
+		<>
+			{links.map(({ label, href, icon }) => (
+				<a href={href} rel="me" class="sl-flex" target="_blank" title={label}>
+					<span class="sr-only">{label}</span>
+					{label == "GameBanana" ? (
+						// The icon is not available in any icon library, so we have to use a custom SVG
+						// From https://images.gamebanana.com/static/img/favicon/512x512.png
+						// Generated with https://convertio.co/png-svg/ and optimized with https://www.svgviewer.dev/
+						// Need to change width and height to 16 to match the other icons and also the fill to currentColor
+						<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512">
+							<g transform="translate(0,512) scale(0.1,-0.1)" fill="currentColor">
+								<path d="M3120 4530 l0 -280 140 0 140 0 0 -425 0 -425 -140 0 -140 0 0 -420
+									0 -420 -140 0 -140 0 0 -140 0 -140 -420 0 -420 0 0 -140 0 -140 -845 0 -845
+									0 0 -425 0 -425 140 0 140 0 0 -140 0 -140 140 0 140 0 0 -140 0 -140 280 0
+									280 0 0 -140 0 -140 985 0 985 0 0 140 0 140 285 0 285 0 0 140 0 140 140 0
+									140 0 0 140 0 140 140 0 140 0 0 285 0 285 140 0 140 0 0 985 0 985 -140 0
+									-140 0 0 140 0 140 -140 0 -140 0 0 140 0 140 -140 0 -140 0 0 280 0 280 -425
+									0 -425 0 0 -280z m1130 -700 l0 -140 140 0 140 0 0 -985 0 -985 -140 0 -140 0
+									0 -285 0 -285 -140 0 -140 0 0 -140 0 -140 -285 0 -285 0 0 -140 0 -140 -985
+									0 -985 0 0 140 0 140 -280 0 -280 0 0 140 0 140 -140 0 -140 0 0 285 0 285
+									705 0 705 0 0 140 0 140 420 0 420 0 0 140 0 140 140 0 140 0 0 140 0 140 140
+									0 140 0 0 420 0 420 140 0 140 0 0 285 0 285 285 0 285 0 0 -140z"/>
+							</g>
+						</svg>
+					) : (
+						<Icon name={icon}/>
+					)}
+				</a>
+			))}
+		</>
+	)
+}
+
+<style>
+	@layer starlight.core {
+		a {
+			color: var(--sl-color-text-accent);
+			padding: 0.5em;
+			margin: -0.5em;
+		}
+
+		a:hover {
+			color: var(--sl-color-white);
+		}
+	}
+</style>

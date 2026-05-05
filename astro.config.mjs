@@ -1,8 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import starlightSidebarTopics from 'starlight-sidebar-topics'
-import starlightThemeObsidian from 'starlight-theme-obsidian'
+import starlightSidebarTopics from 'starlight-sidebar-topics';
 
 const NETLIFY_PREVIEW_SITE = process.env.CONTEXT !== 'production' && process.env.DEPLOY_PRIME_URL;
 
@@ -18,8 +17,16 @@ export default defineConfig({
 			title: 'ACNH Modding Wiki',
 			components: {
 				Sidebar: './src/overrides/Sidebar.astro',
+				PageFrame: 'starlight-theme-obsidian/overrides/PageFrame.astro',
+				Pagination: 'starlight-theme-obsidian/overrides/Pagination.astro',
+				ThemeSelect: 'starlight-theme-obsidian/overrides/ThemeSelect.astro',
+				SocialIcons: './src/overrides/SocialIcons.astro',
 			},
 			customCss: [
+				'starlight-theme-obsidian/styles/layers.css',
+				'starlight-theme-obsidian/styles/theme.css',
+				'starlight-theme-obsidian/styles/centered-reading.css',
+				'starlight-theme-obsidian/styles/common.css',
 				'./src/styles/custom.css',
 				'./src/fonts/acnh-font.css',
 			],
@@ -27,6 +34,7 @@ export default defineConfig({
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/acnhmodding/acnhmodding.github.io' },
 				{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/4cBd8dD6XS' },
 				{ icon: 'reddit', label: 'Reddit', href: 'https://www.reddit.com/r/acnhmodding/' },
+				{ icon: 'heart', label: 'GameBanana', href: 'https://gamebanana.com/games/7923' },
 			],
 			head: [
 				{
@@ -49,14 +57,6 @@ export default defineConfig({
 				themes: ['dracula', 'one-light'],
 			},
 			plugins: [
-				starlightThemeObsidian({
-					debug: false,
-					sitemapConfig: {},
-					graphConfig: {},
-					backlinksConfig: {},
-					graph: false,
-					backlinks: true,
-				}),
 				starlightSidebarTopics([
 					{
 						label: 'Wiki',

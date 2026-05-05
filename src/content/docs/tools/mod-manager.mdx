@@ -4,10 +4,19 @@ sidebar:
   order: 1
 ---
 
-A tool created by **Rafa** that merges mods which modify the same file so they can be used together.
+## What it does?
 
-## Download
-Currently, Mod Manager shares the same GitHub repository as [Heaven Tool](../../tools/heaven-tool), so to download it just access the [latest release](https://github.com/acnhmodding/HeavenTool/releases/latest) and download the `ModManager-Windows.zip` asset.
+Some mods modify the **same game files**, which normally causes them to overwrite each other.
+
+**Mod Manager** solves this by merging compatible files so multiple mods can work together without conflicts.
+
+For example:
+
+- Mod A edits `ItemParam.bcsv`
+- Mod B also edits `ItemParam.bcsv`
+
+Without merging, one mod would overwrite the other.  
+Mod Manager combines the changes so **both mods can work at the same time**.
 
 ## Supported Formats
 
@@ -43,6 +52,10 @@ import { Steps, FileTree } from '@astrojs/starlight/components';
 </Steps>
 
 ## Expected Structure
+
+:::tip
+Most mods already follow this structure, so you usually only need to place the `.zip` file inside the `mods` folder.
+:::
 
 Mod Manager expects all mods to be **zipped** and contain a `romfs` folder inside the archive.
 
