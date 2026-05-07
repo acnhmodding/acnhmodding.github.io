@@ -1,0 +1,62 @@
+---
+title: NHSE Save Editor
+sidebar:
+  order: 5
+---
+
+import { LinkCard, Steps, FileTree } from '@astrojs/starlight/components';
+
+An open-source tool created by [@kwsch](https://github.com/kwsch) and berichan. NHSE is a New Horizons Save Editor that will allow you to edit a lot of things pertaining to your island, including changing villagers, map editing, adding items, changing your name etc etc.
+> GitHub: [kwsch/NSHE](https://github.com/kwsch/NHSE)
+
+:::caution
+This is a working-in-progress page. More info will be added in the future.
+:::
+
+
+### Compatible File Types
+WIP
+
+
+---
+You can download the latest version here: **[Get NHSE](https://berichan.github.io/GetNHSE/)**
+
+## Setup
+<Steps>
+    1. Download the latest version from [Get NHSE](https://berichan.github.io/GetNHSE/)
+    2. Open the supported save file (e.g. `main.dat`)  
+    3. Use the toolbox to view or edit models, textures, animations, audio, and materials.
+    4. Save your edited files and test in-game!
+</Steps>
+
+## Expected Structure
+
+<FileTree>
+- SaveFile
+    - Photograph/ # Hotel photos
+      - hotelroom_0.dat
+      - ...
+      - hotelroom_7.dat
+      - hotelviproom_0.dat
+    - Villager0/
+      - Photograph/ # DLC photos
+        - npc_17_0.dat
+        - ...
+      - personal.dat
+      - personalHeader.dat
+      - photo_studio_island.dat
+      - photo_studio_islandHeader.dat
+      - postbox.dat
+      - postboxHeader.dat
+      - wherearen.dat
+      - wherearenHeader.dat
+    - landname.dat
+    - **main.dat** # The main file to be edited by NHSE
+    - mainHeader.dat  
+</FileTree> 
+
+## Linux-specific Setup
+![Title](../../../assets/images/nhse-save-editor/Tutorial_NHSE_Linux.png)
+*This guide was originally written by [@Comfy_Deer](https://gamebanana.com/members/2939561)*
+### Installation
+WIP
