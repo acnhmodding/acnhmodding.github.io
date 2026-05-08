@@ -33,6 +33,7 @@ export default defineConfig({
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/acnhmodding/acnhmodding.github.io' },
 				{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/4cBd8dD6XS' },
+				{ icon: 'heart', label: 'Fluxer', href: 'https://fluxer.gg/Guyh2coW' },
 				{ icon: 'reddit', label: 'Reddit', href: 'https://www.reddit.com/r/acnhmodding/' },
 				{ icon: 'heart', label: 'GameBanana', href: 'https://gamebanana.com/games/7923' },
 			],
