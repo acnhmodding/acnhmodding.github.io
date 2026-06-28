@@ -1,0 +1,134 @@
+---
+title: Dumping Save Data
+description: "Learn how to dump Save Data from Animal-Crossing: New Horizons!"
+sidebar:
+  order: 1
+---
+
+import { Steps, Tabs, TabItem, FileTree } from '@astrojs/starlight/components';
+
+## What is in your Save Data?
+ACNH Save Data consists of several directories and files that hold your player(s) progress and island's layout data. Most of the important data for save editing is within the `main.dat` file.
+However, everything in the save structure is needed in order to have a save fully working in-game!
+
+<FileTree>
+- `ACNH Save Data/`
+    - Photograph/ # Hotel photos
+      - hotelroom_0.dat
+      - ...
+      - hotelroom_7.dat
+      - hotelviproom_0.dat
+    - Villager0/
+      - Photograph/ # DLC photos
+        - npc_17_0.dat
+        - ...
+      - personal.dat
+      - personalHeader.dat
+      - photo_studio_island.dat
+      - photo_studio_islandHeader.dat
+      - postbox.dat
+      - postboxHeader.dat
+      - wherearen.dat
+      - wherearenHeader.dat
+    - landname.dat
+    - **main.dat** # The main file to be edited by NHSE
+    - mainHeader.dat
+</FileTree>
+
+## Dump Save Data on Real Hardware
+Make sure your Nintendo Switch is modded and has homebrew capabilities before proceeding. Dumping Save Data requires access to the file system, which is not available on unmodded consoles.
+
+<Steps>
+1. [Download the latest release of JKSV](https://github.com/J-D-K/JKSV/releases) and copy it to your Nintendo Switch `switch` folder.
+2. Launch **JKSV** on your Nintendo Switch.
+3. Go down to **Device** and select **Animal Crossing: New Horizons**.
+4. Choose **New Backup** to back up your save (leave the default name `Device - 20YY-MM-DD_HH-MM-SS` or name it whatever you want).
+5. Go back to hekate.
+5. Connect your Nintendo Switch to your PC using a USB cable.
+6. Go to **Tools**, **USB Tools**, **SD Card**.
+7. Go to `sd/JKSV/Animal Crossing New Horizons`, and you should find your save folder there
+</Steps>
+
+<FileTree>
+- sd/
+  - JKSV/
+    - `Animal Crossing New Horizons/`
+      - **`Device - 2026-06-27_21-15-33/`**
+      - ...
+</FileTree>
+
+## Transfer Save Files from an Emulator to Real Hardware
+:::danger
+**Disclaimer:** Restoring your Save Data is at your own discretion. *We are not responsible if your console gets banned from online from restoring your save file.* If you're not planning to go online, use emuMMC, as this has less likelihood of getting your console banned, as long as you keep it permanently offline. Use sysMMC for online at your own risk!
+:::
+
+Emulators like **Sudachi**, **Suyu**, **Eden** can follow the same steps as **Yuzu**. And emulators like **Ryubing**, **KenjiNX** can follow the same steps as **Ryujinx**.
+
+:::caution
+This guide will not cover how to install or set up Yuzu or Ryujinx.
+:::
+
+<Tabs>
+  <TabItem label="Yuzu">
+    <Steps>
+      1. Open Yuzu and right-click on Animal Crossing: New Horizons in the game list.
+      2. Select **Open Save Data Location**.
+      3. In the file explorer window, go up one folder to `00000000000000000000000000000000`
+      4. Copy the `01006F8002326000` folder
+      5. Paste it in your SD Card `sd/JKSV/Animal Crossing New Horizons/`
+      6. Wait for the copying process to complete.
+      7. Rename it to something more descriptive or easy to recognize if you want like `YourIslandName Save`, `AnyIsle Emu Save`, etc.
+    </Steps>
+  </TabItem>
+  
+  <TabItem label="Ryujinx">
+    <Steps>
+      1. Open Ryujinx and right-click Animal Crossing: New Horizons in the game list.
+      2. Select **Open Device Save Directory**.
+      3. In the file explorer window, go up one folder to `0000000000000001`
+      4. Copy the `0` folder
+      5. Paste it in your SD Card `sd/JKSV/Animal Crossing New Horizons/`
+      6. Wait for the copying process to complete.
+      7. Rename it to something more descriptive or easy to recognize if you want like `YourIslandName Save`, `AnyIsle Emu Save`, etc.
+    </Steps>
+  </TabItem>
+</Tabs>
+
+<FileTree>
+- sd/
+  - JKSV/
+    - `Animal Crossing New Horizons/`
+      - `Device - 2026-06-27_21-15-33/`
+      - **`Anyisle Emu Save/`**
+      - ...
+</FileTree>
+
+<Tabs>
+  <TabItem label="Save Restore Enabled">
+    <Steps>
+      8. Launch **JKSV** on your Nintendo Switch.
+      9. Go down to **Device** and select **Animal Crossing: New Horizons**.
+      10. Choose **the save you want to restore** to your console and press Y.
+      11. You will get a warning: Are you sure you really want to restore AnyIsle Emu Save?
+      12. Hold A for a few seconds until it starts the process.
+      13. Exit JKSV with +, Press Home, and Close software
+      14. Now Run Animal Crossing New Horizons and choose your preferred profile!
+    </Steps>
+  </TabItem>
+
+  <TabItem label="Save Restore NOT Enabled">
+    <Steps>
+      8. Launch **JKSV** on your Nintendo Switch.
+      9. Go down to ⚙ (Gear Icon - **Settings**) with A.
+      10. Go down to **Enable writing to system saves and NAND**.
+      11. Set it to **On** if you want to restore your save.
+      12. Go back to the sidebar with B
+      13. Go up to **Device** and select **Animal Crossing: New Horizons**.
+      14. Choose **the save you want to restore** to your console and press Y.
+      15. You will get a warning: Are you sure you really want to restore AnyIsle Emu Save?
+      16. Hold A for a few seconds until it starts the process.
+      17. Exit JKSV with +, Press Home, and Close software
+      18. Now Run Animal Crossing New Horizons and choose your preferred profile!
+    </Steps>
+  </TabItem>
+</Tabs>
