@@ -1,47 +1,106 @@
 ---
-title: BCSV
-description: "Binary Comma-Separated Values (bcsv)"
+title: Binary Comma-Separated Values (BCSV)
+description: "Binary Comma-Separated Values: headers, field hashes, row layout, and data types."
 ---
 
-BCSV (Binary Comma-Separated Values) is a file format used in **Animal Crossing: New Horizons**, is a binary variant of CSV (comma-separated values) that have headers encrypted in **CRC32**.
-
-:::caution
-This is a working-in-progress page. More info will be added in the future.
-:::
+BCSV (Binary Comma-Separated Values) stores tables of data in **Animal Crossing: New Horizons**. The table contains fixed-size rows and column descriptors. Field identifiers are stored as **CRC32 hashes**, rather than readable column names.
 
 :::tip[How to edit?]
-**BCSV** files can be edited with [Heaven Tool](https://github.com/acnhmodding/HeavenTool)
+BCSV files can be edited with [Heaven Tool](/tools/heaven-tool). See [Editing a BCSV](/creating-mods/editing-bcsv) for a walkthrough.
 :::
 
 ## Structure
+
+All multi-byte numbers are **little-endian**. The file contains a header, an array of column descriptors, and an array of fixed-size rows.
+
+Offsets in the header tables are relative to the beginning of the BCSV file. Offsets in the column and row structure tables are relative to the beginning of the corresponding record.
+
 ### Header
-| Offset | Size | Type | Description | 
-| ------ | ---- | ---- | ----------- | 
-| 0x0  | 4 | uint32 | [Row](#row-structure) Count |
-| 0x4  | 4 | uint32 | Size of _each_ [Row](#row-structure) |
-| 0x8  | 2 | uint16 | [Column](#column-structure) Count |
-| 0xA  | 1 | byte | [Has Extended Header](#extended-header) |
-| 0xB  | 1 | byte | Is Japanese (CRC32 hashes)|
 
-#### Extended Header
-If `HasExtendedHeader` is 1
+The base header is `0x0C` (12) bytes long. When the extended-header flag is nonzero, the total header size is `0x1C` (28) bytes.
 
-| Offset | Size | Name | Description |
+| Offset | Size | Type | Description |
 | ------ | ---- | ---- | ----------- |
-| 0xC  | 4 | Header | Backwards BCSV - `VSCB` |
-| 0x10 | 2 | Version | Version |
-| 0x12 | 10 | Padding | 10-byte padding |
+| `0x00` | 4 | uint32 | [Row](#row-structure) count |
+| `0x04` | 4 | uint32 | Size of each row, including its four-byte prefix and any padding |
+| `0x08` | 2 | uint16 | [Column](#column-structure) count |
+| `0x0A` | 1 | uint8 | Has extended header: 0 = no, nonzero = yes (normally 1) |
+| `0x0B` | 1 | uint8 | Enum hash language: 0 = Japanese, nonzero = English |
 
-### Column Structure
-Column are stored in a array, comes after the Header and the array size is determined by "Column Count" ([0x8](#header)).
+The language flag selects the names used to decode hashed enum values. Column identifier hashes are unaffected.
 
-| Offset | Size | Description | 
-| ------ | ---- | ----------- |
-| 0x0 | 4 | CRC32 Hash |
-| 0x4 | 4 | Offset to cell data in a [row](#row-structure) |
+#### Extended header
 
-### Row Structure
-| Offset | Size | Description | 
-| ------ | ---- | ----------- |
-| 0x0 | 4 | Offset (Position in the file) |
-| 0x4 | * | Cell Data |
+These bytes are present when `HasExtendedHeader` is nonzero:
+
+| Offset | Size | Type | Description |
+| ------ | ---- | ---- | ----------- |
+| `0x0C` | 4 | byte[4] | Magic: `VSCB` (`56 53 43 42`), BCSV spelled backward |
+| `0x10` | 12 | byte[12] | Extended metadata; meaning not confirmed |
+
+Preserve the extended metadata when editing. Files without an extended header have no `VSCB` magic.
+
+### Column structure
+
+The column descriptor array begins immediately after the header. It contains `columnCount` records, each `0x08` (8) bytes long.
+
+| Offset | Size | Type | Description |
+| ------ | ---- | ---- | ----------- |
+| `0x00` | 4 | uint32 | CRC32 hash of the field identifier |
+| `0x04` | 4 | uint32 | Offset to this field's data from the beginning of a row |
+
+The descriptor does **not** explicitly store the field's type or size. Its offset includes the row's four-byte prefix: an offset of `0x04` refers to the first byte after that prefix.
+
+### Row structure
+
+Rows begin immediately after the column descriptor array. Every row occupies the number of bytes specified by `rowSize` in the header.
+
+In the checked game files, rows are **aligned to four bytes**: `rowSize` is a multiple of four and can include padding after the last field. Individual fields do not all begin at four-byte boundaries. A final one-byte value can therefore occupy a remaining span of two, three, or four bytes; use the field's type to determine its value size.
+
+| Offset | Size | Type | Description |
+| ------ | ---- | ---- | ----------- |
+| `0x00` | 4 | uint32 | Backward distance from this row to the BCSV header |
+| `0x04` | `rowSize - 4` | Field data and padding | Values at the offsets specified by the column descriptors |
+
+The row prefix lets the game find the owning table header:
+
+```text
+headerAddress = rowAddress - rowPrefix
+```
+
+### Address calculations
+
+For zero-based row index `r` and column index `c`:
+
+```text
+headerSize = 0x1C if HasExtendedHeader != 0, otherwise 0x0C
+columnOffset = headerSize + c * 0x08
+rowsOffset = headerSize + columnCount * 0x08
+rowOffset = rowsOffset + r * rowSize
+valueOffset = rowOffset + column[c].offset
+```
+
+These offsets are relative to the beginning of the BCSV file.
+
+### Common types
+
+Identified field names commonly use these suffixes. Types are not stored in the column descriptors.
+
+| Suffix | Storage size | Meaning |
+| ------ | ------------ | ------- |
+| `s8` / `u8` | 1 byte | Signed / unsigned 8-bit integer |
+| `s16` / `u16` | 2 bytes | Signed / unsigned 16-bit integer |
+| `s32` / `u32` | 4 bytes | Signed / unsigned 32-bit integer |
+| `f32` | 4 bytes | IEEE 754 single-precision floating-point value |
+| `stringN`, such as `string32` | N bytes | Fixed-capacity inline UTF-8 string |
+| `hshCstringRef` | 4 bytes | Hash reference; determine the hash algorithm from the field's reader |
+
+Hash values can use **CRC32** or **MurmurHash3 x86_32** (seed 0), depending on the field. The `.hshCstringRef` suffix alone does not identify the algorithm; check the game's field reader.
+
+Field offsets can include padding, so the gap between fields does not reliably identify their types.
+
+### Strings and padding
+
+`stringN` fields store UTF-8 text **inside the row**, with a capacity of N **bytes**, not characters. Read up to the first null byte or the end of that capacity.
+
+When editing a string, keep its capacity and null termination, and pad unused bytes. Preserve other padding and field offsets; do not shift later fields or change the row size.
