@@ -1,26 +1,62 @@
 :root {
+    --sl-content-margin-inline: unset;
+    --sl-content-width: 100%;
     --sl-content-width: 50rem;
     --sl-color-accent: hsl(144, 33%, 49%);
     --sl-color-accent-high: hsl(118, 45%, 58%);
+    --sl-color-bg-nav: var(--sl-color-bg);
+    --sl-color-bg-sidebar: var(--sl-color-bg);
+    --slsg-graph-minimized-bg-color: var(--sl-color-black);
+    --sl-border-radius-sm: 4px;
+    --sl-border-radius-md: 8px;
+    --sl-border-radius-lg: 12px;
+    --sl-color-text-invert: #fffbf9;
+}
+
+.site-title, .hero h1 {
+    font-family: 'Animal Crossing';
 }
 
 :root[data-theme='dark'] {
+    --sl-color-bg: #111213;
     --sl-color-bg-darker: #0c0d0e;
 }
 
 :root[data-theme='light'] {
     --sl-color-bg-darker: #eceff1;
+
 }
 
 .sidebar-pane {
-    border-right: 1px solid var(--sl-color-hairline-shade);
+    scrollbar-width: thin;
 }
 
-.right-sidebar {
-    border-left: 1px solid var(--sl-color-hairline-shade);
-    margin-top: 10px;
+html[data-has-sidebar] .sl-container {
+    max-width: 100%;
 }
 
+body {
+    scrollbar-color: var(--sl-color-hairline) transparent;
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+}
+
+h1#_top {
+    margin-top: 0;
+}
+
+.right-sidebar-container {
+    width: var(--sl-sidebar-width);
+}
+
+/* ------------ Table styling -------------- */
 .sl-markdown-content :is(th:last-child, td:last-child):not(:where(.not-content *)) {
     padding-inline-end: 1rem;
 }
@@ -33,11 +69,136 @@
     vertical-align: middle;
 }
 
-
 table tbody tr:nth-child(even) {
     background: var(--sl-color-bg-darker);
 }
+/* --------------------------------------- */
 
-.site-title, .hero h1 {
-    font-family: 'Animal Crossing';
+/* ------------ Expressive Code styling -------------- */
+.sl-markdown-content {
+    .expressive-code.expressive-code pre {
+        --code-background: var(--sl-color-black);
+        border: unset;
+        border-radius: var(--sl-border-radius-sm);
+    }
+
+    code {
+        border-radius: var(--sl-border-radius-sm);
+    }
+
+    .expressive-code .ec-line mark::before, .expressive-code .ec-line ins::before, .expressive-code .ec-line del::before {
+        border: unset;
+    }
+
+    .expressive-code .ec-line .code {
+        border-inline-start: unset;
+    }
+
+    .expressive-code .frame {
+        border: unset;
+        border-radius: var(--sl-border-radius-md);
+
+        &.is-terminal, &.has-title {
+            outline: 1px solid var(--sl-color-hairline);
+        }
+
+        & > .header.header.header {
+            border: unset;
+            border-bottom: 1px solid var(--sl-color-hairline);
+            border-radius: var(--sl-border-radius-md) var(--sl-border-radius-md) 0 0;
+            background: var(--sl-color-black);
+
+            &::after {
+                content: unset;
+            }
+        }
+
+        &:not(.is-terminal) {
+            .header {
+                &&::before {
+                    content: "";
+                    border: unset;
+                }
+
+                .title {
+                    margin: -1px 0 0 -1px;
+
+                    &:first-child {
+                        border-radius: var(--sl-border-radius-md) 0 0 0;
+                    }
+
+                    &::after {
+                        border-top: unset;
+                        border-bottom: 2px solid var(--sl-color-accent);
+                    }
+                }
+            }
+        }
+
+        pre {
+            border-color: var(--sl-color-hairline);
+        }
+    }
 }
+/* --------------------------------------------------- */
+
+/* --------------- Link Button Styling --------------- */
+.sl-link-button {
+    --sl-color-text-accent: var(--sl-color-accent-high);
+
+    &.primary:hover {
+        background-color: var(--sl-color-accent);
+        color: var(--sl-color-black);
+        border-color: transparent;
+    }
+
+    &.secondary:hover {
+        border-color: var(--sl-color-accent);
+    }
+
+    &.minimal:hover {
+        background-color: unset;
+        color: var(--sl-color-accent);
+    }
+}
+/* --------------------------------------------------- */
+
+
+ /* ----------------- Link Card Styling --------------- */
+.sl-link-card {
+    border-radius: var(--sl-border-radius-md);
+    border: unset;
+    padding: 1rem;
+    margin: 1rem 0;
+    background-color: var(--sl-color-black);
+    box-shadow: 0 0 0 1px var(--sl-color-hairline);
+}
+
+.sl-link-card:hover {
+    background-color: var(--sl-color-black);
+    box-shadow: 0 0 0 1px var(--sl-color-accent);
+}
+/* --------------------------------------------------- */
+
+ /* ----- Starlight components background styling ----- */
+starlight-file-tree {
+    background-color: var(--sl-color-black);
+    border: unset;
+    border-radius: var(--sl-border-radius-md);
+}
+
+.card {
+    border-radius: var(--sl-border-radius-md);
+    border-color: var(--sl-color-hairline);
+}
+
+.card .icon {
+    border: unset;
+}
+
+.sl-banner {
+    padding: 1rem;
+    margin: 1rem 1rem 0rem 1rem;
+    border-radius: var(--sl-border-radius-lg);
+}
+/* --------------------------------------------------- */

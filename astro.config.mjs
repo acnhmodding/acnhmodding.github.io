@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightSidebarTopics from 'starlight-sidebar-topics';
+import sitemap from '@astrojs/sitemap';
 
 const NETLIFY_PREVIEW_SITE = process.env.CONTEXT !== 'production' && process.env.DEPLOY_PRIME_URL;
 
@@ -16,17 +17,9 @@ export default defineConfig({
 		starlight({
 			title: 'ACNH Modding Wiki',
 			components: {
-				Sidebar: './src/overrides/Sidebar.astro',
-				PageFrame: 'starlight-theme-obsidian/overrides/PageFrame.astro',
-				Pagination: 'starlight-theme-obsidian/overrides/Pagination.astro',
-				ThemeSelect: 'starlight-theme-obsidian/overrides/ThemeSelect.astro',
 				SocialIcons: './src/overrides/SocialIcons.astro',
 			},
 			customCss: [
-				'starlight-theme-obsidian/styles/layers.css',
-				'starlight-theme-obsidian/styles/theme.css',
-				'starlight-theme-obsidian/styles/centered-reading.css',
-				'starlight-theme-obsidian/styles/common.css',
 				'./src/styles/custom.css',
 				'./src/fonts/acnh-font.css',
 			],
@@ -66,23 +59,23 @@ export default defineConfig({
 						items: [
 							{
 								label: 'Getting Started',
-								autogenerate: { directory: "getting-started" }
+								items: [{ autogenerate: { directory: "getting-started" } }]
 							},
 							{
 								label: 'Using Mods',
-								autogenerate: { directory: "using-mods" }
+								items: [{ autogenerate: { directory: "using-mods" } }]
 							},
 							{
 								label: 'Creating Mods',
-								autogenerate: { directory: "creating-mods" }
+								items: [{ autogenerate: { directory: "creating-mods" } }]
 							},
 							{
 								label: 'Tools',
-								autogenerate: { directory: 'tools' }
+								items: [{ autogenerate: { directory: 'tools' } }]
 							},
 							{
 								label: 'Guides',
-								autogenerate: { directory: "guides" }
+								items: [{ autogenerate: { directory: "guides" } }]
 							},
 						]
 					},
@@ -99,12 +92,13 @@ export default defineConfig({
 						},
 					 	{
 								label: 'File Formats',
-								autogenerate: { directory: 'documentation/file-formats' },
+								items: [{ autogenerate: { directory: 'documentation/file-formats' } }],
 						}]
 					},
 
 				])
 			]
 		}),
+		sitemap(),
 	],
 });

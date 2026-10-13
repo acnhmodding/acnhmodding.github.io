@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'Animal Crossing';
-  src: url('./acnh.otf') format('opentype');
-  font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
+  font-weight: 800;
+  src: url(./acnh.woff2) format(woff2);
 }
