@@ -88,6 +88,9 @@ export default defineConfig({
 							items:[{
 								label: 'Getting Started',
 								link: '/documentation',
+							}, {
+								label: 'Particle Effects',
+								link: '/documentation/effects',
 							}]
 						},
 					 	{
