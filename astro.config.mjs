@@ -16,6 +16,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'ACNH Modding Wiki',
+			lastUpdated: true,
 			components: {
 				SocialIcons: './src/overrides/SocialIcons.astro',
 			},
