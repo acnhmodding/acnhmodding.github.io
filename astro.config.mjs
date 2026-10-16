@@ -92,6 +92,9 @@ export default defineConfig({
 							}, {
 								label: 'Particle Effects',
 								link: '/documentation/effects',
+							}, {
+								label: 'Audio and SLink',
+								link: '/documentation/audio',
 							}]
 						},
 					 	{

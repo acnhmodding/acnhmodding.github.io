@@ -202,3 +202,8 @@ starlight-file-tree {
     border-radius: var(--sl-border-radius-lg);
 }
 /* --------------------------------------------------- */
+
+.sl-markdown-content table {
+    width: 100%;
+    display: table;
+}

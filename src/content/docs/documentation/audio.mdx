@@ -1,0 +1,87 @@
+---
+title: Audio and SLink
+description: "How SLink selects sounds, with searchable audio asset names, CRC32 hashes, BARS indices, and call-table references."
+---
+
+import AudioCatalog from '../../../components/AudioCatalog.astro';
+
+**SLink** connects gameplay events, animation actions, and property changes to sounds. Its database is `SLink2/SLink2DB.szs`, which contains `SLink2DB.bslnk`. The audio assets themselves are stored in `.bars` archives under `Sound/Resource`, including its `Stream` subdirectory.
+
+This catalog was extracted from **Animal Crossing: New Horizons 3.0.0**. It contains **20,799 audio asset entries in 1,696 BARS files**, with **7,072 distinct sound names explicitly referenced by SLink**.
+
+## How SLink selects audio
+
+Like [ELink](/documentation/effects#elink-and-slink), SLink organizes its database into **users** such as furniture, characters, and UI objects. A user has named **asset call tables** that can play a sound or select/combine child calls through containers. Calls can be requested by game code or activated through action, property, and always triggers.
+
+A sound asset's `RuntimeAssetName` identifies the audio resource to play. SLink also supplies playback settings such as volume, pitch, delay, fade-in time, sound group, and attachment bone. The BARS file contains the sound's metadata and audio payload; `.barslist` resource lists refer to BARS archives.
+
+See the [xlink2 documentation](https://github.com/dt-12345/xlink2#users) for users, triggers, and call tables, and the [BARS format documentation](https://nintendo-formats.com/libs/aal/bars.html) for the resource lookup tables.
+
+### Which ID is which?
+
+Audio assets use a **CRC32 hash of their name** in the BARS lookup table. This table is sorted by hash; each entry points to an archive-local index. Every exported name was checked against its stored hash.
+
+| Identifier | Meaning |
+| --- | --- |
+| Runtime asset name | The sound resource name, such as `UI_Point_Get`. |
+| Name hash (CRC32) | The 32-bit name hash stored in BARS, such as `0xC8556DD8`. |
+| BARS index | The zero-based position in that archive's hash/offset tables. It is not a global sound ID. |
+| Call-table key | The name a particular SLink user uses to select a call, such as `In`. |
+| Call-table GUID | The identifier for a call table within that user, such as `0x18c6896d`. It is separate from the sound's CRC32 hash. |
+
+Use the **name/hash and BARS file** when locating an audio asset. Use the **user and call-table key/GUID** when investigating what triggers it. Archive indices may change when assets are added or removed.
+
+### Example: Nook Miles result dialog
+
+This shortened entry comes from the `UI_SonkatsuResultDialog` user in the decoded SLink database:
+
+```text
+In[0x18c6896d] {
+  EmitCount = 1
+  Oneshot = false
+  NoPause = false
+  UserFlags = 0b0
+  Execute = Asset {
+    AssetName = "In"
+    RuntimeAssetName = "UI_Point_Get"
+    GroupName = "UI_Default"
+    Delay = 4.0
+    Priority = 0.860000014
+    BitFlag = 0b1101
+    UIPanningEnable = false
+  }
+}
+```
+
+The `In` call selects `UI_Point_Get`. Its audio is in `Sound/Resource/UI_SonkatsuResultDialog.bars` at **index 2**, with name hash **`0xC8556DD8`**. Changing `RuntimeAssetName` changes the selected sound; replacing the corresponding audio payload changes the recording itself.
+
+## Audio asset catalog
+
+Search by sound name, hexadecimal hash, or BARS filename. All BARS paths below are relative to `Sound/Resource/`. Select a **SLink calls** count to see the users, call-table keys, and GUIDs that explicitly reference that sound. The count represents distinct user/key/GUID mappings, not how often a sound plays.
+
+A count of **0** means there is no explicit nonblank `RuntimeAssetName` reference in this SLink export. It does **not** establish that the sound is unused: other playback paths and runtime name selection have not been exhaustively traced. `@Blank` is excluded because it is a placeholder rather than a sound asset.
+
+<AudioCatalog />
+
+### Downloads
+
+- [Complete audio asset catalog (JSON)](/data/audio-assets.json): name, hash, BARS file, archive index, and SLink call count.
+- [SLink references (JSON)](/data/slink-references.json): sound names mapped to `[user, call-table key, GUID]` entries, including all **90,326** distinct mappings.
+
+These downloads contain identifiers and references only. Each BARS asset is listed separately, including assets whose names may appear in more than one archive.
+
+## Reading the SLink database
+
+Unpack `SLink2/SLink2DB.szs` to obtain `SLink2DB.bslnk`, then use [xlink2](https://github.com/dt-12345/xlink2#readme) with the **`Park`** game profile:
+
+```powershell
+.\xlink.exe -i SLink2DB.bslnk -o SLink2DB.txt --game Park --output-type Text
+```
+
+Convert the edited text back to binary with:
+
+```powershell
+.\xlink.exe -i SLink2DB.txt -o SLink2DB.bslnk --game Park --output-type Binary
+```
+
+Repack the resulting binary into `SLink2DB.szs` for the game to load it.

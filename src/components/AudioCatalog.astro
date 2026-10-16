@@ -1,0 +1,242 @@
+---
+import assets from '../../public/data/audio-assets.json';
+const base = import.meta.env.BASE_URL;
+---
+
+<audio-catalog data-assets-url={`${base}data/audio-assets.json`} data-calls-url={`${base}data/slink-references.json`}>
+  <div class="filters">
+    <label>Search sounds
+      <input type="search" placeholder="Name, hash, or archive…" disabled />
+    </label>
+    <label class="toggle"><input type="checkbox" disabled /> Referenced by SLink only</label>
+  </div>
+  <p class="status" role="status" aria-live="polite">Loading search… Showing the first 50 of {assets.length.toLocaleString('en-US')} entries.</p>
+  <noscript>Enable JavaScript to search the catalog, or download the complete JSON list below.</noscript>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Audio assets">
+    <table>
+      <thead><tr><th scope="col">Sound name</th><th scope="col">Name hash (CRC32)</th><th scope="col">BARS file</th><th scope="col">Index</th><th scope="col">SLink calls</th></tr></thead>
+      <tbody>
+        {assets.slice(0, 50).map(asset => <tr>
+          <td><code>{asset.name}</code></td><td><code>{asset.hash}</code></td>
+          <td>{asset.archive}</td><td>{asset.index}</td><td>{asset.calls}</td>
+        </tr>)}
+      </tbody>
+    </table>
+  </div>
+  <div class="pagination" aria-label="Catalog pages">
+    <button type="button" data-prev disabled>Previous</button>
+    <span class="page">Page 1</span>
+    <button type="button" data-next disabled>Next</button>
+  </div>
+  <section class="calls-panel" hidden aria-label="Selected sound's SLink calls">
+    <h3 class="calls-title">SLink calls</h3>
+    <p class="calls-status" role="status" aria-live="polite"></p>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="SLink references">
+      <table>
+        <thead><tr><th scope="col">User</th><th scope="col">Call-table key</th><th scope="col">GUID</th></tr></thead>
+        <tbody class="calls-body"></tbody>
+      </table>
+    </div>
+  </section>
+</audio-catalog>
+
+<script>
+  type Asset = { name: string; hash: string; archive: string; index: number; calls: number };
+  type References = Record<string, [string, string, string][]>;
+  class AudioCatalog extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.initialized) return;
+      this.dataset.initialized = 'true';
+      void this.initialize();
+    }
+
+    async initialize() {
+      const search = this.querySelector<HTMLInputElement>('input[type="search"]')!;
+      const onlyLinked = this.querySelector<HTMLInputElement>('input[type="checkbox"]')!;
+      const status = this.querySelector<HTMLElement>('.status')!;
+      const body = this.querySelector<HTMLTableSectionElement>('tbody')!;
+      const previous = this.querySelector<HTMLButtonElement>('[data-prev]')!;
+      const next = this.querySelector<HTMLButtonElement>('[data-next]')!;
+      const pageLabel = this.querySelector<HTMLElement>('.page')!;
+      const panel = this.querySelector<HTMLElement>('.calls-panel')!;
+      const callsTitle = this.querySelector<HTMLElement>('.calls-title')!;
+      const callsStatus = this.querySelector<HTMLElement>('.calls-status')!;
+      const callsBody = this.querySelector<HTMLTableSectionElement>('.calls-body')!;
+      let references: References | undefined;
+      let selectedSound = '';
+      let page = 0;
+      const pageSize = 50;
+      let assets: Asset[];
+      try {
+        const response = await fetch(this.dataset.assetsUrl!);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        assets = await response.json();
+      } catch {
+        status.textContent = 'Search could not load. Reload the page to retry, or download the complete list below.';
+        return;
+      }
+      let filtered = assets;
+
+      const showCalls = async (name: string) => {
+        selectedSound = name;
+        panel.hidden = false;
+        callsTitle.textContent = `SLink calls for ${name}`;
+        callsStatus.textContent = 'Loading references…';
+        callsBody.replaceChildren();
+        try {
+          if (!references) {
+            const response = await fetch(this.dataset.callsUrl!);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data: References = await response.json();
+            references = data;
+          }
+          if (selectedSound !== name) return;
+          const entries = references[name] ?? [];
+          callsStatus.textContent = `${entries.length.toLocaleString()} user/key/GUID mappings. Showing up to 100; the SLink references download contains all mappings.`;
+          for (const entry of entries.slice(0, 100)) {
+            const row = callsBody.insertRow();
+            for (const value of entry) {
+              const code = document.createElement('code');
+              code.textContent = value;
+              row.insertCell().append(code);
+            }
+          }
+        } catch {
+          if (selectedSound === name) callsStatus.textContent = 'References could not load. Select the sound\'s call count again to retry.';
+        }
+      };
+
+      const render = () => {
+        const pages = Math.max(1, Math.ceil(filtered.length / pageSize));
+        const start = page * pageSize;
+        body.replaceChildren();
+        for (const asset of filtered.slice(start, start + pageSize)) {
+          const row = body.insertRow();
+          for (const value of [asset.name, asset.hash, asset.archive, String(asset.index)]) {
+            const code = document.createElement('code');
+            code.textContent = value;
+            row.insertCell().append(code);
+          }
+          const cell = row.insertCell();
+          if (asset.calls) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = asset.calls.toLocaleString();
+            button.setAttribute('aria-label', `Show ${asset.calls} SLink calls for ${asset.name}`);
+            button.addEventListener('click', () => { void showCalls(asset.name); });
+            cell.append(button);
+          } else cell.textContent = '0';
+        }
+        if (!filtered.length) {
+          const cell = body.insertRow().insertCell();
+          cell.colSpan = 5;
+          cell.textContent = 'No matching sounds.';
+        }
+        status.textContent = filtered.length
+          ? `${filtered.length.toLocaleString()} matching entries · Showing ${(start + 1).toLocaleString()}–${Math.min(start + pageSize, filtered.length).toLocaleString()}`
+          : '0 matching entries';
+        pageLabel.textContent = `Page ${page + 1} of ${pages.toLocaleString()}`;
+        previous.disabled = page === 0;
+        next.disabled = page + 1 >= pages;
+      };
+      const filter = () => {
+        const query = search.value.trim().toLowerCase();
+        filtered = assets.filter(asset => (!onlyLinked.checked || asset.calls > 0) &&
+          (!query || `${asset.name} ${asset.hash} ${asset.archive}`.toLowerCase().includes(query)));
+        page = 0;
+        selectedSound = '';
+        panel.hidden = true;
+        render();
+      };
+      search.disabled = false;
+      onlyLinked.disabled = false;
+      search.addEventListener('input', filter);
+      onlyLinked.addEventListener('change', filter);
+      previous.addEventListener('click', () => { page--; render(); });
+      next.addEventListener('click', () => { page++; render(); });
+      render();
+    }
+  }
+  if (!customElements.get('audio-catalog')) customElements.define('audio-catalog', AudioCatalog);
+</script>
+
+<style>
+  audio-catalog { 
+    display: block; 
+  }
+
+  .filters { 
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 1rem;
+  }
+
+  .filters > label:first-child { 
+    flex: 1 1 16rem; 
+  }
+
+  label { 
+    display: block; font-weight: 600; 
+  }
+
+  input[type='search'] { 
+    display: block;
+    width: 100%;
+    margin-top: .4rem;
+    padding: .6rem;
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: .4rem;
+    background: var(--sl-color-black);
+    color: var(--sl-color-white);
+  }
+
+  
+  .toggle { padding-bottom: .6rem; }
+  .table-wrap { overflow-x: auto; max-width: 100%; }
+
+  /* -------------------- Table ------------------------ */
+  table { width: 100%; font-size: .85rem; }
+
+  .table-wrap :global(td code) { white-space: normal; overflow-wrap: anywhere; }
+  .table-wrap :global(td:first-child) { min-width: 10rem; }
+  .table-wrap :global(td:nth-child(2) code) { white-space: nowrap; }
+  /* --------------------------------------------------- */
+
+  .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-block: 1rem;
+    justify-content: space-between;
+  }
+
+  audio-catalog :global(button) { 
+    cursor: pointer;
+    padding: .25rem .65rem;
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: .3rem;
+    background: var(--sl-color-black);
+    color: var(--sl-color-text);
+    font: inherit;
+  }
+
+  audio-catalog :global(button):not(:disabled):hover { 
+    border: 1px solid var(--sl-color-accent-high);
+    background: var(--sl-color-accent);
+    color: var(--sl-color-white);
+  }
+
+  audio-catalog :global(button:disabled) { 
+    opacity: .5;
+    cursor: default;
+  }
+
+  .calls-panel {
+    margin-top: 2rem; 
+  }
+
+  [hidden] {
+    display: none;
+  }
+</style>
