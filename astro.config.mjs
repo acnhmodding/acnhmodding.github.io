@@ -95,6 +95,12 @@ export default defineConfig({
 							}, {
 								label: 'Audio and SLink',
 								link: '/documentation/audio',
+							}, {
+								label: 'EventFlow Functions',
+								link: '/documentation/eventflow-functions',
+							}, {
+								label: 'UI Screens and IDs',
+								link: '/documentation/ui',
 							}]
 						},
 					 	{

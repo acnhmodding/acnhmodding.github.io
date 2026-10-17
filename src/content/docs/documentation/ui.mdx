@@ -1,0 +1,32 @@
+---
+title: UI Screens and IDs
+description: "Reference for UI request IDs, factory object IDs, screen names, and EventFlow connections."
+---
+
+import UIIdCatalog from '../../../components/UIIdCatalog.astro';
+import UIEventFlowConnections from '../../../components/UIEventFlowConnections.astro';
+
+The game uses **request IDs** to select UI operations and **object IDs** to identify screen classes. These IDs are defined in game code; EventFlow actions generally select them internally rather than accept them as script parameters.
+
+| ID type | Count | Range | Purpose |
+| --- | ---: | --- | --- |
+| Request | 130 | `0x00`–`0x81` | Selects an operation, such as opening a menu. |
+| Factory object | 248 | `0x00`–`0xF8`, excluding `0xEC` | Selects a screen or process class. |
+
+The two ID sets are separate: request `0x4A` opens object `0x61` (`cCafeMenu`), while object `0x4A` is `cKabuBuy`.
+
+## ID catalog
+
+Search by hexadecimal or decimal ID, operation, screen name, or EventFlow action. Operation labels are descriptive; target names are internal factory strings.
+
+Most requests map to factory objects. Thirteen instead use existing `cPocketMenu` or `cMenuDevice` instances, marked **Persistent instance**. The controller uses `-1` for an unset ID.
+
+Objects `0xAB`–`0xDA` are 48 distinct `SwkbdInputSeq` keyboard variants, numbered 0–47.
+
+<UIIdCatalog />
+
+## EventFlow connections
+
+[EventFlow actions](/documentation/eventflow-functions) linked to UI requests and objects, including close operations. Search by name, hash, ID, or screen. The table includes all documented connections; it is not an exhaustive list of callers.
+
+<UIEventFlowConnections />

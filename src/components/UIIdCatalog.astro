@@ -1,0 +1,88 @@
+---
+import catalog from '../../public/data/ui-ids.json';
+---
+
+<ui-id-catalog>
+  <div class="filters">
+    <label>Search UI IDs<input type="search" placeholder="ID, operation, screen, or EventFlow function…" disabled /></label>
+    <label>ID category<select disabled><option value="">All IDs</option><option value="request">Requests</option><option value="object">Factory objects</option></select></label>
+  </div>
+  <p role="status" aria-live="polite">130 request IDs and 248 factory object IDs.</p>
+  <section data-kind="request">
+    <h3>UI request IDs</h3>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="UI request IDs">
+      <table>
+        <thead><tr><th>Request ID</th><th>Operation (descriptive)</th><th>Target object ID</th><th>Target name</th><th>EventFlow actions</th></tr></thead>
+        <tbody>{catalog.requests.map(entry => <tr data-search={`${entry.hex} ${entry.id} ${entry.objectHex ?? ''} ${entry.targetName} ${entry.label} ${entry.description} ${entry.details.join(' ')} ${entry.handlers.map(h => `${h.name ?? ''} ${h.hash}`).join(' ')}`.toLowerCase()}>
+          <td><code>{entry.hex}</code><small>{entry.id}</small></td>
+          <td>{entry.label}<details><summary>Internal behavior</summary><p>{entry.description}</p>{entry.details.map(detail => <p>{detail}</p>)}</details></td>
+          <td><code>{entry.objectHex ?? entry.persistentObjectHex}</code>{entry.route === 'persistent' && <small>Persistent instance</small>}</td>
+          <td><code>{entry.targetName}</code></td>
+          <td>{entry.handlers.length ? entry.handlers.map(handler => <small><code>{handler.name ?? handler.hash}</code></small>) : '—'}</td>
+        </tr>)}</tbody>
+      </table>
+    </div>
+  </section>
+  <section data-kind="object">
+    <h3>UI factory object IDs</h3>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="UI factory object IDs">
+      <table>
+        <thead><tr><th>Object ID</th><th>Internal name</th><th>Keyboard variant</th><th>Request IDs</th></tr></thead>
+        <tbody>{catalog.objects.map(entry => <tr data-search={`${entry.hex} ${entry.id} ${entry.name} ${entry.requestIds.map(id => `0x${id.toString(16).padStart(2, '0')}`).join(' ')}`.toLowerCase()}>
+          <td><code>{entry.hex}</code><small>{entry.id}</small></td>
+          <td><code>{entry.name}</code></td>
+          <td>{entry.variant === null ? '—' : entry.variant}</td>
+          <td>{entry.requestIds.length ? entry.requestIds.map(id => <small><code>0x{id.toString(16).toUpperCase().padStart(2, '0')}</code></small>) : '—'}</td>
+        </tr>)}</tbody>
+      </table>
+    </div>
+  </section>
+</ui-id-catalog>
+
+<script>
+  class UIIdCatalog extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      this.dataset.ready = 'true';
+      const search = this.querySelector<HTMLInputElement>('input')!;
+      const category = this.querySelector<HTMLSelectElement>('select')!;
+      const status = this.querySelector<HTMLElement>('[role="status"]')!;
+      const sections = [...this.querySelectorAll<HTMLElement>('section[data-kind]')];
+      const filter = () => {
+        const term = search.value.trim().toLowerCase();
+        let count = 0;
+        for (const section of sections) {
+          let matches = 0;
+          const include = !category.value || category.value === section.dataset.kind;
+          for (const row of section.querySelectorAll<HTMLTableRowElement>('tbody tr')) {
+            row.hidden = !include || !(row.dataset.search ?? '').includes(term);
+            if (!row.hidden) matches++;
+          }
+          section.hidden = matches === 0;
+          count += matches;
+        }
+        status.textContent = `${count} matching entries.`;
+      };
+      search.addEventListener('input', filter);
+      category.addEventListener('change', filter);
+      search.disabled = category.disabled = false;
+    }
+  }
+  if (!customElements.get('ui-id-catalog')) customElements.define('ui-id-catalog', UIIdCatalog);
+</script>
+
+<style>
+  ui-id-catalog { display: block; }
+  .filters { display: flex; flex-wrap: wrap; gap: .75rem; }
+  label { display: flex; flex-direction: column; gap: .25rem; flex: 1 1 12rem; font-size: .85rem; margin-block: 0; }
+  input, select { font: inherit; width: 100%; min-width: 0; height: 2.5rem; margin: 0; box-sizing: border-box; padding: .4rem .6rem; color: var(--sl-color-text); background: var(--sl-color-black); border: 1px solid var(--sl-color-gray-4); border-radius: .3rem; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; font-size: .85rem; }
+  th, td { padding: .5rem; vertical-align: top; }
+  td code { overflow-wrap: anywhere; white-space: normal; }
+  details { margin-top: .35rem; font-size: .85rem; }
+  summary { cursor: pointer; }
+  details p { margin-block: .5rem; min-width: 14rem; }
+  small { display: block; }
+  [hidden] { display: none !important; }
+</style>

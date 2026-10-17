@@ -1,0 +1,133 @@
+---
+import catalog from '../../public/data/eventflow-functions.json';
+const base = import.meta.env.BASE_URL;
+---
+
+<eventflow-catalog data-url={`${base}data/eventflow-functions.json`}>
+  <div class="filters">
+    <label>Search functions<input type="search" placeholder="Name, alias, hash, or behavior…" disabled /></label>
+    <label>Actor group<select data-actor disabled><option value="">All actors</option>{catalog.groups.map(group => <option>{group.name}</option>)}</select></label>
+    <label>Function type<select data-kind disabled><option value="">Actions and queries</option><option>Action</option><option>Query</option></select></label>
+    <label>Names<select data-usage disabled><option value="">All handlers</option><option value="named">Named handlers</option><option value="unknown">Unnamed handlers</option></select></label>
+  </div>
+  <p class="status" role="status" aria-live="polite">Showing the first 50 of {catalog.handlers.length.toLocaleString('en-US')} handlers. Loading search…</p>
+  <noscript>Enable JavaScript to search the complete function catalog.</noscript>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="EventFlow functions">
+    <table>
+      <thead><tr><th scope="col">Name and aliases</th><th scope="col">Type</th><th scope="col">Supported actor groups</th></tr></thead>
+      <tbody>{catalog.handlers.slice(0, 50).map(handler => <tr>
+        <td><code>{handler.name ?? handler.hash}</code>{'nameSource' in handler && handler.nameSource === 'reconstructed' && <small>Reconstructed name</small>}{handler.aliases.map((alias: unknown) => <small><code>{alias}</code></small>)}{'description' in handler && typeof handler.description === 'string' && <small>{handler.description}</small>}</td>
+        <td>{handler.type}</td><td>{handler.actors.join(', ')}</td>
+      </tr>)}</tbody>
+    </table>
+  </div>
+  <div class="pagination" aria-label="Function catalog pages"><button data-prev type="button" disabled>Previous</button><span class="page">Page 1</span><button data-next type="button" disabled>Next</button></div>
+</eventflow-catalog>
+
+<script>
+  type Handler = { name: string | null; nameSource?: string; description?: string; type: string; hash: string; actors: string[]; aliases: string[] };
+  class EventFlowCatalog extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.initialized) return;
+      this.dataset.initialized = 'true';
+      void this.initialize();
+    }
+    async initialize() {
+      const search = this.querySelector<HTMLInputElement>('input')!;
+      const actor = this.querySelector<HTMLSelectElement>('[data-actor]')!;
+      const kind = this.querySelector<HTMLSelectElement>('[data-kind]')!;
+      const usage = this.querySelector<HTMLSelectElement>('[data-usage]')!;
+      const status = this.querySelector<HTMLElement>('.status')!;
+      const body = this.querySelector<HTMLTableSectionElement>('tbody')!;
+      const previous = this.querySelector<HTMLButtonElement>('[data-prev]')!;
+      const next = this.querySelector<HTMLButtonElement>('[data-next]')!;
+      const pageLabel = this.querySelector<HTMLElement>('.page')!;
+      let handlers: Handler[];
+      try {
+        const response = await fetch(this.dataset.url!);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        handlers = (await response.json()).handlers;
+      } catch {
+        status.textContent = 'Search could not load. Reload the page to retry.';
+        return;
+      }
+      let filtered = handlers;
+      let page = 0;
+      const pageSize = 50;
+      const render = () => {
+        const pages = Math.max(1, Math.ceil(filtered.length / pageSize));
+        body.replaceChildren();
+        for (const handler of filtered.slice(page * pageSize, (page + 1) * pageSize)) {
+          const row = body.insertRow();
+          const nameCell = row.insertCell();
+          for (const [index, name] of [handler.name ?? handler.hash, ...handler.aliases].entries()) {
+            const code = document.createElement('code');
+            code.textContent = name;
+            if (index === 0) nameCell.append(code);
+            else {
+              const alias = document.createElement('small');
+              alias.append(code);
+              nameCell.append(alias);
+            }
+          }
+          if (handler.nameSource === 'reconstructed') {
+            const source = document.createElement('small');
+            source.textContent = 'Reconstructed name';
+            nameCell.append(source);
+          }
+          if (handler.description) {
+            const description = document.createElement('small');
+            description.textContent = handler.description;
+            nameCell.append(description);
+          }
+          row.insertCell().textContent = handler.type;
+          row.insertCell().textContent = handler.actors.join(', ');
+        }
+        if (!filtered.length) {
+          const cell = body.insertRow().insertCell();
+          cell.colSpan = 3;
+          cell.textContent = 'No functions match these filters.';
+        }
+        status.textContent = `${filtered.length.toLocaleString()} matching handlers. Showing ${filtered.length ? page * pageSize + 1 : 0}–${Math.min((page + 1) * pageSize, filtered.length)}.`;
+        pageLabel.textContent = `Page ${page + 1} of ${pages}`;
+        previous.disabled = page === 0;
+        next.disabled = page + 1 >= pages;
+      };
+      const filter = () => {
+        const term = search.value.trim().toLowerCase();
+        filtered = handlers.filter(handler =>
+          (!actor.value || handler.actors.includes(actor.value)) &&
+          (!kind.value || handler.type === kind.value) &&
+          (usage.value !== 'named' || !!handler.name) &&
+          (usage.value !== 'unknown' || !handler.name) &&
+          (!term || [handler.name ?? '', handler.hash, handler.description ?? '', ...handler.aliases].some(value => value.toLowerCase().includes(term)))
+        );
+        page = 0;
+        render();
+      };
+      search.addEventListener('input', filter);
+      for (const select of [actor, kind, usage]) select.addEventListener('change', filter);
+      previous.addEventListener('click', () => { page--; render(); });
+      next.addEventListener('click', () => { page++; render(); });
+      for (const control of [search, actor, kind, usage]) control.disabled = false;
+      render();
+    }
+  }
+  if (!customElements.get('eventflow-catalog')) customElements.define('eventflow-catalog', EventFlowCatalog);
+</script>
+
+<style>
+  eventflow-catalog { display: block; }
+  .filters { display: flex; flex-wrap: wrap; gap: .75rem; }
+  label { display: flex; flex-direction: column; gap: .25rem; font-size: .85rem; flex: 1 1 12rem; margin-block: 0; }
+  input, select, button { font: inherit; color: var(--sl-color-text); background: var(--sl-color-black); border: 1px solid var(--sl-color-gray-4); border-radius: .3rem; padding: .4rem .6rem; }
+  input, select { width: 100%; min-width: 0; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; font-size: .8rem; }
+  .table-wrap :global(td:first-child) { min-width: 16rem; }
+  .table-wrap :global(code) { white-space: normal; overflow-wrap: anywhere; }
+  .table-wrap :global(small) { display: block; margin-top: .35rem; }
+  .pagination { display: flex; justify-content: space-between; align-items: center; gap: .5rem; margin-block: 1rem; }
+  button { cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+</style>

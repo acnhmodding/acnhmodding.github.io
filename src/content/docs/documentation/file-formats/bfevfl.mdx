@@ -1,19 +1,328 @@
 ---
-title: BFEVFL
+title: Event Flow (BFEVFL)
+description: "Animal Crossing EventFlow execution, binary headers, actors, events, parameters, entry points, dictionaries, and relocation tables."
 ---
 
-BFEVFL (Binary Format for EVent FLows) is a file format used by Nintendo in multiple games to handle certain in-game events and mechanics.
+BFEVFL stores **EventFlow scripts**: graphs of actions, conditions, and calls to other flows. In **Animal Crossing: New Horizons**, files under `EventFlow/` coordinate dialogue, player demonstrations, furniture interactions, NPC conversations, and other scripted sequences.
 
-## What is a Event Flow?
-An Event Flow is a sequence of events that can be triggered in the game, such as dialogues, cutscenes, or other scripted actions. These flows are defined in BFEVFL files and can include various parameters and conditions for execution.
+The file supplies names, parameters, and control flow. The game executable implements the actions and queries those names refer to. For example, `Player.EventFlowActionOpenMessageWindow` is an action exposed by the game; a `MessageID` parameter identifies the message to display. The dialogue text itself lives in message resources.
 
-### How to Edit
-**BFEVFL** files can be edited using tools like [Zelda's Event Flow Editor](https://github.com/zeldamods/event-editor) or [ACNH EventFlow Decompiler](https://github.com/asteriation/acnh-eventflow-decompiler)
+## How a flow runs
 
-:::caution
-Zelda's EventFlow Editor is designed for BOTW, some ACNH files may not be compatible with it.\
-It's recommended to use the ACNH EventFlow Decompiler and Compiler for Animal Crossing: New Horizons specific files.
-:::
+A caller selects a **flowchart** and a named **entry point**. The entry point supplies the first event's array index. Each event then determines which event runs next:
+
+| Type | Value | Behavior |
+| --- | --- | --- |
+| Action | `0` | Calls an actor's action with parameters, then continues to its next event when the action completes. |
+| Switch | `1` | Calls an actor's query and selects an event by matching its returned integer against a case value. |
+| Fork | `2` | Starts multiple branches and identifies the Join that synchronizes them. |
+| Join | `3` | Continues after the associated forked branches finish. |
+| SubFlow | `4` | Calls an entry point in a named flowchart, then continues to its next event. An empty target flowchart name denotes the current flowchart. |
+
+An **actor** can be a character such as `Player`, or a system such as `EventFlowSystemActor`. Actors have separate action and query name arrays. An event references an actor by its index in the flowchart, then an action or query by its index **within that actor's array**.
+
+Event names such as `Event11` are labels. They do not determine array positions: `Event11` can be event index `2`. Next-event references use array indices, with `0xFFFF` representing no next event where that field permits it. A Switch's case numbers are query results, not event indices or universally boolean values.
+
+### Example: tool-breaking dialogue
+
+In the 3.0.0 file `EventFlow/Player_ToolBreak.bfevfl`, entry point `ToolBreak_Axe` starts at **event index 2**, named `Event11`:
+
+```text
+ToolBreak_Axe
+  -> index 2: Event11
+     EventFlowSystemActor.EventFlowActionSetTagFromSystem
+  -> index 3: Event12
+     Player.EventFlowActionOpenMessageWindow
+       MessageID = "TalkSys/SYS_Player:290"
+       IsCloseMessageWindow = false
+  -> index 9: Event3
+     EventFlowSystemActor.EventFlowQueryNetIsDreaming
+     ... branch according to the query result
+```
+
+This is an abbreviated graph trace, not compiler input. The same file has six entry points, two actors, and ten events. Several entry points share event index `0`, allowing the script to reuse a sequence.
+
+### How functions are identified and called
+
+An Action or Switch event identifies a function through its **actor index** and **action/query index**. The game uses these indices to retrieve the actor and function names, then resolves them to a registered game handler using a 32-bit MurmurHash3 hash with seed zero. Each actor category supports its own set of actions and queries. `EventFlow/Info/BindInfo.byml` supplies name aliases through separate `ActionBindData` and `QueryBindData` tables; the executable contains the handler registries. See the [EventFlow function catalog](/documentation/eventflow-functions) for supported actors, actions, queries, and hashes.
+
+The event's parameter pointer leads to a named container of typed values. The handler reads the parameters it expects, such as the string `MessageID` and boolean `IsCloseMessageWindow` for `EventFlowActionOpenMessageWindow`. Argument references are resolved from values supplied to the flow. The function's implementation and parameter handling are defined by the game code.
+
+An action signals completion so the flow can continue, while a query returns an integer used to select a Switch case. Editing the script can change function calls, parameters, and their order; adding a new function name also requires a matching game handler and binding.
+
+## Editing tools
+
+The [ACNH EventFlow Decompiler](https://github.com/asteriation/acnh-eventflow-decompiler) converts flowcharts into a readable, code-like representation. Its companion [ACNH EventFlow Compiler](https://github.com/asteriation/acnh-eventflow-compiler) builds BFEVFL files from that representation. The decompiler accepts a version-appropriate `functions.csv` to improve action/query typing and optional dialogue hints.
+
+[Zelda's Event Flow Editor](https://github.com/zeldamods/event-editor) can also edit EventFlow files. When using an editor designed for another game, make sure it preserves ACNH's entry-point variable definitions.
 
 ## Structure
-An detailed structure of a BFEVFL file can be found in the [ZeldaMods Wiki](https://zeldamods.org/wiki/BFEVFL).
+
+ACNH's BFEVFL files are little-endian, have version bytes `00 03 00 00`, and contain a flowchart. Structures use fixed-size records plus pointers to separately stored arrays and data. The format also supports timeline blocks, documented below, which ACNH does not use for its EventFlow scripts.
+
+### Offsets, indices, and strings
+
+- `u8`, `u16`, `u32`, and `u64` mean unsigned integers of that width; `s32` is signed, and `f32` is an IEEE 754 float.
+- A **pointer** below is an eight-byte **file-relative offset on disk**. Zero is a null pointer. After relocation, the corresponding field can hold a memory address.
+- Table offsets are relative to the start of the record being described. The flowchart's string-pool field at `+0x04` is a four-byte **record-relative** offset; it is not one of the eight-byte file pointers.
+- A normal string pointer targets a `u16` UTF-8 byte length, followed by that many bytes and a null terminator. Strings are aligned to two-byte boundaries. The file-name field in the main header is different: it points directly to the text bytes, skipping the length prefix.
+
+Do not infer record placement from one file. Follow the pointer fields; parameter blocks, dictionaries, strings, and arrays can be stored separately from their owners.
+
+### File header — `0x48` bytes
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 8 | bytes | Magic: `BFEVFL\0\0`. |
+| `0x08` | 4 | bytes | Version bytes: `00 03 00 00`. |
+| `0x0C` | 2 | u16 | Byte-order mark: `0xFEFF`, stored as `FF FE`. |
+| `0x0E` | 1 | u8 | Alignment exponent: `3`, meaning eight-byte alignment. |
+| `0x0F` | 1 | u8 | Reserved/platform byte; zero. |
+| `0x10` | 4 | u32 | File-name text offset, relative to the file start. |
+| `0x14` | 2 | u16 | Relocated flag; `0` on disk. |
+| `0x16` | 2 | u16 | First block offset; targets `EVFL` for an ACNH flowchart. |
+| `0x18` | 4 | u32 | Relocation table offset. |
+| `0x1C` | 4 | u32 | Total file size in bytes. |
+| `0x20` | 2 | u16 | Flowchart count. |
+| `0x22` | 2 | u16 | Timeline count. |
+| `0x24` | 4 | u32 | Reserved; zero. |
+| `0x28` | 8 | pointer | Array of flowchart pointers, one per flowchart. |
+| `0x30` | 8 | pointer | Flowchart-name dictionary. |
+| `0x38` | 8 | pointer | Array of timeline pointers; null for ACNH flowcharts. |
+| `0x40` | 8 | pointer | Timeline-name dictionary; empty for ACNH flowcharts. |
+
+The pointer at `0x28` targets an **array of pointers**, not an `EVFL` record directly. Dereference its first entry to obtain the first flowchart.
+
+### Flowchart (`EVFL`) — `0x48` bytes
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 4 | bytes | Magic: `EVFL`. |
+| `0x04` | 4 | u32 | Offset from this record to the `STR ` pool. |
+| `0x08` | 8 | bytes | Reserved; zero. |
+| `0x10` | 2 | u16 | Actor count. |
+| `0x12` | 2 | u16 | Sum of all actors' action counts. |
+| `0x14` | 2 | u16 | Sum of all actors' query counts. |
+| `0x16` | 2 | u16 | Event count. |
+| `0x18` | 2 | u16 | Entry-point count. |
+| `0x1A` | 6 | bytes | Reserved; zero. |
+| `0x20` | 8 | pointer | Flowchart name string. |
+| `0x28` | 8 | pointer | Actor records. |
+| `0x30` | 8 | pointer | Event records. |
+| `0x38` | 8 | pointer | Entry-point-name dictionary. |
+| `0x40` | 8 | pointer | Entry-point records. |
+
+For `Player_ToolBreak`, the flowchart starts at `0x90` and the relative string-pool offset at `+0x04` is `0xC28`, giving pool offset `0xCB8`.
+
+### Actor — `0x38` bytes
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 8 | pointer | Actor name string. |
+| `0x08` | 8 | pointer | Secondary actor name string. |
+| `0x10` | 8 | pointer | Argument name used for actor binding. |
+| `0x18` | 8 | pointer | Action-name pointer array. |
+| `0x20` | 8 | pointer | Query-name pointer array. |
+| `0x28` | 8 | pointer | Actor parameter container, or null. |
+| `0x30` | 2 | u16 | Action count. |
+| `0x32` | 2 | u16 | Query count. |
+| `0x34` | 2 | u16 | Argument entry-point index, or `0xFFFF`. |
+| `0x36` | 2 | u16 | Concurrent-clip capacity; `1` for ACNH flowchart actors. |
+
+Each action/query array entry is just an eight-byte pointer to a name string. The file does not store executable function bodies in these arrays. For timelines, the concurrent-clip capacity allows an actor to participate in overlapping clips.
+
+### Event — `0x28` bytes
+
+Every event begins with a name-string pointer at `+0x00`, an event-type byte at `+0x08`, and a reserved byte at `+0x09`. The remaining fields form a type-dependent record:
+
+| Offset | Action (`0`) | Switch (`1`) | Fork (`2`) | Join (`3`) | SubFlow (`4`) |
+| --- | --- | --- | --- | --- | --- |
+| `0x0A` | u16 next event | u16 case count | u16 branch count | u16 next event | u16 next event |
+| `0x0C` | u16 actor index | u16 actor index | u16 Join event index | Reserved u16 | Reserved u16 |
+| `0x0E` | u16 action index | u16 query index | Reserved u16 | Reserved u16 | Reserved u16 |
+| `0x10` | Parameters pointer | Parameters pointer | Branch-index array pointer | Reserved u64 | Parameters pointer |
+| `0x18` | Reserved u64 | Case-array pointer | Reserved u64 | Reserved u64 | Target flowchart-name pointer |
+| `0x20` | Reserved u64 | Reserved u64 | Reserved u64 | Reserved u64 | Target entry-point-name pointer |
+
+Fork branch arrays contain `u16` event indices. A Switch case is an eight-byte record: `u32` result value at `+0x00`, `u16` target event index at `+0x04`, and two reserved bytes at `+0x06`. A SubFlow's parameters can supply arguments for the called entry point.
+
+### Entry point — `0x20` bytes
+
+Names come from the flowchart's entry-point dictionary, in the same order as this record array.
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 8 | pointer | Array of indices of SubFlow events associated with this entry point. |
+| `0x08` | 8 | pointer | Variable-name dictionary, or null. |
+| `0x10` | 8 | pointer | Variable-definition array, or null. |
+| `0x18` | 2 | u16 | SubFlow index count. |
+| `0x1A` | 2 | u16 | Variable-definition count. |
+| `0x1C` | 2 | u16 | First event index, or `0xFFFF`. |
+| `0x1E` | 2 | u16 | Reserved; zero. |
+
+Entry points can define local variables with initial values. Preserve these definitions when editing or rebuilding a file.
+
+Each definition is `0x10` bytes:
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 8 | bytes | Initial-value storage; the scalar value occupies the low bytes. |
+| `0x08` | 2 | u16 | Item count; `1` for scalar definitions. |
+| `0x0A` | 2 | u16 | Type: `2` integer, `3` boolean, `4` float. |
+| `0x0C` | 4 | u32 | Reserved; zero. |
+
+The variable-name dictionary supplies the corresponding names, in the same order as the definition array.
+
+### Parameters and containers
+
+Actors and events can point to a parameter **container**: a dictionary of names with typed values. The same header is used for each container and its value records:
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 1 | u8 | Data-type tag. |
+| `0x01` | 1 | u8 | Reserved; zero. |
+| `0x02` | 2 | u16 | Item count. |
+| `0x04` | 4 | u32 | Reserved; zero. |
+| `0x08` | 8 | pointer | Name dictionary for a container; null for scalar and array value records. |
+| `0x10` | Variable | bytes | Payload, interpreted according to the type. |
+
+For a container, the payload is an array of pointers to value records. Dictionary key `i` names value pointer `i`.
+
+| Tag | Type | Payload |
+| --- | --- | --- |
+| `0` | Argument | String pointer naming a caller-supplied argument. |
+| `1` | Container | Value-record pointers, paired with a name dictionary. |
+| `2` | Integer | `s32` value. |
+| `3` | Boolean | Four-byte value storage; see below. |
+| `4` | Float | `f32` value. |
+| `5` | String | String pointer. |
+| `6` | UTF-16 string | Wide-string type; payload details are not covered here. |
+| `7` | Integer array | `s32[count]`. |
+| `8` | Boolean array | Four-byte boolean elements. |
+| `9` | Float array | `f32[count]`. |
+| `10` | String array | String pointers. |
+| `11` | UTF-16 string array | Wide-string array type; payload details are not covered here. |
+| `12` | Actor identifier | Two string pointers: actor name and secondary name. |
+
+Argument values are references to supplied values, rather than literal strings with the same name. Strings used as values may be stored outside the main string pool, so readers must follow their pointers.
+
+ACNH boolean payloads use **`00 00 00 00` for false** and **`01 00 00 80` for true** (`0x80000001`). Preserve all four bytes when reading or writing these values.
+
+### Name dictionary (`DIC `)
+
+A dictionary maps a string to an index in a separate value array. It stores a radix-tree lookup structure, not the values themselves. Its header is `0x08` bytes: magic `DIC ` followed by a `u32` count of named entries. A root node and then that many named nodes follow.
+
+Each node is `0x10` bytes:
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 4 | u32 | Reference-bit index used by the lookup tree; root uses `0xFFFFFFFF`. |
+| `0x04` | 2 | u16 | First child node index. |
+| `0x06` | 2 | u16 | Second child node index. |
+| `0x08` | 8 | pointer | Key string. |
+
+Node indices include root index `0`. Named node `i + 1` corresponds to value-array index `i`; an empty dictionary still has its root node. These are name dictionaries, rather than the CRC32 field identifiers used by [BCSV](/documentation/file-formats/bcsv).
+
+### String pool (`STR `)
+
+The pool begins with magic `STR ` at `+0x00`, twelve reserved bytes at `+0x04`, and a `u32` string count at `+0x10`. Length-prefixed strings follow from `+0x14`, aligned to two bytes. The empty string is excluded from the recorded count.
+
+Strings can be shared by several pointers. Their physical order does not define event order or dictionary indices.
+
+### Relocation table (`RELT`)
+
+Relocation identifies the **pointer fields that must be adjusted when the file is loaded into memory**. Each entry has an offset and a bitmask selecting the pointer slots to relocate.
+
+The `0x10`-byte table header contains:
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 4 | bytes | Magic: `RELT`. |
+| `0x04` | 4 | u32 | This table's file offset. |
+| `0x08` | 4 | u32 | Section count. |
+| `0x0C` | 4 | u32 | Reserved. |
+
+Each section descriptor is `0x18` bytes: a `u64` alternate base, `u32` region offset, `u32` region size, `u32` first entry index, and `u32` entry count. ACNH uses zero for the alternate base and region offset. Eight-byte relocation entries follow all section descriptors:
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 4 | u32 | File offset of the first potential pointer slot. |
+| `0x04` | 4 | u32 | Mask selecting up to 32 eight-byte pointer slots. |
+
+For each set bit `i`, the pointer field is at `entry.offset + 8 × i`. The field's contents are the target offset; the entry does not directly store that target. Null pointers may also be registered.
+
+When rewriting a file, rebuild relocation information together with the pointer fields and counts. Copying blocks to new locations without updating these references can leave a file that appears readable in a hex editor but fails at runtime.
+
+### Timelines (`TLIN`)
+
+**ACNH does not use timelines for its EventFlow scripts**, but they are part of the BFEVFL format. A timeline schedules actor actions by time: **clips** have a start and duration, while **oneshots** fire at a specific time. Enter/leave triggers mark clip boundaries, and subtimelines reference other timelines by name.
+
+#### Timeline header — `0x60` bytes
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 4 | bytes | Magic: `TLIN`. |
+| `0x04` | 4 | u32 | Offset from this record to the `STR ` pool. |
+| `0x08` | 8 | bytes | Reserved. |
+| `0x10` | 4 | f32 | Timeline duration. |
+| `0x14` | 2 | u16 | Actor count. |
+| `0x16` | 2 | u16 | Total action count across actors. |
+| `0x18` | 2 | u16 | Clip count. |
+| `0x1A` | 2 | u16 | Oneshot count. |
+| `0x1C` | 2 | u16 | Subtimeline count. |
+| `0x1E` | 2 | u16 | Cut count. |
+| `0x20` | 8 | pointer | Timeline name string. |
+| `0x28` | 8 | pointer | Actor records, using the actor layout above. |
+| `0x30` | 8 | pointer | Clip records. |
+| `0x38` | 8 | pointer | Oneshot records. |
+| `0x40` | 8 | pointer | Trigger records; two per clip. |
+| `0x48` | 8 | pointer | Subtimeline records. |
+| `0x50` | 8 | pointer | Cut records. |
+| `0x58` | 8 | pointer | Timeline parameter container, or null. |
+
+#### Clip — `0x18` bytes
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 4 | f32 | Start time. |
+| `0x04` | 4 | f32 | Duration. |
+| `0x08` | 2 | u16 | Actor index. |
+| `0x0A` | 2 | u16 | Action index within that actor. |
+| `0x0C` | 1 | u8 | Concurrent-clip slot for the actor. |
+| `0x0D` | 3 | bytes | Reserved. |
+| `0x10` | 8 | pointer | Parameter container, or null. |
+
+When an actor has overlapping clips, each active clip uses a separate concurrent-clip slot. This relates to the capacity field at `+0x36` in the actor record.
+
+#### Oneshot — `0x18` bytes
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 4 | f32 | Trigger time. |
+| `0x04` | 2 | u16 | Actor index. |
+| `0x06` | 2 | u16 | Action index within that actor. |
+| `0x08` | 8 | bytes | Reserved. |
+| `0x10` | 8 | pointer | Parameter container, or null. |
+
+#### Trigger — `0x04` bytes
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 2 | u16 | Clip index. |
+| `0x02` | 1 | u8 | Type: `1` Enter, `2` Leave. |
+| `0x03` | 1 | u8 | Reserved. |
+
+The trigger array is ordered by trigger time. Enter uses the clip's start time; Leave uses its start time plus duration.
+
+#### Subtimeline — `0x08` bytes
+
+Each record is a single pointer to the referenced timeline's name string.
+
+#### Cut — `0x18` bytes
+
+| Offset | Size | Type | Meaning |
+| --- | --- | --- | --- |
+| `0x00` | 4 | f32 | Time/position field; its precise role is not fully documented. |
+| `0x04` | 4 | u32 | Unknown. |
+| `0x08` | 8 | pointer | Cut name string. |
+| `0x10` | 8 | pointer | Parameter container, or null. |

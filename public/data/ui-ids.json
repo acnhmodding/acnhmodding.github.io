@@ -1,0 +1,4825 @@
+{
+  "summary": {
+    "requestIds": 130,
+    "directObjectMappings": 117,
+    "persistentRoutes": 13,
+    "factoryObjects": 248,
+    "keyboardVariants": 48,
+    "unhandledFactoryIds": [
+      236
+    ]
+  },
+  "requests": [
+    {
+      "id": 0,
+      "hex": "0x00",
+      "objectId": 26,
+      "objectHex": "0x1A",
+      "objectName": "cMenuMobileBank",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMenuMobileBank",
+      "handlers": [
+        {
+          "hash": "0x21C14ABC",
+          "name": "EventFlowActionUIAtmHandling"
+        }
+      ],
+      "label": "Open ATM / mobile bank",
+      "labelSource": "descriptive",
+      "description": "Open ATM / mobile bank. The controller maps request 0x00 to object 0x1A (cMenuMobileBank) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_ATM_mobile_bank_00"
+    },
+    {
+      "id": 1,
+      "hex": "0x01",
+      "objectId": 66,
+      "objectHex": "0x42",
+      "objectName": "cWorkCraft",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWorkCraft",
+      "handlers": [],
+      "label": "Open crafting screen (0x01)",
+      "labelSource": "descriptive",
+      "description": "Open crafting screen. The controller maps request 0x01 to object 0x42 (cWorkCraft) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x02. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_crafting_screen_01"
+    },
+    {
+      "id": 2,
+      "hex": "0x02",
+      "objectId": 66,
+      "objectHex": "0x42",
+      "objectName": "cWorkCraft",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWorkCraft",
+      "handlers": [],
+      "label": "Open crafting screen (0x02)",
+      "labelSource": "descriptive",
+      "description": "Open crafting screen. The controller maps request 0x02 to object 0x42 (cWorkCraft) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x01. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_crafting_screen_02"
+    },
+    {
+      "id": 3,
+      "hex": "0x03",
+      "objectId": 67,
+      "objectHex": "0x43",
+      "objectName": "cWorkRemake",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWorkRemake",
+      "handlers": [],
+      "label": "Open item-remake screen (0x03)",
+      "labelSource": "descriptive",
+      "description": "Open item-remake screen. The controller maps request 0x03 to object 0x43 (cWorkRemake) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x04. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_item_remake_screen_03"
+    },
+    {
+      "id": 4,
+      "hex": "0x04",
+      "objectId": 67,
+      "objectHex": "0x43",
+      "objectName": "cWorkRemake",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWorkRemake",
+      "handlers": [],
+      "label": "Open item-remake screen (0x04)",
+      "labelSource": "descriptive",
+      "description": "Open item-remake screen. The controller maps request 0x04 to object 0x43 (cWorkRemake) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x03. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_item_remake_screen_04"
+    },
+    {
+      "id": 5,
+      "hex": "0x05",
+      "objectId": 49,
+      "objectHex": "0x31",
+      "objectName": "cAddress",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cAddress",
+      "handlers": [],
+      "label": "Open address selection",
+      "labelSource": "descriptive",
+      "description": "Open address selection. The controller maps request 0x05 to object 0x31 (cAddress) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_address_selection_05"
+    },
+    {
+      "id": 6,
+      "hex": "0x06",
+      "objectId": 27,
+      "objectHex": "0x1B",
+      "objectName": "cCustomHome",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCustomHome",
+      "handlers": [],
+      "label": "Open home customization",
+      "labelSource": "descriptive",
+      "description": "Open home customization. The controller maps request 0x06 to object 0x1B (cCustomHome) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_home_customization_06"
+    },
+    {
+      "id": 7,
+      "hex": "0x07",
+      "objectId": 65,
+      "objectHex": "0x41",
+      "objectName": "cCharaMake",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCharaMake",
+      "handlers": [
+        {
+          "hash": "0x7D27BE72",
+          "name": "EventFlowActionUICharactermakingHandling"
+        }
+      ],
+      "label": "Open character creation",
+      "labelSource": "descriptive",
+      "description": "Open character creation. The controller maps request 0x07 to object 0x41 (cCharaMake) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_character_creation_07"
+    },
+    {
+      "id": 8,
+      "hex": "0x08",
+      "objectId": 55,
+      "objectHex": "0x37",
+      "objectName": "cTrip",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cTrip",
+      "handlers": [
+        {
+          "hash": "0x9242BD2B",
+          "name": "EventFlowActionOpenVillageList"
+        }
+      ],
+      "label": "Open island / village list",
+      "labelSource": "descriptive",
+      "description": "Open island / village list. The controller maps request 0x08 to object 0x37 (cTrip) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_island_village_list_08"
+    },
+    {
+      "id": 9,
+      "hex": "0x09",
+      "objectId": 74,
+      "objectHex": "0x4A",
+      "objectName": "cKabuBuy",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cKabuBuy",
+      "handlers": [
+        {
+          "hash": "0xEFB28C50",
+          "name": null
+        }
+      ],
+      "label": "Open turnip purchase",
+      "labelSource": "descriptive",
+      "description": "Open turnip purchase. The controller maps request 0x09 to object 0x4A (cKabuBuy) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_turnip_purchase_09"
+    },
+    {
+      "id": 10,
+      "hex": "0x0A",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 0,
+      "persistentObjectHex": "0x00",
+      "targetName": "cPocketMenu",
+      "handlers": [],
+      "pocketMode": 1,
+      "pocketFlag": true,
+      "label": "Open pocket menu (mode 1, flag 1)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent pocket menu with mode 1 and the accompanying flag set to 1.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_pocket_menu_0A"
+    },
+    {
+      "id": 11,
+      "hex": "0x0B",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 0,
+      "persistentObjectHex": "0x00",
+      "targetName": "cPocketMenu",
+      "handlers": [],
+      "pocketMode": 2,
+      "pocketFlag": true,
+      "label": "Open pocket menu (mode 2, flag 1)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent pocket menu with mode 2 and the accompanying flag set to 1.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_pocket_menu_0B"
+    },
+    {
+      "id": 12,
+      "hex": "0x0C",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 0,
+      "persistentObjectHex": "0x00",
+      "targetName": "cPocketMenu",
+      "handlers": [],
+      "pocketMode": 3,
+      "pocketFlag": true,
+      "label": "Open pocket menu (mode 3, flag 1)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent pocket menu with mode 3 and the accompanying flag set to 1.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_pocket_menu_0C"
+    },
+    {
+      "id": 13,
+      "hex": "0x0D",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 0,
+      "persistentObjectHex": "0x00",
+      "targetName": "cPocketMenu",
+      "handlers": [],
+      "pocketMode": 3,
+      "pocketFlag": false,
+      "label": "Open pocket menu (mode 3, flag 0)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent pocket menu with mode 3 and the accompanying flag set to 0.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_pocket_menu_0D"
+    },
+    {
+      "id": 14,
+      "hex": "0x0E",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 0,
+      "persistentObjectHex": "0x00",
+      "targetName": "cPocketMenu",
+      "handlers": [],
+      "pocketMode": 4,
+      "pocketFlag": true,
+      "label": "Open pocket menu (mode 4, flag 1)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent pocket menu with mode 4 and the accompanying flag set to 1.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_pocket_menu_0E"
+    },
+    {
+      "id": 15,
+      "hex": "0x0F",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 0,
+      "persistentObjectHex": "0x00",
+      "targetName": "cPocketMenu",
+      "handlers": [],
+      "pocketMode": 5,
+      "pocketFlag": true,
+      "label": "Open pocket menu (mode 5, flag 1)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent pocket menu with mode 5 and the accompanying flag set to 1.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_pocket_menu_0F"
+    },
+    {
+      "id": 16,
+      "hex": "0x10",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 0,
+      "persistentObjectHex": "0x00",
+      "targetName": "cPocketMenu",
+      "handlers": [],
+      "pocketMode": 6,
+      "pocketFlag": true,
+      "label": "Open pocket menu (mode 6, flag 1)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent pocket menu with mode 6 and the accompanying flag set to 1.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_pocket_menu_10"
+    },
+    {
+      "id": 17,
+      "hex": "0x11",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 0,
+      "persistentObjectHex": "0x00",
+      "targetName": "cPocketMenu",
+      "handlers": [],
+      "pocketMode": 8,
+      "pocketFlag": true,
+      "label": "Open pocket menu (mode 8, flag 1)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent pocket menu with mode 8 and the accompanying flag set to 1.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_pocket_menu_11"
+    },
+    {
+      "id": 18,
+      "hex": "0x12",
+      "objectId": 5,
+      "objectHex": "0x05",
+      "objectName": "cSwkbdInput",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cSwkbdInput",
+      "handlers": [
+        {
+          "hash": "0x009E7DC5",
+          "name": "EventFlowActionUISoftwareKeyboardPasswordHandling"
+        },
+        {
+          "hash": "0x50A4E7CD",
+          "name": "EventFlowActionUISoftwareKeyboardFacilitiesNameHandling"
+        },
+        {
+          "hash": "0x954F3CA0",
+          "name": "EventFlowActionUISoftwareKeyboardHandling"
+        }
+      ],
+      "label": "Open software keyboard",
+      "labelSource": "descriptive",
+      "description": "Open software keyboard. The controller maps request 0x12 to object 0x05 (cSwkbdInput) and passes the request ID to the target.",
+      "details": [
+        "Keyboard purpose and settings come from prepared context; multiple keyboard EventFlow actions share this request."
+      ],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_software_keyboard_12"
+    },
+    {
+      "id": 19,
+      "hex": "0x13",
+      "objectId": 53,
+      "objectHex": "0x35",
+      "objectName": "cMsgCardView",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMsgCardView",
+      "handlers": [],
+      "label": "View message card (0x13)",
+      "labelSource": "descriptive",
+      "description": "View message card. The controller maps request 0x13 to object 0x35 (cMsgCardView) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x15, 0x16. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_View_message_card_13"
+    },
+    {
+      "id": 20,
+      "hex": "0x14",
+      "objectId": 52,
+      "objectHex": "0x34",
+      "objectName": "cMsgCardEditText",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMsgCardEditText",
+      "handlers": [],
+      "label": "Edit message-card text (0x14)",
+      "labelSource": "descriptive",
+      "description": "Edit message-card text. The controller maps request 0x14 to object 0x34 (cMsgCardEditText) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x17. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Edit_message_card_text_14"
+    },
+    {
+      "id": 21,
+      "hex": "0x15",
+      "objectId": 53,
+      "objectHex": "0x35",
+      "objectName": "cMsgCardView",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMsgCardView",
+      "handlers": [
+        {
+          "hash": "0x7A20E9CB",
+          "name": "EventFlowActionUITempMsgCardHandling"
+        }
+      ],
+      "label": "View temporary message card",
+      "labelSource": "descriptive",
+      "description": "View temporary message card. The controller maps request 0x15 to object 0x35 (cMsgCardView) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_View_temporary_message_card_15"
+    },
+    {
+      "id": 22,
+      "hex": "0x16",
+      "objectId": 53,
+      "objectHex": "0x35",
+      "objectName": "cMsgCardView",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMsgCardView",
+      "handlers": [
+        {
+          "hash": "0x38484B60",
+          "name": "EventFlowActionUIFutureMsgCardHandling"
+        }
+      ],
+      "label": "View future message card",
+      "labelSource": "descriptive",
+      "description": "View future message card. The controller maps request 0x16 to object 0x35 (cMsgCardView) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_View_future_message_card_16"
+    },
+    {
+      "id": 23,
+      "hex": "0x17",
+      "objectId": 52,
+      "objectHex": "0x34",
+      "objectName": "cMsgCardEditText",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMsgCardEditText",
+      "handlers": [],
+      "label": "Edit message-card text (0x17)",
+      "labelSource": "descriptive",
+      "description": "Edit message-card text. The controller maps request 0x17 to object 0x34 (cMsgCardEditText) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x14. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Edit_message_card_text_17"
+    },
+    {
+      "id": 24,
+      "hex": "0x18",
+      "objectId": 68,
+      "objectHex": "0x44",
+      "objectName": "cAudioPlayer",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cAudioPlayer",
+      "handlers": [],
+      "label": "Open audio player (0x18)",
+      "labelSource": "descriptive",
+      "description": "Open audio player. The controller maps request 0x18 to object 0x44 (cAudioPlayer) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x72. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_audio_player_18"
+    },
+    {
+      "id": 25,
+      "hex": "0x19",
+      "objectId": 39,
+      "objectHex": "0x27",
+      "objectName": "cShopBuy",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cShopBuy",
+      "handlers": [
+        {
+          "hash": "0x942756F7",
+          "name": "EventFlowActionUIShopBuyAppear"
+        }
+      ],
+      "label": "Open shop purchase",
+      "labelSource": "descriptive",
+      "description": "Open shop purchase. The controller maps request 0x19 to object 0x27 (cShopBuy) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_shop_purchase_19"
+    },
+    {
+      "id": 26,
+      "hex": "0x1A",
+      "objectId": 40,
+      "objectHex": "0x28",
+      "objectName": "cShopBuyTailor",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cShopBuyTailor",
+      "handlers": [],
+      "label": "Open tailor shop purchase",
+      "labelSource": "descriptive",
+      "description": "Open tailor shop purchase. The controller maps request 0x1A to object 0x28 (cShopBuyTailor) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_tailor_shop_purchase_1A"
+    },
+    {
+      "id": 27,
+      "hex": "0x1B",
+      "objectId": 51,
+      "objectHex": "0x33",
+      "objectName": "cMsgCardDesignSelect",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMsgCardDesignSelect",
+      "handlers": [],
+      "label": "Select message-card design",
+      "labelSource": "descriptive",
+      "description": "Select message-card design. The controller maps request 0x1B to object 0x33 (cMsgCardDesignSelect) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Select_message_card_design_1B"
+    },
+    {
+      "id": 28,
+      "hex": "0x1C",
+      "objectId": 17,
+      "objectHex": "0x11",
+      "objectName": "cMyDesignList",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMyDesignList",
+      "handlers": [
+        {
+          "hash": "0x36BB0FA0",
+          "name": "EventFlowActionUIMyDesignSelectHandling"
+        }
+      ],
+      "label": "Select custom design",
+      "labelSource": "descriptive",
+      "description": "Select custom design. The controller maps request 0x1C to object 0x11 (cMyDesignList) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Select_custom_design_1C"
+    },
+    {
+      "id": 29,
+      "hex": "0x1D",
+      "objectId": 70,
+      "objectHex": "0x46",
+      "objectName": "cPost",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cPost",
+      "handlers": [
+        {
+          "hash": "0x94839704",
+          "name": "EventFlowActionUIPostHandling"
+        }
+      ],
+      "label": "Open post / mail interface",
+      "labelSource": "descriptive",
+      "description": "Open post / mail interface. The controller maps request 0x1D to object 0x46 (cPost) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_post_mail_interface_1D"
+    },
+    {
+      "id": 30,
+      "hex": "0x1E",
+      "objectId": 31,
+      "objectHex": "0x1F",
+      "objectName": "cBoard",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cBoard",
+      "handlers": [
+        {
+          "hash": "0x4BAE373D",
+          "name": "EventFlowActionUIBoardHandling"
+        }
+      ],
+      "label": "Open bulletin board",
+      "labelSource": "descriptive",
+      "description": "Open bulletin board. The controller maps request 0x1E to object 0x1F (cBoard) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_bulletin_board_1E"
+    },
+    {
+      "id": 31,
+      "hex": "0x1F",
+      "objectId": 62,
+      "objectHex": "0x3E",
+      "objectName": "cCloset",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCloset",
+      "handlers": [
+        {
+          "hash": "0x0BEA7FBD",
+          "name": "EventFlowActionUIClosetHandling"
+        }
+      ],
+      "label": "Open closet",
+      "labelSource": "descriptive",
+      "description": "Open closet. The controller maps request 0x1F to object 0x3E (cCloset) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_closet_1F"
+    },
+    {
+      "id": 32,
+      "hex": "0x20",
+      "objectId": 64,
+      "objectHex": "0x40",
+      "objectName": "cClosetCoordinateEdit",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cClosetCoordinateEdit",
+      "handlers": [
+        {
+          "hash": "0xE0FECC2E",
+          "name": "EventFlowActionUICoordinateEditHandling"
+        }
+      ],
+      "label": "Edit outfit coordination",
+      "labelSource": "descriptive",
+      "description": "Edit outfit coordination. The controller maps request 0x20 to object 0x40 (cClosetCoordinateEdit) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Edit_outfit_coordination_20"
+    },
+    {
+      "id": 33,
+      "hex": "0x21",
+      "objectId": 28,
+      "objectHex": "0x1C",
+      "objectName": "cShopSonkatsu",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cShopSonkatsu",
+      "handlers": [],
+      "label": "Open Sonkatsu shop",
+      "labelSource": "descriptive",
+      "description": "Open Sonkatsu shop. The controller maps request 0x21 to object 0x1C (cShopSonkatsu) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_Sonkatsu_shop_21"
+    },
+    {
+      "id": 34,
+      "hex": "0x22",
+      "objectId": 75,
+      "objectHex": "0x4B",
+      "objectName": "cHarvestBox",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cHarvestBox",
+      "handlers": [
+        {
+          "hash": "0xEAE5AE54",
+          "name": "EventFlowActionUICreatureHarvestBoxHandling"
+        }
+      ],
+      "label": "Open creature harvest box",
+      "labelSource": "descriptive",
+      "description": "Open creature harvest box. The controller maps request 0x22 to object 0x4B (cHarvestBox) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_creature_harvest_box_22"
+    },
+    {
+      "id": 35,
+      "hex": "0x23",
+      "objectId": 54,
+      "objectHex": "0x36",
+      "objectName": "cDateInput",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cDateInput",
+      "handlers": [],
+      "label": "Enter date",
+      "labelSource": "descriptive",
+      "description": "Enter date. The controller maps request 0x23 to object 0x36 (cDateInput) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Enter_date_23"
+    },
+    {
+      "id": 36,
+      "hex": "0x24",
+      "objectId": 57,
+      "objectHex": "0x39",
+      "objectName": "cDateInputYear",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cDateInputYear",
+      "handlers": [],
+      "label": "Enter date with year",
+      "labelSource": "descriptive",
+      "description": "Enter date with year. The controller maps request 0x24 to object 0x39 (cDateInputYear) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Enter_date_with_year_24"
+    },
+    {
+      "id": 37,
+      "hex": "0x25",
+      "objectId": 16,
+      "objectHex": "0x10",
+      "objectName": "cCatalog",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCatalog",
+      "handlers": [
+        {
+          "hash": "0x494CB785",
+          "name": "EventFlowActionUICatalogRestartHandling"
+        },
+        {
+          "hash": "0x7291D34E",
+          "name": "EventFlowActionUICatalogHandling"
+        }
+      ],
+      "label": "Open catalog",
+      "labelSource": "descriptive",
+      "description": "Open catalog. The controller maps request 0x25 to object 0x10 (cCatalog) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_catalog_25"
+    },
+    {
+      "id": 38,
+      "hex": "0x26",
+      "objectId": 29,
+      "objectHex": "0x1D",
+      "objectName": "cLostList",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cLostList",
+      "handlers": [
+        {
+          "hash": "0x12CCA869",
+          "name": "EventFlowActionUILostListHandling"
+        }
+      ],
+      "label": "Open lost-item list",
+      "labelSource": "descriptive",
+      "description": "Open lost-item list. The controller maps request 0x26 to object 0x1D (cLostList) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_lost_item_list_26"
+    },
+    {
+      "id": 39,
+      "hex": "0x27",
+      "objectId": 76,
+      "objectHex": "0x4C",
+      "objectName": "cStaffRoll",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cStaffRoll",
+      "handlers": [
+        {
+          "hash": "0x788E3B23",
+          "name": null
+        }
+      ],
+      "label": "Open staff roll",
+      "labelSource": "descriptive",
+      "description": "Open staff roll. The controller maps request 0x27 to object 0x4C (cStaffRoll) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_staff_roll_27"
+    },
+    {
+      "id": 40,
+      "hex": "0x28",
+      "objectId": 61,
+      "objectHex": "0x3D",
+      "objectName": "cStorage",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cStorage",
+      "handlers": [
+        {
+          "hash": "0xDADE017C",
+          "name": "EventFlowActionUIStorageHandling"
+        }
+      ],
+      "label": "Open storage",
+      "labelSource": "descriptive",
+      "description": "Open storage. The controller maps request 0x28 to object 0x3D (cStorage) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_storage_28"
+    },
+    {
+      "id": 41,
+      "hex": "0x29",
+      "objectId": 30,
+      "objectHex": "0x1E",
+      "objectName": "cMelodyEdit",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMelodyEdit",
+      "handlers": [
+        {
+          "hash": "0x2E2B5974",
+          "name": "EventFlowActionUIMelodyEditHandling"
+        }
+      ],
+      "label": "Edit island tune",
+      "labelSource": "descriptive",
+      "description": "Edit island tune. The controller maps request 0x29 to object 0x1E (cMelodyEdit) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Edit_island_tune_29"
+    },
+    {
+      "id": 42,
+      "hex": "0x2A",
+      "objectId": 56,
+      "objectHex": "0x38",
+      "objectName": "cMapSelect",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMapSelect",
+      "handlers": [
+        {
+          "hash": "0x1A24F4B5",
+          "name": "EventFlowActionUIMapSelectHandling"
+        }
+      ],
+      "label": "Open map selection",
+      "labelSource": "descriptive",
+      "description": "Open map selection. The controller maps request 0x2A to object 0x38 (cMapSelect) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_map_selection_2A"
+    },
+    {
+      "id": 43,
+      "hex": "0x2B",
+      "objectId": 13,
+      "objectHex": "0x0D",
+      "objectName": "cSonkatsuQuestMain",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cSonkatsuQuestMain",
+      "handlers": [
+        {
+          "hash": "0x3C877539",
+          "name": null
+        }
+      ],
+      "label": "Open Sonkatsu quest interface",
+      "labelSource": "descriptive",
+      "description": "Open Sonkatsu quest interface. The controller maps request 0x2B to object 0x0D (cSonkatsuQuestMain) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_Sonkatsu_quest_interface_2B"
+    },
+    {
+      "id": 44,
+      "hex": "0x2C",
+      "objectId": 12,
+      "objectHex": "0x0C",
+      "objectName": "cSonkatsuResultMain",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cSonkatsuResultMain",
+      "handlers": [
+        {
+          "hash": "0x1B86AE7B",
+          "name": null
+        }
+      ],
+      "label": "Open Sonkatsu results",
+      "labelSource": "descriptive",
+      "description": "Open Sonkatsu results. The controller maps request 0x2C to object 0x0C (cSonkatsuResultMain) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_Sonkatsu_results_2C"
+    },
+    {
+      "id": 45,
+      "hex": "0x2D",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 10,
+      "persistentObjectHex": "0x0A",
+      "targetName": "cMenuDevice",
+      "handlers": [],
+      "label": "Open device menu (0x2D)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent cMenuDevice instance and forwards request 0x2D to it. The behavioral distinction between requests 0x2D and 0x2E remains unresolved.",
+      "details": [],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_device_menu_2D"
+    },
+    {
+      "id": 46,
+      "hex": "0x2E",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 10,
+      "persistentObjectHex": "0x0A",
+      "targetName": "cMenuDevice",
+      "handlers": [],
+      "label": "Open device menu (0x2E)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent cMenuDevice instance and forwards request 0x2E to it. The behavioral distinction between requests 0x2D and 0x2E remains unresolved.",
+      "details": [],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_device_menu_2E"
+    },
+    {
+      "id": 47,
+      "hex": "0x2F",
+      "objectId": 34,
+      "objectHex": "0x22",
+      "objectName": "cMapRemove",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMapRemove",
+      "handlers": [
+        {
+          "hash": "0x96AF6462",
+          "name": "EventFlowActionUIMapRemoveHandling"
+        }
+      ],
+      "label": "Open map removal interface",
+      "labelSource": "descriptive",
+      "description": "Open map removal interface. The controller maps request 0x2F to object 0x22 (cMapRemove) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_map_removal_interface_2F"
+    },
+    {
+      "id": 48,
+      "hex": "0x30",
+      "objectId": 92,
+      "objectHex": "0x5C",
+      "objectName": "cAmiiboTouchGuide",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cAmiiboTouchGuide",
+      "handlers": [
+        {
+          "hash": "0x7F671773",
+          "name": "EventFlowActionReadAmiibo"
+        }
+      ],
+      "label": "Show amiibo touch guide",
+      "labelSource": "descriptive",
+      "description": "Show amiibo touch guide. The controller maps request 0x30 to object 0x5C (cAmiiboTouchGuide) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Show_amiibo_touch_guide_30"
+    },
+    {
+      "id": 49,
+      "hex": "0x31",
+      "objectId": 93,
+      "objectHex": "0x5D",
+      "objectName": "cAmiiboPreviousNoticeGuide",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cAmiiboPreviousNoticeGuide",
+      "handlers": [
+        {
+          "hash": "0xEBFF503A",
+          "name": "EventFlowActionUIAmiiboPreviousNoticeGuideCreate"
+        }
+      ],
+      "label": "Show amiibo prior-notice guide",
+      "labelSource": "descriptive",
+      "description": "Show amiibo prior-notice guide. The controller maps request 0x31 to object 0x5D (cAmiiboPreviousNoticeGuide) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Show_amiibo_prior_notice_guide_31"
+    },
+    {
+      "id": 50,
+      "hex": "0x32",
+      "objectId": 78,
+      "objectHex": "0x4E",
+      "objectName": "cTitle",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cTitle",
+      "handlers": [],
+      "label": "Open title screen",
+      "labelSource": "descriptive",
+      "description": "Open title screen. The controller maps request 0x32 to object 0x4E (cTitle) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_title_screen_32"
+    },
+    {
+      "id": 51,
+      "hex": "0x33",
+      "objectId": 35,
+      "objectHex": "0x23",
+      "objectName": "cShopBridgeSlope",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cShopBridgeSlope",
+      "handlers": [],
+      "label": "Open bridge / incline shop",
+      "labelSource": "descriptive",
+      "description": "Open bridge / incline shop. The controller maps request 0x33 to object 0x23 (cShopBridgeSlope) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_bridge_incline_shop_33"
+    },
+    {
+      "id": 52,
+      "hex": "0x34",
+      "objectId": 86,
+      "objectHex": "0x56",
+      "objectName": "cIllegalReport",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cIllegalReport",
+      "handlers": [
+        {
+          "hash": "0x7D46280A",
+          "name": "EventFlowActionUIIllegalReportHandling"
+        }
+      ],
+      "label": "Open report interface",
+      "labelSource": "descriptive",
+      "description": "Open report interface. The controller maps request 0x34 to object 0x56 (cIllegalReport) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_report_interface_34"
+    },
+    {
+      "id": 53,
+      "hex": "0x35",
+      "objectId": 63,
+      "objectHex": "0x3F",
+      "objectName": "cClosetBalloon",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cClosetBalloon",
+      "handlers": [
+        {
+          "hash": "0xED85EBAF",
+          "name": "EventFlowActionUIClosetBalloonAppearHandling"
+        }
+      ],
+      "label": "Show closet balloon",
+      "labelSource": "descriptive",
+      "description": "Show closet balloon. The controller maps request 0x35 to object 0x3F (cClosetBalloon) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Show_closet_balloon_35"
+    },
+    {
+      "id": 54,
+      "hex": "0x36",
+      "objectId": 77,
+      "objectHex": "0x4D",
+      "objectName": "cBirthdayMessage",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cBirthdayMessage",
+      "handlers": [],
+      "label": "Open birthday message",
+      "labelSource": "descriptive",
+      "description": "Open birthday message. The controller maps request 0x36 to object 0x4D (cBirthdayMessage) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_birthday_message_36"
+    },
+    {
+      "id": 55,
+      "hex": "0x37",
+      "objectId": 79,
+      "objectHex": "0x4F",
+      "objectName": "cAddresseeSelMulti",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cAddresseeSelMulti",
+      "handlers": [],
+      "label": "Select multiple addressees",
+      "labelSource": "descriptive",
+      "description": "Select multiple addressees. The controller maps request 0x37 to object 0x4F (cAddresseeSelMulti) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Select_multiple_addressees_37"
+    },
+    {
+      "id": 56,
+      "hex": "0x38",
+      "objectId": 80,
+      "objectHex": "0x50",
+      "objectName": "cSwkbdTextAreaInputBell",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cSwkbdTextAreaInputBell",
+      "handlers": [],
+      "label": "Enter Bell amount",
+      "labelSource": "descriptive",
+      "description": "Enter Bell amount. The controller maps request 0x38 to object 0x50 (cSwkbdTextAreaInputBell) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Enter_Bell_amount_38"
+    },
+    {
+      "id": 57,
+      "hex": "0x39",
+      "objectId": 9,
+      "objectHex": "0x09",
+      "objectName": "cClockCtrlFront",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cClockCtrlFront",
+      "handlers": [
+        {
+          "hash": "0x6CFBD60B",
+          "name": "EventFlowActionUIDemoClock"
+        }
+      ],
+      "label": "Open clock control",
+      "labelSource": "descriptive",
+      "description": "Open clock control. The controller maps request 0x39 to object 0x09 (cClockCtrlFront) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_clock_control_39"
+    },
+    {
+      "id": 58,
+      "hex": "0x3A",
+      "objectId": 41,
+      "objectHex": "0x29",
+      "objectName": "cMyDesignExchangeUpload",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMyDesignExchangeUpload",
+      "handlers": [],
+      "label": "Upload custom design",
+      "labelSource": "descriptive",
+      "description": "Upload custom design. The controller maps request 0x3A to object 0x29 (cMyDesignExchangeUpload) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Upload_custom_design_3A"
+    },
+    {
+      "id": 59,
+      "hex": "0x3B",
+      "objectId": 42,
+      "objectHex": "0x2A",
+      "objectName": "cMyDesignExchangeDownloadPreview",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMyDesignExchangeDownloadPreview",
+      "handlers": [],
+      "label": "Preview custom-design download",
+      "labelSource": "descriptive",
+      "description": "Preview custom-design download. The controller maps request 0x3B to object 0x2A (cMyDesignExchangeDownloadPreview) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Preview_custom_design_download_3B"
+    },
+    {
+      "id": 60,
+      "hex": "0x3C",
+      "objectId": 43,
+      "objectHex": "0x2B",
+      "objectName": "cMyDesignExchangeDeleteConfirmation",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMyDesignExchangeDeleteConfirmation",
+      "handlers": [],
+      "label": "Confirm custom-design deletion",
+      "labelSource": "descriptive",
+      "description": "Confirm custom-design deletion. The controller maps request 0x3C to object 0x2B (cMyDesignExchangeDeleteConfirmation) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Confirm_custom_design_deletion_3C"
+    },
+    {
+      "id": 61,
+      "hex": "0x3D",
+      "objectId": 45,
+      "objectHex": "0x2D",
+      "objectName": "cMyDesignExchangeMenu",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMyDesignExchangeMenu",
+      "handlers": [
+        {
+          "hash": "0xB00D0FEF",
+          "name": "EventFlowActionUIMyDesignExchangeMenuHandling"
+        }
+      ],
+      "label": "Open custom-design exchange",
+      "labelSource": "descriptive",
+      "description": "Open custom-design exchange. The controller maps request 0x3D to object 0x2D (cMyDesignExchangeMenu) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_custom_design_exchange_3D"
+    },
+    {
+      "id": 62,
+      "hex": "0x3E",
+      "objectId": 44,
+      "objectHex": "0x2C",
+      "objectName": "cMyDesignExchangeList",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMyDesignExchangeList",
+      "handlers": [
+        {
+          "hash": "0x2C7E8216",
+          "name": "EventFlowActionUIMyDesignExchangeListHandling"
+        }
+      ],
+      "label": "Open custom-design exchange list",
+      "labelSource": "descriptive",
+      "description": "Open custom-design exchange list. The controller maps request 0x3E to object 0x2C (cMyDesignExchangeList) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_custom_design_exchange_list_3E"
+    },
+    {
+      "id": 63,
+      "hex": "0x3F",
+      "objectId": 50,
+      "objectHex": "0x32",
+      "objectName": "cAddresseeFriend",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cAddresseeFriend",
+      "handlers": [
+        {
+          "hash": "0xBE0BA54C",
+          "name": "EventFlowActionUIAddresseeFriendHandling"
+        }
+      ],
+      "label": "Select friend addressee",
+      "labelSource": "descriptive",
+      "description": "Select friend addressee. The controller maps request 0x3F to object 0x32 (cAddresseeFriend) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Select_friend_addressee_3F"
+    },
+    {
+      "id": 64,
+      "hex": "0x40",
+      "objectId": 20,
+      "objectHex": "0x14",
+      "objectName": "cMenuProfile",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMenuProfile",
+      "handlers": [
+        {
+          "hash": "0xF492B3C8",
+          "name": "EventFlowActionUIMenuProfileOthersHandling"
+        }
+      ],
+      "label": "Open player profile",
+      "labelSource": "descriptive",
+      "description": "Open player profile. The controller maps request 0x40 to object 0x14 (cMenuProfile) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_player_profile_40"
+    },
+    {
+      "id": 65,
+      "hex": "0x41",
+      "objectId": 81,
+      "objectHex": "0x51",
+      "objectName": "cStampRallyMuseum",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cStampRallyMuseum",
+      "handlers": [
+        {
+          "hash": "0x1A80A67F",
+          "name": "EventFlowActionUIStampRallyMuseumFromStampRackHandling"
+        }
+      ],
+      "label": "Open museum stamp rally from stamp rack",
+      "labelSource": "descriptive",
+      "description": "Open museum stamp rally from stamp rack. The controller maps request 0x41 to object 0x51 (cStampRallyMuseum) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_museum_stamp_rally_from_stamp_rack_41"
+    },
+    {
+      "id": 66,
+      "hex": "0x42",
+      "objectId": 81,
+      "objectHex": "0x51",
+      "objectName": "cStampRallyMuseum",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cStampRallyMuseum",
+      "handlers": [
+        {
+          "hash": "0x260A6D52",
+          "name": "EventFlowActionUIStampRallyMuseumFromOwlHandling"
+        }
+      ],
+      "label": "Open museum stamp rally from museum NPC",
+      "labelSource": "descriptive",
+      "description": "Open museum stamp rally from museum NPC. The controller maps request 0x42 to object 0x51 (cStampRallyMuseum) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_museum_stamp_rally_from_museum_NPC_42"
+    },
+    {
+      "id": 67,
+      "hex": "0x43",
+      "objectId": 8,
+      "objectHex": "0x08",
+      "objectName": "cNetConnectWait",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cNetConnectWait",
+      "handlers": [
+        {
+          "hash": "0xB40617B2",
+          "name": "EventFlowActionWaitDownloadMyDesignDataForPreview"
+        }
+      ],
+      "label": "Show network connection wait (0x43)",
+      "labelSource": "descriptive",
+      "description": "Show network connection wait. The controller maps request 0x43 to object 0x08 (cNetConnectWait) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x44. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here.",
+        "Used by WaitDownloadMyDesignDataForPreview for its network-wait operation."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Show_network_connection_wait_43"
+    },
+    {
+      "id": 68,
+      "hex": "0x44",
+      "objectId": 8,
+      "objectHex": "0x08",
+      "objectName": "cNetConnectWait",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cNetConnectWait",
+      "handlers": [],
+      "label": "Show network connection wait (0x44)",
+      "labelSource": "descriptive",
+      "description": "Show network connection wait. The controller maps request 0x44 to object 0x08 (cNetConnectWait) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x43. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Show_network_connection_wait_44"
+    },
+    {
+      "id": 69,
+      "hex": "0x45",
+      "objectId": 100,
+      "objectHex": "0x64",
+      "objectName": "cWherearenIslandsMap",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWherearenIslandsMap",
+      "handlers": [
+        {
+          "hash": "0x697942BB",
+          "name": "EventFlowActionUIWherearenIslandsMapHandling"
+        }
+      ],
+      "label": "Open vacation-home islands map",
+      "labelSource": "descriptive",
+      "description": "Open vacation-home islands map. The controller maps request 0x45 to object 0x64 (cWherearenIslandsMap) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_vacation_home_islands_map_45"
+    },
+    {
+      "id": 70,
+      "hex": "0x46",
+      "objectId": 109,
+      "objectHex": "0x6D",
+      "objectName": "cTheme",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cTheme",
+      "handlers": [
+        {
+          "hash": "0x55BF0242",
+          "name": "EventFlowActionUIThemeAppear"
+        },
+        {
+          "hash": "0x66871AE5",
+          "name": null
+        }
+      ],
+      "label": "Open theme selection",
+      "labelSource": "descriptive",
+      "description": "Open theme selection. The controller maps request 0x46 to object 0x6D (cTheme) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_theme_selection_46"
+    },
+    {
+      "id": 71,
+      "hex": "0x47",
+      "objectId": 129,
+      "objectHex": "0x81",
+      "objectName": "cWherearenOrderList",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWherearenOrderList",
+      "handlers": [
+        {
+          "hash": "0xACCD5CEB",
+          "name": "EventFlowActionUIHousingOrderListHandling"
+        }
+      ],
+      "label": "Open vacation-home order list",
+      "labelSource": "descriptive",
+      "description": "Open vacation-home order list. The controller maps request 0x47 to object 0x81 (cWherearenOrderList) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_vacation_home_order_list_47"
+    },
+    {
+      "id": 72,
+      "hex": "0x48",
+      "objectId": 48,
+      "objectHex": "0x30",
+      "objectName": "cSurveyCameraGuide",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cSurveyCameraGuide",
+      "handlers": [
+        {
+          "hash": "0x984B10DB",
+          "name": "EventFlowActionHoldGalleryCamera"
+        }
+      ],
+      "label": "Show survey-camera guide",
+      "labelSource": "descriptive",
+      "description": "Show survey-camera guide. The controller maps request 0x48 to object 0x30 (cSurveyCameraGuide) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Show_survey_camera_guide_48"
+    },
+    {
+      "id": 73,
+      "hex": "0x49",
+      "objectId": 94,
+      "objectHex": "0x5E",
+      "objectName": "cCatalogGift",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCatalogGift",
+      "handlers": [
+        {
+          "hash": "0xDD6AD3E4",
+          "name": "EventFlowActionUICatalogGiftHandling"
+        }
+      ],
+      "label": "Open catalog gift selection",
+      "labelSource": "descriptive",
+      "description": "Open catalog gift selection. The controller maps request 0x49 to object 0x5E (cCatalogGift) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_catalog_gift_selection_49"
+    },
+    {
+      "id": 74,
+      "hex": "0x4A",
+      "objectId": 97,
+      "objectHex": "0x61",
+      "objectName": "cCafeMenu",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCafeMenu",
+      "handlers": [
+        {
+          "hash": "0x1573AFE5",
+          "name": null
+        },
+        {
+          "hash": "0x5879B0C9",
+          "name": "EventFlowActionUICafeMenuAppearHandling"
+        }
+      ],
+      "label": "Open cafe menu",
+      "labelSource": "descriptive",
+      "description": "Open cafe menu. The controller maps request 0x4A to object 0x61 (cCafeMenu) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_cafe_menu_4A"
+    },
+    {
+      "id": 75,
+      "hex": "0x4B",
+      "objectId": 145,
+      "objectHex": "0x91",
+      "objectName": "cStudyDialog",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cStudyDialog",
+      "handlers": [],
+      "label": "Open Study dialog (0x4B)",
+      "labelSource": "descriptive",
+      "description": "Open Study dialog. The controller maps request 0x4B to object 0x91 (cStudyDialog) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x4C, 0x4D. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_Study_dialog_4B"
+    },
+    {
+      "id": 76,
+      "hex": "0x4C",
+      "objectId": 145,
+      "objectHex": "0x91",
+      "objectName": "cStudyDialog",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cStudyDialog",
+      "handlers": [],
+      "label": "Open Study dialog (0x4C)",
+      "labelSource": "descriptive",
+      "description": "Open Study dialog. The controller maps request 0x4C to object 0x91 (cStudyDialog) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x4B, 0x4D. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_Study_dialog_4C"
+    },
+    {
+      "id": 77,
+      "hex": "0x4D",
+      "objectId": 145,
+      "objectHex": "0x91",
+      "objectName": "cStudyDialog",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cStudyDialog",
+      "handlers": [],
+      "label": "Open Study dialog (0x4D)",
+      "labelSource": "descriptive",
+      "description": "Open Study dialog. The controller maps request 0x4D to object 0x91 (cStudyDialog) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x4B, 0x4C. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_Study_dialog_4D"
+    },
+    {
+      "id": 78,
+      "hex": "0x4E",
+      "objectId": 133,
+      "objectHex": "0x85",
+      "objectName": "cWherearenIslandsMsgPhoto",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWherearenIslandsMsgPhoto",
+      "handlers": [
+        {
+          "hash": "0x8C8C7576",
+          "name": "EventFlowActionUIWherearenIslandsMsgPhotoAppear"
+        }
+      ],
+      "label": "Open vacation-home photo message",
+      "labelSource": "descriptive",
+      "description": "Open vacation-home photo message. The controller maps request 0x4E to object 0x85 (cWherearenIslandsMsgPhoto) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_vacation_home_photo_message_4E"
+    },
+    {
+      "id": 79,
+      "hex": "0x4F",
+      "objectId": 47,
+      "objectHex": "0x2F",
+      "objectName": "cMyDesignExchangeSearch",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMyDesignExchangeSearch",
+      "handlers": [
+        {
+          "hash": "0xE4784F66",
+          "name": "EventFlowActionUIMyDesignExchangeSearchHandling"
+        }
+      ],
+      "label": "Search custom-design exchange",
+      "labelSource": "descriptive",
+      "description": "Search custom-design exchange. The controller maps request 0x4F to object 0x2F (cMyDesignExchangeSearch) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Search_custom_design_exchange_4F"
+    },
+    {
+      "id": 80,
+      "hex": "0x50",
+      "objectId": 46,
+      "objectHex": "0x2E",
+      "objectName": "cMyDesignExchangeFavorite",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMyDesignExchangeFavorite",
+      "handlers": [
+        {
+          "hash": "0x2D8AF324",
+          "name": "EventFlowActionUIMyDesignExchangeFavoriteHandling"
+        }
+      ],
+      "label": "Open favorite custom designs",
+      "labelSource": "descriptive",
+      "description": "Open favorite custom designs. The controller maps request 0x50 to object 0x2E (cMyDesignExchangeFavorite) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_favorite_custom_designs_50"
+    },
+    {
+      "id": 81,
+      "hex": "0x51",
+      "objectId": 96,
+      "objectHex": "0x60",
+      "objectName": "cRecoverySaveData",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cRecoverySaveData",
+      "handlers": [
+        {
+          "hash": "0x303D4520",
+          "name": "EventFlowActionUIRecoverySaveDataHandling"
+        }
+      ],
+      "label": "Open save-data recovery",
+      "labelSource": "descriptive",
+      "description": "Open save-data recovery. The controller maps request 0x51 to object 0x60 (cRecoverySaveData) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_save_data_recovery_51"
+    },
+    {
+      "id": 82,
+      "hex": "0x52",
+      "objectId": 82,
+      "objectHex": "0x52",
+      "objectName": "cMyDesignFireworks",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMyDesignFireworks",
+      "handlers": [
+        {
+          "hash": "0x3A81BEEC",
+          "name": "EventFlowActionUIMyDesignFireworksHandling"
+        }
+      ],
+      "label": "Select fireworks custom design",
+      "labelSource": "descriptive",
+      "description": "Select fireworks custom design. The controller maps request 0x52 to object 0x52 (cMyDesignFireworks) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Select_fireworks_custom_design_52"
+    },
+    {
+      "id": 83,
+      "hex": "0x53",
+      "objectId": 118,
+      "objectHex": "0x76",
+      "objectName": "cWherearenIslandsCustomHome",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWherearenIslandsCustomHome",
+      "handlers": [],
+      "label": "Open vacation-home customization",
+      "labelSource": "descriptive",
+      "description": "Open vacation-home customization. The controller maps request 0x53 to object 0x76 (cWherearenIslandsCustomHome) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_vacation_home_customization_53"
+    },
+    {
+      "id": 84,
+      "hex": "0x54",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 0,
+      "persistentObjectHex": "0x00",
+      "targetName": "cPocketMenu",
+      "handlers": [],
+      "pocketMode": 1,
+      "pocketFlag": false,
+      "label": "Open pocket menu (mode 1, flag 0)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent pocket menu with mode 1 and the accompanying flag set to 0.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_pocket_menu_54"
+    },
+    {
+      "id": 85,
+      "hex": "0x55",
+      "objectId": 98,
+      "objectHex": "0x62",
+      "objectName": "cMenuExchangePoki",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMenuExchangePoki",
+      "handlers": [
+        {
+          "hash": "0x1C0AF1B2",
+          "name": "EventFlowActionUIExchangePokiHandling"
+        }
+      ],
+      "label": "Exchange Poki",
+      "labelSource": "descriptive",
+      "description": "Exchange Poki. The controller maps request 0x55 to object 0x62 (cMenuExchangePoki) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Exchange_Poki_55"
+    },
+    {
+      "id": 86,
+      "hex": "0x56",
+      "objectId": 87,
+      "objectHex": "0x57",
+      "objectName": "cDreamFavoriteList",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cDreamFavoriteList",
+      "handlers": [
+        {
+          "hash": "0x13ED65AF",
+          "name": "EventFlowActionUIDreamFavoriteListHandling"
+        }
+      ],
+      "label": "Open favorite dreams",
+      "labelSource": "descriptive",
+      "description": "Open favorite dreams. The controller maps request 0x56 to object 0x57 (cDreamFavoriteList) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_favorite_dreams_56"
+    },
+    {
+      "id": 87,
+      "hex": "0x57",
+      "objectId": 121,
+      "objectHex": "0x79",
+      "objectName": "cCast",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCast",
+      "handlers": [
+        {
+          "hash": "0x52CAF470",
+          "name": "EventFlowActionUICastHandling"
+        },
+        {
+          "hash": "0xCA26FC9E",
+          "name": "EventFlowActionUIPostCastHandling"
+        }
+      ],
+      "label": "Open cast selection",
+      "labelSource": "descriptive",
+      "description": "Open cast selection. The controller maps request 0x57 to object 0x79 (cCast) and passes the request ID to the target.",
+      "details": [
+        "UICastHandling and UIPostCastHandling use this same request with different prepared cast modes."
+      ],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_cast_selection_57"
+    },
+    {
+      "id": 88,
+      "hex": "0x58",
+      "objectId": 99,
+      "objectHex": "0x63",
+      "objectName": "cNatteeCatalog",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cNatteeCatalog",
+      "handlers": [
+        {
+          "hash": "0x9C0B16A1",
+          "name": "EventFlowActionUINatteeCatalogRestartHandling"
+        }
+      ],
+      "label": "Open Nattee catalog",
+      "labelSource": "descriptive",
+      "description": "Open Nattee catalog. The controller maps request 0x58 to object 0x63 (cNatteeCatalog) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_Nattee_catalog_58"
+    },
+    {
+      "id": 89,
+      "hex": "0x59",
+      "objectId": 136,
+      "objectHex": "0x88",
+      "objectName": "cWherearenInspectList",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWherearenInspectList",
+      "handlers": [
+        {
+          "hash": "0x25605959",
+          "name": "EventFlowActionUIWherearenInspectListAppear"
+        },
+        {
+          "hash": "0xC79C9C04",
+          "name": "EventFlowActionUIWherearenInspectListHandling"
+        }
+      ],
+      "label": "Open vacation-home showcase list",
+      "labelSource": "descriptive",
+      "description": "Open vacation-home showcase list. The controller maps request 0x59 to object 0x88 (cWherearenInspectList) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_vacation_home_showcase_list_59"
+    },
+    {
+      "id": 90,
+      "hex": "0x5A",
+      "objectId": 137,
+      "objectHex": "0x89",
+      "objectName": "cWherearenInspectFollowList",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWherearenInspectFollowList",
+      "handlers": [
+        {
+          "hash": "0x0F758AB9",
+          "name": "EventFlowActionUIWherearenInspectFollowListHandling"
+        }
+      ],
+      "label": "Open showcase follow list",
+      "labelSource": "descriptive",
+      "description": "Open showcase follow list. The controller maps request 0x5A to object 0x89 (cWherearenInspectFollowList) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_showcase_follow_list_5A"
+    },
+    {
+      "id": 91,
+      "hex": "0x5B",
+      "objectId": 138,
+      "objectHex": "0x8A",
+      "objectName": "cWherearenInspectUser",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWherearenInspectUser",
+      "handlers": [
+        {
+          "hash": "0x2BB03178",
+          "name": null
+        },
+        {
+          "hash": "0x76848A40",
+          "name": "EventFlowActionUIWherearenInspectUserAppear"
+        }
+      ],
+      "label": "Open showcase user page",
+      "labelSource": "descriptive",
+      "description": "Open showcase user page. The controller maps request 0x5B to object 0x8A (cWherearenInspectUser) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_showcase_user_page_5B"
+    },
+    {
+      "id": 92,
+      "hex": "0x5C",
+      "objectId": 135,
+      "objectHex": "0x87",
+      "objectName": "cWherearenConstructionPortfolio",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWherearenConstructionPortfolio",
+      "handlers": [
+        {
+          "hash": "0x375BF713",
+          "name": "EventFlowActionUIConstructionPortfolioAppear"
+        },
+        {
+          "hash": "0x9877DD32",
+          "name": "EventFlowActionUIClientListHandling"
+        }
+      ],
+      "label": "Open vacation-home portfolio / client list",
+      "labelSource": "descriptive",
+      "description": "Open vacation-home portfolio / client list. The controller maps request 0x5C to object 0x87 (cWherearenConstructionPortfolio) and passes the request ID to the target.",
+      "details": [
+        "UIConstructionPortfolioAppear and UIClientListHandling share this target; prepared context determines the use."
+      ],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_vacation_home_portfolio_client_list_5C"
+    },
+    {
+      "id": 93,
+      "hex": "0x5D",
+      "objectId": 102,
+      "objectHex": "0x66",
+      "objectName": "cFesStaffCreditPhoto",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cFesStaffCreditPhoto",
+      "handlers": [],
+      "label": "Open festival staff-credit photo interface",
+      "labelSource": "descriptive",
+      "description": "Open festival staff-credit photo interface. The controller maps request 0x5D to object 0x66 (cFesStaffCreditPhoto) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_festival_staff_credit_photo_interface_5D"
+    },
+    {
+      "id": 94,
+      "hex": "0x5E",
+      "objectId": 125,
+      "objectHex": "0x7D",
+      "objectName": "cCustomFacility",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCustomFacility",
+      "handlers": [
+        {
+          "hash": "0x60E9CFC9",
+          "name": "EventFlowActionUICustomFacilityHandling"
+        }
+      ],
+      "label": "Customize facility",
+      "labelSource": "descriptive",
+      "description": "Customize facility. The controller maps request 0x5E to object 0x7D (cCustomFacility) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Customize_facility_5E"
+    },
+    {
+      "id": 95,
+      "hex": "0x5F",
+      "objectId": 101,
+      "objectHex": "0x65",
+      "objectName": "cFesStaffCredit",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cFesStaffCredit",
+      "handlers": [
+        {
+          "hash": "0xBF150DAE",
+          "name": null
+        }
+      ],
+      "label": "Open festival staff credits",
+      "labelSource": "descriptive",
+      "description": "Open festival staff credits. The controller maps request 0x5F to object 0x65 (cFesStaffCredit) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_festival_staff_credits_5F"
+    },
+    {
+      "id": 96,
+      "hex": "0x60",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 0,
+      "persistentObjectHex": "0x00",
+      "targetName": "cPocketMenu",
+      "handlers": [],
+      "pocketMode": 9,
+      "pocketFlag": true,
+      "label": "Open pocket menu (mode 9, flag 1)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent pocket menu with mode 9 and the accompanying flag set to 1.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_pocket_menu_60"
+    },
+    {
+      "id": 97,
+      "hex": "0x61",
+      "objectId": 106,
+      "objectHex": "0x6A",
+      "objectName": "cNatteeMsgCardDesignSelect",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cNatteeMsgCardDesignSelect",
+      "handlers": [],
+      "label": "Select Nattee message-card design",
+      "labelSource": "descriptive",
+      "description": "Select Nattee message-card design. The controller maps request 0x61 to object 0x6A (cNatteeMsgCardDesignSelect) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Select_Nattee_message_card_design_61"
+    },
+    {
+      "id": 98,
+      "hex": "0x62",
+      "objectId": 72,
+      "objectHex": "0x48",
+      "objectName": "cMusicBox",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMusicBox",
+      "handlers": [],
+      "label": "Open music box (0x62)",
+      "labelSource": "descriptive",
+      "description": "Open music box. The controller maps request 0x62 to object 0x48 (cMusicBox) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x73. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_music_box_62"
+    },
+    {
+      "id": 99,
+      "hex": "0x63",
+      "objectId": 83,
+      "objectHex": "0x53",
+      "objectName": "cRadioGymnasticsStrapGuide",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cRadioGymnasticsStrapGuide",
+      "handlers": [
+        {
+          "hash": "0x5D3AA253",
+          "name": "EventFlowActionUIRadioGymnasticStrapGuideHandling"
+        }
+      ],
+      "label": "Show group-stretching strap guide (0x63)",
+      "labelSource": "descriptive",
+      "description": "Show group-stretching strap guide. The controller maps request 0x63 to object 0x53 (cRadioGymnasticsStrapGuide) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x64. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Show_group_stretching_strap_guide_63"
+    },
+    {
+      "id": 100,
+      "hex": "0x64",
+      "objectId": 83,
+      "objectHex": "0x53",
+      "objectName": "cRadioGymnasticsStrapGuide",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cRadioGymnasticsStrapGuide",
+      "handlers": [
+        {
+          "hash": "0x15D13068",
+          "name": "EventFlowActionUIRadioGymnasticStrapGuide2Handling"
+        }
+      ],
+      "label": "Show group-stretching strap guide (0x64)",
+      "labelSource": "descriptive",
+      "description": "Show group-stretching strap guide. The controller maps request 0x64 to object 0x53 (cRadioGymnasticsStrapGuide) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x63. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Show_group_stretching_strap_guide_64"
+    },
+    {
+      "id": 101,
+      "hex": "0x65",
+      "objectId": 141,
+      "objectHex": "0x8D",
+      "objectName": "cWherearenConstructionPortfolioPromotion",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWherearenConstructionPortfolioPromotion",
+      "handlers": [
+        {
+          "hash": "0x2BF7272F",
+          "name": "EventFlowActionUIPortfolioPromotionAppear"
+        }
+      ],
+      "label": "Open portfolio promotion",
+      "labelSource": "descriptive",
+      "description": "Open portfolio promotion. The controller maps request 0x65 to object 0x8D (cWherearenConstructionPortfolioPromotion) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_portfolio_promotion_65"
+    },
+    {
+      "id": 102,
+      "hex": "0x66",
+      "objectId": 84,
+      "objectHex": "0x54",
+      "objectName": "cSwkbdTextAreaNatteeLoan",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cSwkbdTextAreaNatteeLoan",
+      "handlers": [],
+      "label": "Enter Nattee loan amount",
+      "labelSource": "descriptive",
+      "description": "Enter Nattee loan amount. The controller maps request 0x66 to object 0x54 (cSwkbdTextAreaNatteeLoan) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Enter_Nattee_loan_amount_66"
+    },
+    {
+      "id": 103,
+      "hex": "0x67",
+      "objectId": null,
+      "objectHex": null,
+      "objectName": null,
+      "route": "persistent",
+      "persistentObjectId": 0,
+      "persistentObjectHex": "0x00",
+      "targetName": "cPocketMenu",
+      "handlers": [],
+      "pocketMode": 10,
+      "pocketFlag": true,
+      "label": "Open pocket menu (mode 10, flag 1)",
+      "labelSource": "descriptive",
+      "description": "Activates the persistent pocket menu with mode 10 and the accompanying flag set to 1.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_pocket_menu_67"
+    },
+    {
+      "id": 104,
+      "hex": "0x68",
+      "objectId": 95,
+      "objectHex": "0x5F",
+      "objectName": "cAlpRemake",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cAlpRemake",
+      "handlers": [
+        {
+          "hash": "0x9C8CC4A8",
+          "name": "EventFlowActionUIRemakeOrderHandling"
+        }
+      ],
+      "label": "Open remake order",
+      "labelSource": "descriptive",
+      "description": "Open remake order. The controller maps request 0x68 to object 0x5F (cAlpRemake) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_remake_order_68"
+    },
+    {
+      "id": 105,
+      "hex": "0x69",
+      "objectId": 73,
+      "objectHex": "0x49",
+      "objectName": "cCookingTable",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCookingTable",
+      "handlers": [
+        {
+          "hash": "0xEBE719EF",
+          "name": "EventFlowActionUICookTableHandling"
+        }
+      ],
+      "label": "Open cooking table",
+      "labelSource": "descriptive",
+      "description": "Open cooking table. The controller maps request 0x69 to object 0x49 (cCookingTable) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_cooking_table_69"
+    },
+    {
+      "id": 106,
+      "hex": "0x6A",
+      "objectId": 38,
+      "objectHex": "0x26",
+      "objectName": "cCustomNpcHome",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCustomNpcHome",
+      "handlers": [
+        {
+          "hash": "0x66D98B28",
+          "name": "EventFlowActionUICustomNpcHomeHandling"
+        }
+      ],
+      "label": "Customize NPC home",
+      "labelSource": "descriptive",
+      "description": "Customize NPC home. The controller maps request 0x6A to object 0x26 (cCustomNpcHome) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Customize_NPC_home_6A"
+    },
+    {
+      "id": 107,
+      "hex": "0x6B",
+      "objectId": 108,
+      "objectHex": "0x6C",
+      "objectName": "cClosetWherearenWorkMain",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cClosetWherearenWorkMain",
+      "handlers": [],
+      "label": "Select vacation-home work outfit (0x6B)",
+      "labelSource": "descriptive",
+      "description": "Select vacation-home work outfit. The controller maps request 0x6B to object 0x6C (cClosetWherearenWorkMain) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x6C. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Select_vacation_home_work_outfit_6B"
+    },
+    {
+      "id": 108,
+      "hex": "0x6C",
+      "objectId": 108,
+      "objectHex": "0x6C",
+      "objectName": "cClosetWherearenWorkMain",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cClosetWherearenWorkMain",
+      "handlers": [],
+      "label": "Select vacation-home work outfit (0x6C)",
+      "labelSource": "descriptive",
+      "description": "Select vacation-home work outfit. The controller maps request 0x6C to object 0x6C (cClosetWherearenWorkMain) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x6B. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Select_vacation_home_work_outfit_6C"
+    },
+    {
+      "id": 109,
+      "hex": "0x6D",
+      "objectId": 143,
+      "objectHex": "0x8F",
+      "objectName": "cWherearenConstructionPortfolioSNSShare",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWherearenConstructionPortfolioSNSShare",
+      "handlers": [
+        {
+          "hash": "0x172CB557",
+          "name": "EventFlowActionUIConstructionPortfolioSNSShareHandling"
+        }
+      ],
+      "label": "Share portfolio to social media",
+      "labelSource": "descriptive",
+      "description": "Share portfolio to social media. The controller maps request 0x6D to object 0x8F (cWherearenConstructionPortfolioSNSShare) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Share_portfolio_to_social_media_6D"
+    },
+    {
+      "id": 110,
+      "hex": "0x6E",
+      "objectId": 85,
+      "objectHex": "0x55",
+      "objectName": "cSwkbdTextAreaHospitalDonation",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cSwkbdTextAreaHospitalDonation",
+      "handlers": [],
+      "label": "Enter hospital donation",
+      "labelSource": "descriptive",
+      "description": "Enter hospital donation. The controller maps request 0x6E to object 0x55 (cSwkbdTextAreaHospitalDonation) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Enter_hospital_donation_6E"
+    },
+    {
+      "id": 111,
+      "hex": "0x6F",
+      "objectId": 134,
+      "objectHex": "0x86",
+      "objectName": "cWherearenPhotoFirstEntry",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWherearenPhotoFirstEntry",
+      "handlers": [
+        {
+          "hash": "0x457CB7F5",
+          "name": "EventFlowActionUIWherearenPhotoFirstEntryAppear"
+        }
+      ],
+      "label": "Open first vacation-home photo entry",
+      "labelSource": "descriptive",
+      "description": "Open first vacation-home photo entry. The controller maps request 0x6F to object 0x86 (cWherearenPhotoFirstEntry) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_first_vacation_home_photo_entry_6F"
+    },
+    {
+      "id": 112,
+      "hex": "0x70",
+      "objectId": 88,
+      "objectHex": "0x58",
+      "objectName": "cDreamIslandSearchResult",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cDreamIslandSearchResult",
+      "handlers": [
+        {
+          "hash": "0x05B108C7",
+          "name": "EventFlowActionUIDreamIslandSearchResultHandling"
+        }
+      ],
+      "label": "Open dream-island search results",
+      "labelSource": "descriptive",
+      "description": "Open dream-island search results. The controller maps request 0x70 to object 0x58 (cDreamIslandSearchResult) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_dream_island_search_results_70"
+    },
+    {
+      "id": 113,
+      "hex": "0x71",
+      "objectId": 127,
+      "objectHex": "0x7F",
+      "objectName": "cWherearenFullScreenCaptureFader",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cWherearenFullScreenCaptureFader",
+      "handlers": [
+        {
+          "hash": "0x377D1CC0",
+          "name": "EventFlowActionUIFullScreenCaptureFaderAppear"
+        }
+      ],
+      "label": "Show full-screen capture fader",
+      "labelSource": "descriptive",
+      "description": "Show full-screen capture fader. The controller maps request 0x71 to object 0x7F (cWherearenFullScreenCaptureFader) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Show_full_screen_capture_fader_71"
+    },
+    {
+      "id": 114,
+      "hex": "0x72",
+      "objectId": 68,
+      "objectHex": "0x44",
+      "objectName": "cAudioPlayer",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cAudioPlayer",
+      "handlers": [],
+      "label": "Open audio player (0x72)",
+      "labelSource": "descriptive",
+      "description": "Open audio player. The controller maps request 0x72 to object 0x44 (cAudioPlayer) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x18. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_audio_player_72"
+    },
+    {
+      "id": 115,
+      "hex": "0x73",
+      "objectId": 72,
+      "objectHex": "0x48",
+      "objectName": "cMusicBox",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cMusicBox",
+      "handlers": [],
+      "label": "Open music box (0x73)",
+      "labelSource": "descriptive",
+      "description": "Open music box. The controller maps request 0x73 to object 0x48 (cMusicBox) and passes the request ID to the target.",
+      "details": [
+        "Also targeted by 0x62. The shared target does not make these request IDs interchangeable; mode-specific behavior is not specified here."
+      ],
+      "variantMeaningUnresolved": true,
+      "symbol": "UIRequest_Open_music_box_73"
+    },
+    {
+      "id": 116,
+      "hex": "0x74",
+      "objectId": 144,
+      "objectHex": "0x90",
+      "objectName": "cConstructionPortfolioWherearenInspectLoad",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cConstructionPortfolioWherearenInspectLoad",
+      "handlers": [
+        {
+          "hash": "0xA1A1273B",
+          "name": "EventFlowActionUIPortfolioInspectLoadAppear"
+        }
+      ],
+      "label": "Load showcase portfolio",
+      "labelSource": "descriptive",
+      "description": "Load showcase portfolio. The controller maps request 0x74 to object 0x90 (cConstructionPortfolioWherearenInspectLoad) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Load_showcase_portfolio_74"
+    },
+    {
+      "id": 117,
+      "hex": "0x75",
+      "objectId": 221,
+      "objectHex": "0xDD",
+      "objectName": "cHotelRoomThemeSelect",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cHotelRoomThemeSelect",
+      "handlers": [
+        {
+          "hash": "0xBB1DD4D0",
+          "name": "EventFlowActionUIHotelRoomThemeSelectHandling"
+        }
+      ],
+      "label": "Select hotel-room theme",
+      "labelSource": "descriptive",
+      "description": "Select hotel-room theme. The controller maps request 0x75 to object 0xDD (cHotelRoomThemeSelect) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Select_hotel_room_theme_75"
+    },
+    {
+      "id": 118,
+      "hex": "0x76",
+      "objectId": 224,
+      "objectHex": "0xE0",
+      "objectName": "cHotelRoomSelectEditVisitList",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cHotelRoomSelectEditVisitList",
+      "handlers": [
+        {
+          "hash": "0x0D72F21C",
+          "name": "EventFlowActionUIHotelRoomSelectEditVisitListHandling"
+        },
+        {
+          "hash": "0xBB2ADBBF",
+          "name": "EventFlowActionUIHotelRoomVisit"
+        }
+      ],
+      "label": "Select hotel room to edit / visit",
+      "labelSource": "descriptive",
+      "description": "Select hotel room to edit / visit. The controller maps request 0x76 to object 0xE0 (cHotelRoomSelectEditVisitList) and passes the request ID to the target.",
+      "details": [
+        "UIHotelRoomSelectEditVisitListHandling and UIHotelRoomVisit share this request."
+      ],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Select_hotel_room_to_edit_visit_76"
+    },
+    {
+      "id": 119,
+      "hex": "0x77",
+      "objectId": 226,
+      "objectHex": "0xE2",
+      "objectName": "cHotelCatalog",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cHotelCatalog",
+      "handlers": [],
+      "label": "Open hotel catalog",
+      "labelSource": "descriptive",
+      "description": "Open hotel catalog. The controller maps request 0x77 to object 0xE2 (cHotelCatalog) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_hotel_catalog_77"
+    },
+    {
+      "id": 120,
+      "hex": "0x78",
+      "objectId": 227,
+      "objectHex": "0xE3",
+      "objectName": "cHotelCordeMannequinMain",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cHotelCordeMannequinMain",
+      "handlers": [
+        {
+          "hash": "0x574761E6",
+          "name": "EventFlowActionUIHotelCordeMannequineHandling"
+        }
+      ],
+      "label": "Open hotel outfit mannequin",
+      "labelSource": "descriptive",
+      "description": "Open hotel outfit mannequin. The controller maps request 0x78 to object 0xE3 (cHotelCordeMannequinMain) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_hotel_outfit_mannequin_78"
+    },
+    {
+      "id": 121,
+      "hex": "0x79",
+      "objectId": 231,
+      "objectHex": "0xE7",
+      "objectName": "cCloudIslandSave",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCloudIslandSave",
+      "handlers": [
+        {
+          "hash": "0xD546E773",
+          "name": "EventFlowActionUICloudIslandSaveHandling"
+        }
+      ],
+      "label": "Open cloud-island save interface",
+      "labelSource": "descriptive",
+      "description": "Open cloud-island save interface. The controller maps request 0x79 to object 0xE7 (cCloudIslandSave) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_cloud_island_save_interface_79"
+    },
+    {
+      "id": 122,
+      "hex": "0x7A",
+      "objectId": 228,
+      "objectHex": "0xE4",
+      "objectName": "cDIYTrade",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cDIYTrade",
+      "handlers": [
+        {
+          "hash": "0x7C54BDA5",
+          "name": "EventFlowActionUIDIYTradeHandling"
+        }
+      ],
+      "label": "Open DIY trade",
+      "labelSource": "descriptive",
+      "description": "Open DIY trade. The controller maps request 0x7A to object 0xE4 (cDIYTrade) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_DIY_trade_7A"
+    },
+    {
+      "id": 123,
+      "hex": "0x7B",
+      "objectId": 234,
+      "objectHex": "0xEA",
+      "objectName": "cCloudIslandMap",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCloudIslandMap",
+      "handlers": [
+        {
+          "hash": "0xEBC36F28",
+          "name": "EventFlowActionUICloudIslandMapHandling"
+        }
+      ],
+      "label": "Open cloud-island map",
+      "labelSource": "descriptive",
+      "description": "Open cloud-island map. The controller maps request 0x7B to object 0xEA (cCloudIslandMap) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_cloud_island_map_7B"
+    },
+    {
+      "id": 124,
+      "hex": "0x7C",
+      "objectId": 229,
+      "objectHex": "0xE5",
+      "objectName": "cHotelVipNpcSelect",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cHotelVipNpcSelect",
+      "handlers": [
+        {
+          "hash": "0x0D2BBB0F",
+          "name": "EventFlowActionUIHotelVipNpcSelectHandling"
+        }
+      ],
+      "label": "Select hotel VIP NPC",
+      "labelSource": "descriptive",
+      "description": "Select hotel VIP NPC. The controller maps request 0x7C to object 0xE5 (cHotelVipNpcSelect) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Select_hotel_VIP_NPC_7C"
+    },
+    {
+      "id": 125,
+      "hex": "0x7D",
+      "objectId": 238,
+      "objectHex": "0xEE",
+      "objectName": "cCloudIslandCustomHome",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCloudIslandCustomHome",
+      "handlers": [
+        {
+          "hash": "0xBC21A803",
+          "name": "EventFlowActionUICloudIslandCustomHomeHandling"
+        }
+      ],
+      "label": "Customize cloud-island home",
+      "labelSource": "descriptive",
+      "description": "Customize cloud-island home. The controller maps request 0x7D to object 0xEE (cCloudIslandCustomHome) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Customize_cloud_island_home_7D"
+    },
+    {
+      "id": 126,
+      "hex": "0x7E",
+      "objectId": 242,
+      "objectHex": "0xF2",
+      "objectName": "cCloudIslandShopBridgeSlope",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCloudIslandShopBridgeSlope",
+      "handlers": [],
+      "label": "Open cloud-island bridge / incline shop",
+      "labelSource": "descriptive",
+      "description": "Open cloud-island bridge / incline shop. The controller maps request 0x7E to object 0xF2 (cCloudIslandShopBridgeSlope) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_cloud_island_bridge_incline_shop_7E"
+    },
+    {
+      "id": 127,
+      "hex": "0x7F",
+      "objectId": 243,
+      "objectHex": "0xF3",
+      "objectName": "cCloudIslandMapRemove",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCloudIslandMapRemove",
+      "handlers": [
+        {
+          "hash": "0x6C45D39B",
+          "name": "EventFlowActionUICloudIslandMapRemoveHandling"
+        }
+      ],
+      "label": "Open cloud-island map removal",
+      "labelSource": "descriptive",
+      "description": "Open cloud-island map removal. The controller maps request 0x7F to object 0xF3 (cCloudIslandMapRemove) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Open_cloud_island_map_removal_7F"
+    },
+    {
+      "id": 128,
+      "hex": "0x80",
+      "objectId": 244,
+      "objectHex": "0xF4",
+      "objectName": "cCloudIslandDialogSelectIsland",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCloudIslandDialogSelectIsland",
+      "handlers": [
+        {
+          "hash": "0x2F217DBA",
+          "name": "EventFlowActionUICloudIslandDialogSelectIsland"
+        }
+      ],
+      "label": "Select cloud island",
+      "labelSource": "descriptive",
+      "description": "Select cloud island. The controller maps request 0x80 to object 0xF4 (cCloudIslandDialogSelectIsland) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Select_cloud_island_80"
+    },
+    {
+      "id": 129,
+      "hex": "0x81",
+      "objectId": 247,
+      "objectHex": "0xF7",
+      "objectName": "cCloudIslandSwkbdInputIslandName",
+      "route": "factory",
+      "persistentObjectId": null,
+      "persistentObjectHex": null,
+      "targetName": "cCloudIslandSwkbdInputIslandName",
+      "handlers": [],
+      "label": "Enter cloud-island name",
+      "labelSource": "descriptive",
+      "description": "Enter cloud-island name. The controller maps request 0x81 to object 0xF7 (cCloudIslandSwkbdInputIslandName) and passes the request ID to the target.",
+      "details": [],
+      "variantMeaningUnresolved": false,
+      "symbol": "UIRequest_Enter_cloud_island_name_81"
+    }
+  ],
+  "objects": [
+    {
+      "id": 0,
+      "hex": "0x00",
+      "name": "cPocketMenu",
+      "variant": null,
+      "requestIds": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        84,
+        96,
+        103
+      ]
+    },
+    {
+      "id": 1,
+      "hex": "0x01",
+      "name": "cRingMenuToolsMain",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 2,
+      "hex": "0x02",
+      "name": "cRingMenuReactionMain",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 3,
+      "hex": "0x03",
+      "name": "cRingMenuEmoticonList",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 4,
+      "hex": "0x04",
+      "name": "cMenuChat",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 5,
+      "hex": "0x05",
+      "name": "cSwkbdInput",
+      "variant": null,
+      "requestIds": [
+        18
+      ]
+    },
+    {
+      "id": 6,
+      "hex": "0x06",
+      "name": "cPlayerMarker",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 7,
+      "hex": "0x07",
+      "name": "cPlayerNameMarker",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 8,
+      "hex": "0x08",
+      "name": "cNetConnectWait",
+      "variant": null,
+      "requestIds": [
+        67,
+        68
+      ]
+    },
+    {
+      "id": 9,
+      "hex": "0x09",
+      "name": "cClockCtrlFront",
+      "variant": null,
+      "requestIds": [
+        57
+      ]
+    },
+    {
+      "id": 10,
+      "hex": "0x0A",
+      "name": "cMenuDevice",
+      "variant": null,
+      "requestIds": [
+        45,
+        46
+      ]
+    },
+    {
+      "id": 11,
+      "hex": "0x0B",
+      "name": "cPhotoCameraGuide",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 12,
+      "hex": "0x0C",
+      "name": "cSonkatsuResultMain",
+      "variant": null,
+      "requestIds": [
+        44
+      ]
+    },
+    {
+      "id": 13,
+      "hex": "0x0D",
+      "name": "cSonkatsuQuestMain",
+      "variant": null,
+      "requestIds": [
+        43
+      ]
+    },
+    {
+      "id": 14,
+      "hex": "0x0E",
+      "name": "cMenuBook",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 15,
+      "hex": "0x0F",
+      "name": "cMenuRecipe",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 16,
+      "hex": "0x10",
+      "name": "cCatalog",
+      "variant": null,
+      "requestIds": [
+        37
+      ]
+    },
+    {
+      "id": 17,
+      "hex": "0x11",
+      "name": "cMyDesignList",
+      "variant": null,
+      "requestIds": [
+        28
+      ]
+    },
+    {
+      "id": 18,
+      "hex": "0x12",
+      "name": "cMyDesignEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 19,
+      "hex": "0x13",
+      "name": "cMyDesignSet",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 20,
+      "hex": "0x14",
+      "name": "cMenuProfile",
+      "variant": null,
+      "requestIds": [
+        64
+      ]
+    },
+    {
+      "id": 21,
+      "hex": "0x15",
+      "name": "cProfileWinPlayerTitle",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 22,
+      "hex": "0x16",
+      "name": "cMap",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 23,
+      "hex": "0x17",
+      "name": "cMenuChatLog",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 24,
+      "hex": "0x18",
+      "name": "cFriendList",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 25,
+      "hex": "0x19",
+      "name": "cMenuLoadTips",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 26,
+      "hex": "0x1A",
+      "name": "cMenuMobileBank",
+      "variant": null,
+      "requestIds": [
+        0
+      ]
+    },
+    {
+      "id": 27,
+      "hex": "0x1B",
+      "name": "cCustomHome",
+      "variant": null,
+      "requestIds": [
+        6
+      ]
+    },
+    {
+      "id": 28,
+      "hex": "0x1C",
+      "name": "cShopSonkatsu",
+      "variant": null,
+      "requestIds": [
+        33
+      ]
+    },
+    {
+      "id": 29,
+      "hex": "0x1D",
+      "name": "cLostList",
+      "variant": null,
+      "requestIds": [
+        38
+      ]
+    },
+    {
+      "id": 30,
+      "hex": "0x1E",
+      "name": "cMelodyEdit",
+      "variant": null,
+      "requestIds": [
+        41
+      ]
+    },
+    {
+      "id": 31,
+      "hex": "0x1F",
+      "name": "cBoard",
+      "variant": null,
+      "requestIds": [
+        30
+      ]
+    },
+    {
+      "id": 32,
+      "hex": "0x20",
+      "name": "cBoardEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 33,
+      "hex": "0x21",
+      "name": "cBoardInfo",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 34,
+      "hex": "0x22",
+      "name": "cMapRemove",
+      "variant": null,
+      "requestIds": [
+        47
+      ]
+    },
+    {
+      "id": 35,
+      "hex": "0x23",
+      "name": "cShopBridgeSlope",
+      "variant": null,
+      "requestIds": [
+        51
+      ]
+    },
+    {
+      "id": 36,
+      "hex": "0x24",
+      "name": "cNpcRoomInteriorEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 37,
+      "hex": "0x25",
+      "name": "cNpcRoomEditStorage",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 38,
+      "hex": "0x26",
+      "name": "cCustomNpcHome",
+      "variant": null,
+      "requestIds": [
+        106
+      ]
+    },
+    {
+      "id": 39,
+      "hex": "0x27",
+      "name": "cShopBuy",
+      "variant": null,
+      "requestIds": [
+        25
+      ]
+    },
+    {
+      "id": 40,
+      "hex": "0x28",
+      "name": "cShopBuyTailor",
+      "variant": null,
+      "requestIds": [
+        26
+      ]
+    },
+    {
+      "id": 41,
+      "hex": "0x29",
+      "name": "cMyDesignExchangeUpload",
+      "variant": null,
+      "requestIds": [
+        58
+      ]
+    },
+    {
+      "id": 42,
+      "hex": "0x2A",
+      "name": "cMyDesignExchangeDownloadPreview",
+      "variant": null,
+      "requestIds": [
+        59
+      ]
+    },
+    {
+      "id": 43,
+      "hex": "0x2B",
+      "name": "cMyDesignExchangeDeleteConfirmation",
+      "variant": null,
+      "requestIds": [
+        60
+      ]
+    },
+    {
+      "id": 44,
+      "hex": "0x2C",
+      "name": "cMyDesignExchangeList",
+      "variant": null,
+      "requestIds": [
+        62
+      ]
+    },
+    {
+      "id": 45,
+      "hex": "0x2D",
+      "name": "cMyDesignExchangeMenu",
+      "variant": null,
+      "requestIds": [
+        61
+      ]
+    },
+    {
+      "id": 46,
+      "hex": "0x2E",
+      "name": "cMyDesignExchangeFavorite",
+      "variant": null,
+      "requestIds": [
+        80
+      ]
+    },
+    {
+      "id": 47,
+      "hex": "0x2F",
+      "name": "cMyDesignExchangeSearch",
+      "variant": null,
+      "requestIds": [
+        79
+      ]
+    },
+    {
+      "id": 48,
+      "hex": "0x30",
+      "name": "cSurveyCameraGuide",
+      "variant": null,
+      "requestIds": [
+        72
+      ]
+    },
+    {
+      "id": 49,
+      "hex": "0x31",
+      "name": "cAddress",
+      "variant": null,
+      "requestIds": [
+        5
+      ]
+    },
+    {
+      "id": 50,
+      "hex": "0x32",
+      "name": "cAddresseeFriend",
+      "variant": null,
+      "requestIds": [
+        63
+      ]
+    },
+    {
+      "id": 51,
+      "hex": "0x33",
+      "name": "cMsgCardDesignSelect",
+      "variant": null,
+      "requestIds": [
+        27
+      ]
+    },
+    {
+      "id": 52,
+      "hex": "0x34",
+      "name": "cMsgCardEditText",
+      "variant": null,
+      "requestIds": [
+        20,
+        23
+      ]
+    },
+    {
+      "id": 53,
+      "hex": "0x35",
+      "name": "cMsgCardView",
+      "variant": null,
+      "requestIds": [
+        19,
+        21,
+        22
+      ]
+    },
+    {
+      "id": 54,
+      "hex": "0x36",
+      "name": "cDateInput",
+      "variant": null,
+      "requestIds": [
+        35
+      ]
+    },
+    {
+      "id": 55,
+      "hex": "0x37",
+      "name": "cTrip",
+      "variant": null,
+      "requestIds": [
+        8
+      ]
+    },
+    {
+      "id": 56,
+      "hex": "0x38",
+      "name": "cMapSelect",
+      "variant": null,
+      "requestIds": [
+        42
+      ]
+    },
+    {
+      "id": 57,
+      "hex": "0x39",
+      "name": "cDateInputYear",
+      "variant": null,
+      "requestIds": [
+        36
+      ]
+    },
+    {
+      "id": 58,
+      "hex": "0x3A",
+      "name": "cNetDemoBack",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 59,
+      "hex": "0x3B",
+      "name": "cRingMenuStick",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 60,
+      "hex": "0x3C",
+      "name": "cRoadSelect",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 61,
+      "hex": "0x3D",
+      "name": "cStorage",
+      "variant": null,
+      "requestIds": [
+        40
+      ]
+    },
+    {
+      "id": 62,
+      "hex": "0x3E",
+      "name": "cCloset",
+      "variant": null,
+      "requestIds": [
+        31
+      ]
+    },
+    {
+      "id": 63,
+      "hex": "0x3F",
+      "name": "cClosetBalloon",
+      "variant": null,
+      "requestIds": [
+        53
+      ]
+    },
+    {
+      "id": 64,
+      "hex": "0x40",
+      "name": "cClosetCoordinateEdit",
+      "variant": null,
+      "requestIds": [
+        32
+      ]
+    },
+    {
+      "id": 65,
+      "hex": "0x41",
+      "name": "cCharaMake",
+      "variant": null,
+      "requestIds": [
+        7
+      ]
+    },
+    {
+      "id": 66,
+      "hex": "0x42",
+      "name": "cWorkCraft",
+      "variant": null,
+      "requestIds": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": 67,
+      "hex": "0x43",
+      "name": "cWorkRemake",
+      "variant": null,
+      "requestIds": [
+        3,
+        4
+      ]
+    },
+    {
+      "id": 68,
+      "hex": "0x44",
+      "name": "cAudioPlayer",
+      "variant": null,
+      "requestIds": [
+        24,
+        114
+      ]
+    },
+    {
+      "id": 69,
+      "hex": "0x45",
+      "name": "cPlayerHouseInteriorEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 70,
+      "hex": "0x46",
+      "name": "cPost",
+      "variant": null,
+      "requestIds": [
+        29
+      ]
+    },
+    {
+      "id": 71,
+      "hex": "0x47",
+      "name": "cMsgBottle",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 72,
+      "hex": "0x48",
+      "name": "cMusicBox",
+      "variant": null,
+      "requestIds": [
+        98,
+        115
+      ]
+    },
+    {
+      "id": 73,
+      "hex": "0x49",
+      "name": "cCookingTable",
+      "variant": null,
+      "requestIds": [
+        105
+      ]
+    },
+    {
+      "id": 74,
+      "hex": "0x4A",
+      "name": "cKabuBuy",
+      "variant": null,
+      "requestIds": [
+        9
+      ]
+    },
+    {
+      "id": 75,
+      "hex": "0x4B",
+      "name": "cHarvestBox",
+      "variant": null,
+      "requestIds": [
+        34
+      ]
+    },
+    {
+      "id": 76,
+      "hex": "0x4C",
+      "name": "cStaffRoll",
+      "variant": null,
+      "requestIds": [
+        39
+      ]
+    },
+    {
+      "id": 77,
+      "hex": "0x4D",
+      "name": "cBirthdayMessage",
+      "variant": null,
+      "requestIds": [
+        54
+      ]
+    },
+    {
+      "id": 78,
+      "hex": "0x4E",
+      "name": "cTitle",
+      "variant": null,
+      "requestIds": [
+        50
+      ]
+    },
+    {
+      "id": 79,
+      "hex": "0x4F",
+      "name": "cAddresseeSelMulti",
+      "variant": null,
+      "requestIds": [
+        55
+      ]
+    },
+    {
+      "id": 80,
+      "hex": "0x50",
+      "name": "cSwkbdTextAreaInputBell",
+      "variant": null,
+      "requestIds": [
+        56
+      ]
+    },
+    {
+      "id": 81,
+      "hex": "0x51",
+      "name": "cStampRallyMuseum",
+      "variant": null,
+      "requestIds": [
+        65,
+        66
+      ]
+    },
+    {
+      "id": 82,
+      "hex": "0x52",
+      "name": "cMyDesignFireworks",
+      "variant": null,
+      "requestIds": [
+        82
+      ]
+    },
+    {
+      "id": 83,
+      "hex": "0x53",
+      "name": "cRadioGymnasticsStrapGuide",
+      "variant": null,
+      "requestIds": [
+        99,
+        100
+      ]
+    },
+    {
+      "id": 84,
+      "hex": "0x54",
+      "name": "cSwkbdTextAreaNatteeLoan",
+      "variant": null,
+      "requestIds": [
+        102
+      ]
+    },
+    {
+      "id": 85,
+      "hex": "0x55",
+      "name": "cSwkbdTextAreaHospitalDonation",
+      "variant": null,
+      "requestIds": [
+        110
+      ]
+    },
+    {
+      "id": 86,
+      "hex": "0x56",
+      "name": "cIllegalReport",
+      "variant": null,
+      "requestIds": [
+        52
+      ]
+    },
+    {
+      "id": 87,
+      "hex": "0x57",
+      "name": "cDreamFavoriteList",
+      "variant": null,
+      "requestIds": [
+        86
+      ]
+    },
+    {
+      "id": 88,
+      "hex": "0x58",
+      "name": "cDreamIslandSearchResult",
+      "variant": null,
+      "requestIds": [
+        112
+      ]
+    },
+    {
+      "id": 89,
+      "hex": "0x59",
+      "name": "cPhotoIslandStorage",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 90,
+      "hex": "0x5A",
+      "name": "cPhotoIslandStorageMenu",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 91,
+      "hex": "0x5B",
+      "name": "cPhotoIslandInteriorEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 92,
+      "hex": "0x5C",
+      "name": "cAmiiboTouchGuide",
+      "variant": null,
+      "requestIds": [
+        48
+      ]
+    },
+    {
+      "id": 93,
+      "hex": "0x5D",
+      "name": "cAmiiboPreviousNoticeGuide",
+      "variant": null,
+      "requestIds": [
+        49
+      ]
+    },
+    {
+      "id": 94,
+      "hex": "0x5E",
+      "name": "cCatalogGift",
+      "variant": null,
+      "requestIds": [
+        73
+      ]
+    },
+    {
+      "id": 95,
+      "hex": "0x5F",
+      "name": "cAlpRemake",
+      "variant": null,
+      "requestIds": [
+        104
+      ]
+    },
+    {
+      "id": 96,
+      "hex": "0x60",
+      "name": "cRecoverySaveData",
+      "variant": null,
+      "requestIds": [
+        81
+      ]
+    },
+    {
+      "id": 97,
+      "hex": "0x61",
+      "name": "cCafeMenu",
+      "variant": null,
+      "requestIds": [
+        74
+      ]
+    },
+    {
+      "id": 98,
+      "hex": "0x62",
+      "name": "cMenuExchangePoki",
+      "variant": null,
+      "requestIds": [
+        85
+      ]
+    },
+    {
+      "id": 99,
+      "hex": "0x63",
+      "name": "cNatteeCatalog",
+      "variant": null,
+      "requestIds": [
+        88
+      ]
+    },
+    {
+      "id": 100,
+      "hex": "0x64",
+      "name": "cWherearenIslandsMap",
+      "variant": null,
+      "requestIds": [
+        69
+      ]
+    },
+    {
+      "id": 101,
+      "hex": "0x65",
+      "name": "cFesStaffCredit",
+      "variant": null,
+      "requestIds": [
+        95
+      ]
+    },
+    {
+      "id": 102,
+      "hex": "0x66",
+      "name": "cFesStaffCreditPhoto",
+      "variant": null,
+      "requestIds": [
+        93
+      ]
+    },
+    {
+      "id": 103,
+      "hex": "0x67",
+      "name": "cFesStaffCreditEnd",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 104,
+      "hex": "0x68",
+      "name": "cWipeFesFadeOut",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 105,
+      "hex": "0x69",
+      "name": "cWherearenFesCommander",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 106,
+      "hex": "0x6A",
+      "name": "cNatteeMsgCardDesignSelect",
+      "variant": null,
+      "requestIds": [
+        97
+      ]
+    },
+    {
+      "id": 107,
+      "hex": "0x6B",
+      "name": "cWherearenShareHouseBalloon",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 108,
+      "hex": "0x6C",
+      "name": "cClosetWherearenWorkMain",
+      "variant": null,
+      "requestIds": [
+        107,
+        108
+      ]
+    },
+    {
+      "id": 109,
+      "hex": "0x6D",
+      "name": "cTheme",
+      "variant": null,
+      "requestIds": [
+        70
+      ]
+    },
+    {
+      "id": 110,
+      "hex": "0x6E",
+      "name": "cWherearenInteriorEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 111,
+      "hex": "0x6F",
+      "name": "cWherearenExteriorEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 112,
+      "hex": "0x70",
+      "name": "cWherearenRevisitEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 113,
+      "hex": "0x71",
+      "name": "cWherearenInspectEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 114,
+      "hex": "0x72",
+      "name": "cWherearenStorage",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 115,
+      "hex": "0x73",
+      "name": "cWherearenIslandsBridgeSlope",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 116,
+      "hex": "0x74",
+      "name": "cWherearenFencePut",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 117,
+      "hex": "0x75",
+      "name": "cWherearenRoadSelect",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 118,
+      "hex": "0x76",
+      "name": "cWherearenIslandsCustomHome",
+      "variant": null,
+      "requestIds": [
+        83
+      ]
+    },
+    {
+      "id": 119,
+      "hex": "0x77",
+      "name": "cWherearenTimeEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 120,
+      "hex": "0x78",
+      "name": "cEffectClothSelect",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 121,
+      "hex": "0x79",
+      "name": "cCast",
+      "variant": null,
+      "requestIds": [
+        87
+      ]
+    },
+    {
+      "id": 122,
+      "hex": "0x7A",
+      "name": "cCastList",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 123,
+      "hex": "0x7B",
+      "name": "cClosetWherearenCastMain",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 124,
+      "hex": "0x7C",
+      "name": "cWherearenInsectCheck",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 125,
+      "hex": "0x7D",
+      "name": "cCustomFacility",
+      "variant": null,
+      "requestIds": [
+        94
+      ]
+    },
+    {
+      "id": 126,
+      "hex": "0x7E",
+      "name": "cRoomSetting",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 127,
+      "hex": "0x7F",
+      "name": "cWherearenFullScreenCaptureFader",
+      "variant": null,
+      "requestIds": [
+        113
+      ]
+    },
+    {
+      "id": 128,
+      "hex": "0x80",
+      "name": "cWherearenSeasonEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 129,
+      "hex": "0x81",
+      "name": "cWherearenOrderList",
+      "variant": null,
+      "requestIds": [
+        71
+      ]
+    },
+    {
+      "id": 130,
+      "hex": "0x82",
+      "name": "cWherearenStorageInteriorOrderList",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 131,
+      "hex": "0x83",
+      "name": "cClientListPhotoSelect",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 132,
+      "hex": "0x84",
+      "name": "cClientListPhotoSelectMenu",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 133,
+      "hex": "0x85",
+      "name": "cWherearenIslandsMsgPhoto",
+      "variant": null,
+      "requestIds": [
+        78
+      ]
+    },
+    {
+      "id": 134,
+      "hex": "0x86",
+      "name": "cWherearenPhotoFirstEntry",
+      "variant": null,
+      "requestIds": [
+        111
+      ]
+    },
+    {
+      "id": 135,
+      "hex": "0x87",
+      "name": "cWherearenConstructionPortfolio",
+      "variant": null,
+      "requestIds": [
+        92
+      ]
+    },
+    {
+      "id": 136,
+      "hex": "0x88",
+      "name": "cWherearenInspectList",
+      "variant": null,
+      "requestIds": [
+        89
+      ]
+    },
+    {
+      "id": 137,
+      "hex": "0x89",
+      "name": "cWherearenInspectFollowList",
+      "variant": null,
+      "requestIds": [
+        90
+      ]
+    },
+    {
+      "id": 138,
+      "hex": "0x8A",
+      "name": "cWherearenInspectUser",
+      "variant": null,
+      "requestIds": [
+        91
+      ]
+    },
+    {
+      "id": 139,
+      "hex": "0x8B",
+      "name": "cWherearenConstructionPortfolioInfo",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 140,
+      "hex": "0x8C",
+      "name": "cWherearenConstructionPortfolioMap",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 141,
+      "hex": "0x8D",
+      "name": "cWherearenConstructionPortfolioPromotion",
+      "variant": null,
+      "requestIds": [
+        101
+      ]
+    },
+    {
+      "id": 142,
+      "hex": "0x8E",
+      "name": "cWherearenConstructionPortfolioPromotionInfo",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 143,
+      "hex": "0x8F",
+      "name": "cWherearenConstructionPortfolioSNSShare",
+      "variant": null,
+      "requestIds": [
+        109
+      ]
+    },
+    {
+      "id": 144,
+      "hex": "0x90",
+      "name": "cConstructionPortfolioWherearenInspectLoad",
+      "variant": null,
+      "requestIds": [
+        116
+      ]
+    },
+    {
+      "id": 145,
+      "hex": "0x91",
+      "name": "cStudyDialog",
+      "variant": null,
+      "requestIds": [
+        75,
+        76,
+        77
+      ]
+    },
+    {
+      "id": 146,
+      "hex": "0x92",
+      "name": "cWherearenStudyEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 147,
+      "hex": "0x93",
+      "name": "cMapMini",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 148,
+      "hex": "0x94",
+      "name": "cAmiiboStationBG",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 149,
+      "hex": "0x95",
+      "name": "cDreamBG",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 150,
+      "hex": "0x96",
+      "name": "cPrologueBG",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 151,
+      "hex": "0x97",
+      "name": "cVersionGuide",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 152,
+      "hex": "0x98",
+      "name": "cMovieNookIncLogo",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 153,
+      "hex": "0x99",
+      "name": "cMovieSkipGuide",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 154,
+      "hex": "0x9A",
+      "name": "cMovieTitleLogo",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 155,
+      "hex": "0x9B",
+      "name": "cGuideBalloonWeddingParty",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 156,
+      "hex": "0x9C",
+      "name": "cRadioGymnasticsOperationGuide",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 157,
+      "hex": "0x9D",
+      "name": "cMovieSkipGuideWherearen",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 158,
+      "hex": "0x9E",
+      "name": "cMovieTitleLogoWherearen",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 159,
+      "hex": "0x9F",
+      "name": "cSelectCursor",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 160,
+      "hex": "0xA0",
+      "name": "cFader",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 161,
+      "hex": "0xA1",
+      "name": "cCommonBG",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 162,
+      "hex": "0xA2",
+      "name": "cMessageWindow",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 163,
+      "hex": "0xA3",
+      "name": "cNetErrorWindow",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 164,
+      "hex": "0xA4",
+      "name": "cKeyGuide",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 165,
+      "hex": "0xA5",
+      "name": "cTelop",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 166,
+      "hex": "0xA6",
+      "name": "cCommonDialog",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 167,
+      "hex": "0xA7",
+      "name": "cCommonWipe",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 168,
+      "hex": "0xA8",
+      "name": "cMainScreen",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 169,
+      "hex": "0xA9",
+      "name": "cSystemDialog",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 170,
+      "hex": "0xAA",
+      "name": "cChatBalloon",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 171,
+      "hex": "0xAB",
+      "name": "SwkbdInputSeq",
+      "variant": 0,
+      "requestIds": []
+    },
+    {
+      "id": 172,
+      "hex": "0xAC",
+      "name": "SwkbdInputSeq",
+      "variant": 1,
+      "requestIds": []
+    },
+    {
+      "id": 173,
+      "hex": "0xAD",
+      "name": "SwkbdInputSeq",
+      "variant": 2,
+      "requestIds": []
+    },
+    {
+      "id": 174,
+      "hex": "0xAE",
+      "name": "SwkbdInputSeq",
+      "variant": 3,
+      "requestIds": []
+    },
+    {
+      "id": 175,
+      "hex": "0xAF",
+      "name": "SwkbdInputSeq",
+      "variant": 4,
+      "requestIds": []
+    },
+    {
+      "id": 176,
+      "hex": "0xB0",
+      "name": "SwkbdInputSeq",
+      "variant": 5,
+      "requestIds": []
+    },
+    {
+      "id": 177,
+      "hex": "0xB1",
+      "name": "SwkbdInputSeq",
+      "variant": 6,
+      "requestIds": []
+    },
+    {
+      "id": 178,
+      "hex": "0xB2",
+      "name": "SwkbdInputSeq",
+      "variant": 7,
+      "requestIds": []
+    },
+    {
+      "id": 179,
+      "hex": "0xB3",
+      "name": "SwkbdInputSeq",
+      "variant": 8,
+      "requestIds": []
+    },
+    {
+      "id": 180,
+      "hex": "0xB4",
+      "name": "SwkbdInputSeq",
+      "variant": 9,
+      "requestIds": []
+    },
+    {
+      "id": 181,
+      "hex": "0xB5",
+      "name": "SwkbdInputSeq",
+      "variant": 10,
+      "requestIds": []
+    },
+    {
+      "id": 182,
+      "hex": "0xB6",
+      "name": "SwkbdInputSeq",
+      "variant": 11,
+      "requestIds": []
+    },
+    {
+      "id": 183,
+      "hex": "0xB7",
+      "name": "SwkbdInputSeq",
+      "variant": 12,
+      "requestIds": []
+    },
+    {
+      "id": 184,
+      "hex": "0xB8",
+      "name": "SwkbdInputSeq",
+      "variant": 13,
+      "requestIds": []
+    },
+    {
+      "id": 185,
+      "hex": "0xB9",
+      "name": "SwkbdInputSeq",
+      "variant": 14,
+      "requestIds": []
+    },
+    {
+      "id": 186,
+      "hex": "0xBA",
+      "name": "SwkbdInputSeq",
+      "variant": 15,
+      "requestIds": []
+    },
+    {
+      "id": 187,
+      "hex": "0xBB",
+      "name": "SwkbdInputSeq",
+      "variant": 16,
+      "requestIds": []
+    },
+    {
+      "id": 188,
+      "hex": "0xBC",
+      "name": "SwkbdInputSeq",
+      "variant": 17,
+      "requestIds": []
+    },
+    {
+      "id": 189,
+      "hex": "0xBD",
+      "name": "SwkbdInputSeq",
+      "variant": 18,
+      "requestIds": []
+    },
+    {
+      "id": 190,
+      "hex": "0xBE",
+      "name": "SwkbdInputSeq",
+      "variant": 19,
+      "requestIds": []
+    },
+    {
+      "id": 191,
+      "hex": "0xBF",
+      "name": "SwkbdInputSeq",
+      "variant": 20,
+      "requestIds": []
+    },
+    {
+      "id": 192,
+      "hex": "0xC0",
+      "name": "SwkbdInputSeq",
+      "variant": 21,
+      "requestIds": []
+    },
+    {
+      "id": 193,
+      "hex": "0xC1",
+      "name": "SwkbdInputSeq",
+      "variant": 22,
+      "requestIds": []
+    },
+    {
+      "id": 194,
+      "hex": "0xC2",
+      "name": "SwkbdInputSeq",
+      "variant": 23,
+      "requestIds": []
+    },
+    {
+      "id": 195,
+      "hex": "0xC3",
+      "name": "SwkbdInputSeq",
+      "variant": 24,
+      "requestIds": []
+    },
+    {
+      "id": 196,
+      "hex": "0xC4",
+      "name": "SwkbdInputSeq",
+      "variant": 25,
+      "requestIds": []
+    },
+    {
+      "id": 197,
+      "hex": "0xC5",
+      "name": "SwkbdInputSeq",
+      "variant": 26,
+      "requestIds": []
+    },
+    {
+      "id": 198,
+      "hex": "0xC6",
+      "name": "SwkbdInputSeq",
+      "variant": 27,
+      "requestIds": []
+    },
+    {
+      "id": 199,
+      "hex": "0xC7",
+      "name": "SwkbdInputSeq",
+      "variant": 28,
+      "requestIds": []
+    },
+    {
+      "id": 200,
+      "hex": "0xC8",
+      "name": "SwkbdInputSeq",
+      "variant": 29,
+      "requestIds": []
+    },
+    {
+      "id": 201,
+      "hex": "0xC9",
+      "name": "SwkbdInputSeq",
+      "variant": 30,
+      "requestIds": []
+    },
+    {
+      "id": 202,
+      "hex": "0xCA",
+      "name": "SwkbdInputSeq",
+      "variant": 31,
+      "requestIds": []
+    },
+    {
+      "id": 203,
+      "hex": "0xCB",
+      "name": "SwkbdInputSeq",
+      "variant": 32,
+      "requestIds": []
+    },
+    {
+      "id": 204,
+      "hex": "0xCC",
+      "name": "SwkbdInputSeq",
+      "variant": 33,
+      "requestIds": []
+    },
+    {
+      "id": 205,
+      "hex": "0xCD",
+      "name": "SwkbdInputSeq",
+      "variant": 34,
+      "requestIds": []
+    },
+    {
+      "id": 206,
+      "hex": "0xCE",
+      "name": "SwkbdInputSeq",
+      "variant": 35,
+      "requestIds": []
+    },
+    {
+      "id": 207,
+      "hex": "0xCF",
+      "name": "SwkbdInputSeq",
+      "variant": 36,
+      "requestIds": []
+    },
+    {
+      "id": 208,
+      "hex": "0xD0",
+      "name": "SwkbdInputSeq",
+      "variant": 37,
+      "requestIds": []
+    },
+    {
+      "id": 209,
+      "hex": "0xD1",
+      "name": "SwkbdInputSeq",
+      "variant": 38,
+      "requestIds": []
+    },
+    {
+      "id": 210,
+      "hex": "0xD2",
+      "name": "SwkbdInputSeq",
+      "variant": 39,
+      "requestIds": []
+    },
+    {
+      "id": 211,
+      "hex": "0xD3",
+      "name": "SwkbdInputSeq",
+      "variant": 40,
+      "requestIds": []
+    },
+    {
+      "id": 212,
+      "hex": "0xD4",
+      "name": "SwkbdInputSeq",
+      "variant": 41,
+      "requestIds": []
+    },
+    {
+      "id": 213,
+      "hex": "0xD5",
+      "name": "SwkbdInputSeq",
+      "variant": 42,
+      "requestIds": []
+    },
+    {
+      "id": 214,
+      "hex": "0xD6",
+      "name": "SwkbdInputSeq",
+      "variant": 43,
+      "requestIds": []
+    },
+    {
+      "id": 215,
+      "hex": "0xD7",
+      "name": "SwkbdInputSeq",
+      "variant": 44,
+      "requestIds": []
+    },
+    {
+      "id": 216,
+      "hex": "0xD8",
+      "name": "SwkbdInputSeq",
+      "variant": 45,
+      "requestIds": []
+    },
+    {
+      "id": 217,
+      "hex": "0xD9",
+      "name": "SwkbdInputSeq",
+      "variant": 46,
+      "requestIds": []
+    },
+    {
+      "id": 218,
+      "hex": "0xDA",
+      "name": "SwkbdInputSeq",
+      "variant": 47,
+      "requestIds": []
+    },
+    {
+      "id": 219,
+      "hex": "0xDB",
+      "name": "cHotelRoomInteriorEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 220,
+      "hex": "0xDC",
+      "name": "cHotelRoomStorage",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 221,
+      "hex": "0xDD",
+      "name": "cHotelRoomThemeSelect",
+      "variant": null,
+      "requestIds": [
+        117
+      ]
+    },
+    {
+      "id": 222,
+      "hex": "0xDE",
+      "name": "cHotelRoomPhotographSelect",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 223,
+      "hex": "0xDF",
+      "name": "cHotelRoomPhotographSelectMenu",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 224,
+      "hex": "0xE0",
+      "name": "cHotelRoomSelectEditVisitList",
+      "variant": null,
+      "requestIds": [
+        118
+      ]
+    },
+    {
+      "id": 225,
+      "hex": "0xE1",
+      "name": "cHotelRoomDialogEditVisit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 226,
+      "hex": "0xE2",
+      "name": "cHotelCatalog",
+      "variant": null,
+      "requestIds": [
+        119
+      ]
+    },
+    {
+      "id": 227,
+      "hex": "0xE3",
+      "name": "cHotelCordeMannequinMain",
+      "variant": null,
+      "requestIds": [
+        120
+      ]
+    },
+    {
+      "id": 228,
+      "hex": "0xE4",
+      "name": "cDIYTrade",
+      "variant": null,
+      "requestIds": [
+        122
+      ]
+    },
+    {
+      "id": 229,
+      "hex": "0xE5",
+      "name": "cHotelVipNpcSelect",
+      "variant": null,
+      "requestIds": [
+        124
+      ]
+    },
+    {
+      "id": 230,
+      "hex": "0xE6",
+      "name": "cCloudIslandStorage",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 231,
+      "hex": "0xE7",
+      "name": "cCloudIslandSave",
+      "variant": null,
+      "requestIds": [
+        121
+      ]
+    },
+    {
+      "id": 232,
+      "hex": "0xE8",
+      "name": "cCloudIslandModeChange",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 233,
+      "hex": "0xE9",
+      "name": "cCloudIslandRoadSelect",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 234,
+      "hex": "0xEA",
+      "name": "cCloudIslandMap",
+      "variant": null,
+      "requestIds": [
+        123
+      ]
+    },
+    {
+      "id": 235,
+      "hex": "0xEB",
+      "name": "cCloudIslandMapFull",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 237,
+      "hex": "0xED",
+      "name": "cCloudIslandFencePut",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 238,
+      "hex": "0xEE",
+      "name": "cCloudIslandCustomHome",
+      "variant": null,
+      "requestIds": [
+        125
+      ]
+    },
+    {
+      "id": 239,
+      "hex": "0xEF",
+      "name": "cCloudIslandHouseInteriorEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 240,
+      "hex": "0xF0",
+      "name": "cCloudIslandTimeEdit",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 241,
+      "hex": "0xF1",
+      "name": "cCloudIslandMyDesignList",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 242,
+      "hex": "0xF2",
+      "name": "cCloudIslandShopBridgeSlope",
+      "variant": null,
+      "requestIds": [
+        126
+      ]
+    },
+    {
+      "id": 243,
+      "hex": "0xF3",
+      "name": "cCloudIslandMapRemove",
+      "variant": null,
+      "requestIds": [
+        127
+      ]
+    },
+    {
+      "id": 244,
+      "hex": "0xF4",
+      "name": "cCloudIslandDialogSelectIsland",
+      "variant": null,
+      "requestIds": [
+        128
+      ]
+    },
+    {
+      "id": 245,
+      "hex": "0xF5",
+      "name": "cCloudIslandWhiteEffect",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 246,
+      "hex": "0xF6",
+      "name": "cCloudIslandPlantVariation",
+      "variant": null,
+      "requestIds": []
+    },
+    {
+      "id": 247,
+      "hex": "0xF7",
+      "name": "cCloudIslandSwkbdInputIslandName",
+      "variant": null,
+      "requestIds": [
+        129
+      ]
+    },
+    {
+      "id": 248,
+      "hex": "0xF8",
+      "name": "cCloudIslandTimeReflection",
+      "variant": null,
+      "requestIds": []
+    }
+  ],
+  "requestLabelSource": "Explanatory operation labels used by this documentation; target names preserve internal factory strings."
+}

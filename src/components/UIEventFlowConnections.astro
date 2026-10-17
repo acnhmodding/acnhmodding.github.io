@@ -1,0 +1,58 @@
+---
+import catalog from '../../public/data/eventflow-functions.json';
+const hex = (id: number) => `0x${id.toString(16).toUpperCase().padStart(2, '0')}`;
+const connections = catalog.handlers.flatMap(handler =>
+  ('uiTargets' in handler ? handler.uiTargets : []).map((target: any) => ({ handler, target }))
+);
+---
+
+<ui-eventflow-connections>
+  <label>Search UI connections<input type="search" placeholder="Action, hash, request ID, or screen…" disabled /></label>
+  <p role="status" aria-live="polite">{connections.length} connections.</p>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="EventFlow UI connections">
+    <table>
+      <thead><tr><th>EventFlow action</th><th>Request ID</th><th>Object ID</th><th>Target</th><th>Operation</th></tr></thead>
+      <tbody>{connections.map(({handler, target}) => <tr data-search={[handler.name ?? '', handler.hash, ...handler.aliases, 'requestId' in target ? hex(target.requestId) : '', 'objectId' in target ? hex(target.objectId) : '', target.targetName, 'operation' in target ? target.operation : ''].join(' ').toLowerCase()}>
+        <td><code>{handler.name ?? handler.hash}</code></td>
+        <td>{'requestId' in target ? <code>{hex(target.requestId)}</code> : '—'}</td>
+        <td>{'objectId' in target ? <code>{hex(target.objectId)}</code> : '—'}</td>
+        <td><code>{target.targetName}</code></td>
+        <td>{'operation' in target ? target.operation : 'Open'}</td>
+      </tr>)}</tbody>
+    </table>
+  </div>
+</ui-eventflow-connections>
+
+<script>
+  class UIEventFlowConnections extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      this.dataset.ready = 'true';
+      const input = this.querySelector<HTMLInputElement>('input')!;
+      const status = this.querySelector<HTMLElement>('[role="status"]')!;
+      const rows = [...this.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      input.addEventListener('input', () => {
+        const term = input.value.trim().toLowerCase();
+        let count = 0;
+        for (const row of rows) {
+          row.hidden = !(row.dataset.search ?? '').includes(term);
+          if (!row.hidden) count++;
+        }
+        status.textContent = `${count} matching connections.`;
+      });
+      input.disabled = false;
+    }
+  }
+  if (!customElements.get('ui-eventflow-connections')) customElements.define('ui-eventflow-connections', UIEventFlowConnections);
+</script>
+
+<style>
+  ui-eventflow-connections { display: block; }
+  label { display: flex; flex-direction: column; gap: .25rem; font-size: .85rem; }
+  input { font: inherit; padding: .4rem .6rem; color: var(--sl-color-text); background: var(--sl-color-black); border: 1px solid var(--sl-color-gray-4); border-radius: .3rem; }
+  .table-wrap { overflow-x: auto; max-height: 36rem; }
+  table { width: 100%; font-size: .8rem; }
+  th, td { padding: .5rem; vertical-align: top; }
+  td code { white-space: normal; overflow-wrap: anywhere; }
+  [hidden] { display: none !important; }
+</style>

@@ -1,0 +1,51 @@
+---
+title: EventFlow Functions
+description: "Search registered EventFlow actions and queries by actor, name, alias, and handler hash."
+---
+
+import EventFlowCatalog from '../../../components/EventFlowCatalog.astro';
+
+[EventFlow scripts](/documentation/file-formats/bfevfl) call functions implemented by the game. The function registry contains **1,255 action handlers** and **959 query handlers**, including functions not declared in EventFlow scripts. Actions perform work and signal completion; queries return an integer used by a Switch event.
+
+Each entry lists the handler name or hash, supported actors, and aliases. **Reconstructed name** marks an inferred name; unnamed handlers are identified by their registered hash in this reference.
+
+## Actors and supported functions
+
+The game assigns each actor a category and creates the action and query handlers supported by that category. Multiple categories can expose the same handler, so the counts below overlap.
+
+| Actor group | Script actor names | Actions | Queries |
+| --- | --- | ---: | ---: |
+| Player | `Player` | 96 | 26 |
+| NPC | `MainNpc`, `SubNpc`, `Npc_1` through `Npc_5`, and `DynamicCast_*` NPC bindings | 346 | 323 |
+| EventFlowSystemActor | `EventFlowSystemActor` | 820 | 611 |
+| Ftr | `Ftr` | 16 | 8 |
+| SnowMan | `SnowMan` | 3 | 8 |
+| GeneralObject | `GeneralObject` | 2 | 6 |
+| HaniwaKun | `HaniwaKun` | 1 | 1 |
+
+These are function-support categories, rather than a list of individual villagers or furniture items. A script actor is bound to an actual game object when a flow runs. Names beginning with `DynamicCast_` select NPC bindings dynamically; they do not introduce another function category.
+
+An actor's **secondary name** distinguishes separate bindings of the same primary actor. For example, `EventFlowSystemActor[BgmActor]` and `EventFlowSystemActor[NetActor]` share the system actor's supported functions. The text in brackets represents the secondary name, rather than part of the primary actor name.
+
+## Names, aliases, and hashes
+
+An event first selects an actor and an action/query entry by their **local array indices** in the BFEVFL. The game then resolves the name to a handler using a **32-bit MurmurHash3 hash, with seed zero**. The hash in this catalog identifies the registered handler; it is separate from the event's local function index. Actions and queries use separate registries.
+
+`EventFlow/Info/BindInfo.byml` supplies aliases through `ActionBindData` and `QueryBindData`. Several names can resolve to one handler. The catalog places aliases beneath the handler name and includes them in searches. Hashes identify registered handler names; hashing an alias directly can produce a different value.
+
+## Function catalog
+
+Select an actor group to list its supported actions and queries. Search by name, alias, hash, or behavior. Unnamed entries display their handler hash in place of a name.
+
+<EventFlowCatalog />
+
+## Dispatcher special cases
+
+Some action names are handled directly by the flow dispatcher, outside the action factory registry:
+
+| Name | Behavior |
+| --- | --- |
+| `EventFlowActionExitFlowchart` | Requests that the flowchart exit. |
+| `EventFlowActionDummy` | Completes immediately. |
+
+`EventFlowActionReleaseVersionFile` is declared by scripts but has no matching factory-registry entry. It is excluded from the registered-handler counts above; its behavior is not specified here.
