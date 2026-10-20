@@ -1,7 +1,6 @@
 :root {
     --sl-content-margin-inline: unset;
     --sl-content-width: 100%;
-    --sl-content-width: 50rem;
     --sl-color-accent: hsl(144, 33%, 49%);
     --sl-color-accent-high: hsl(118, 45%, 58%);
     --sl-color-bg-nav: var(--sl-color-bg);

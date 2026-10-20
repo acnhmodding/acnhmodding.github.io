@@ -75,6 +75,10 @@ export default defineConfig({
 								items: [{ autogenerate: { directory: 'tools' } }]
 							},
 							{
+								label: 'Reverse Engineering',
+								items: [{ autogenerate: { directory: "reverse-engineering" } }]
+							},
+							{
 								label: 'Guides',
 								items: [{ autogenerate: { directory: "guides" } }]
 							},

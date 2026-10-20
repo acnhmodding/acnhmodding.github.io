@@ -1,0 +1,64 @@
+{
+  "formatVersion": 1,
+  "game": "Animal Crossing: New Horizons 3.0.3",
+  "disposerConstructor": "_ZN4sead9IDisposerC2EPNS_4HeapENS0_14HeapNullOptionE",
+  "hotMinimumCallSites": 200,
+  "functions": [
+    {
+      "name": "__cxa_atexit",
+      "size": 120,
+      "hash": "385c80f9d5a966bc688d",
+      "address303": "0x1D0",
+      "evidence": "Appends (function, argument, DSO handle) to the 24-byte exit table; static initializers pass destructor, object and __dso_handle."
+    },
+    {
+      "name": "_ZNK4sead7HeapMgr15findContainHeapEPKv",
+      "size": 1060,
+      "hash": "5e54525a795b05247fc5",
+      "address303": "0x37CB610",
+      "evidence": "Called by operator delete (_ZdlPv) with HeapMgr::sInstancePtr and the pointer, followed by the heap free virtual (+0x38)."
+    },
+    {
+      "name": "_ZN4sead22BufferedSafeStringBaseIcE6formatEPKcz",
+      "size": 208,
+      "hash": "cff7754b3173385afd25",
+      "address303": "0x37D1270",
+      "evidence": "nn::util::VSNPrintf into the buffer and capacity at +8 and +0x10 of a SafeString."
+    },
+    {
+      "name": "_ZN4sead22BufferedSafeStringBaseIcE16appendWithFormatEPKcz",
+      "size": 328,
+      "hash": "54a36afd80cdeb65d097",
+      "address303": "0x37D13F0",
+      "evidence": "Finds the current length (bounded at 0x80000), then nn::util::VSNPrintf into the remaining capacity; returns the new length."
+    },
+    {
+      "name": "_ZN4sead9IDisposerC2EPNS_4HeapENS0_14HeapNullOptionE",
+      "size": 276,
+      "hash": "4709dfc031fced54861b",
+      "address303": "0x37C69F0",
+      "evidence": "IDisposer constructor with an explicit heap and null option; every sead singleton createInstance calls it with option 3."
+    },
+    {
+      "name": "_ZN4sead9SemaphoreC2Eii",
+      "size": 216,
+      "hash": "167bb1fc3c03a7f4dd74",
+      "address303": "0x37E3114",
+      "evidence": "IDisposer constructor inlined, Semaphore vtable, then nn::os::InitializeSemaphore(+0x20, initial, maximum)."
+    },
+    {
+      "name": "_ZN4sead9SemaphoreD2Ev",
+      "size": 188,
+      "hash": "ff541fcd21ca0c8aaaa1",
+      "address303": "0x37E31EC",
+      "evidence": "nn::os::FinalizeSemaphore at +0x20, then the IDisposer destructor unlinks from the heap."
+    },
+    {
+      "name": "ACNH_MurmurHash3_x86_32_String",
+      "size": 260,
+      "hash": "574f24052a82ce7ab319",
+      "address303": "0x5BD550",
+      "evidence": "MurmurHash3 x86 32-bit of a NUL-terminated string with a seed (constants 0xcc9e2d51, 0x1b873593, 0xe6546b64)."
+    }
+  ]
+}

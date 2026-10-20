@@ -1,0 +1,60 @@
+---
+title: Useful Scripts
+description: "Ghidra scripts that name functions, recover actors, RTTI and state machines, and import BCSV and save data types."
+sidebar:
+  order: 3
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+Ghidra scripts based on [CylindricalEarth](https://github.com/Treeki/CylindricalEarth), updated to run directly in Ghidra. They target the **3.0.3** executable.
+
+| Script | What it does |
+| ------ | ------------ |
+| `RecoverActors.py` | Finds every actor, imports the actor ID enum, and names actor factories and vtables. |
+| `RecoverRTTIHierarchy.py` | Labels the game's custom RTTI type-info objects and vtables, and comments each type's parents. |
+| `NameLibraryFunctions.py` | Names imports, exports, common sead functions and singletons. |
+| `NameStateCallbacks.py` | Names state-machine callbacks after their states, for example `NpcAIState::cTalk_Exec`, and imports state index enums. |
+| `AnnotateBCSV.py` | Names BCSV reader classes, imports row layouts, field-offset caches and enums, and names functions that read a single field. |
+| `ImportSaveTypes.py` | Imports the 3.0 save data structures. |
+
+### Installation
+
+<Steps>
+    1. Download all scripts by [clicking here](/downloads/cylindrical-earth-acnh-scripts.zip).
+    2. Extract the ZIP to a folder of your choice. Keep the `cylindrical_earth` folder beside the scripts inside `ghidra_scripts`.
+    3. Open the analyzed game executable in [Ghidra](/reverse-engineering/ghidra-setup), with Python scripting support enabled.
+    4. Open **Window → Script Manager**, then **Manage Script Directories**, and add the extracted `ghidra_scripts` folder.
+    5. Run the scripts under **ACNH → CylindricalEarth** in the order below.
+    6. Check the console summary and save the program.
+</Steps>
+
+### Run order
+
+Each script works on its own, but this order gives the best names:
+
+| # | Script | Why |
+| - | ------ | --- |
+| 1 | `RecoverActors.py` | Labels actor vtables, used later to name singletons. |
+| 2 | `RecoverRTTIHierarchy.py` | Labels RTTI vtables, also used to name singletons. |
+| 3 | `NameLibraryFunctions.py` | Names sead functions and singletons using the labels from steps 1 and 2. |
+| 4 | `NameStateCallbacks.py` | Run before the BCSV script so callbacks get state names. |
+| 5 | `AnnotateBCSV.py` | Needs the `memset` import named, by the loader or step 3. |
+| 6 | `ImportSaveTypes.py` | Only imports types, so it can run at any time. |
+
+The scripts only rename functions that still have default names such as `FUN_`, so running one again never overwrites your own names.
+
+### Results
+
+New data types appear in the **Data Type Manager** under **ACNH**:
+
+| Category | Contents |
+| -------- | -------- |
+| **ACNH → Actors** | Actor ID enum and actor profile layout. |
+| **ACNH → States** | State index enums (`ACNH_State_*`) and the state manager layout. |
+| **ACNH → BCSV** | Row layouts (`ACNH_BcsvRow_*`), field-offset caches (`ACNH_BcsvOffsets_*`) and enum index types. |
+| **ACNH → Save** | Save data structures. |
+
+BCSV fields are not read through a shared getter: the game inlines every read. `AnnotateBCSV.py` adds a comment to each function that reads BCSV fields, such as `Reads BCSV fields: ItemParam.Height, ItemParam.Width.` Small functions that read a single field are named after it, for example `Bcsv::ItemParam::Read_CarpetMaterial`.
+
+The save structures describe the save file data, not the game's objects in memory. Apply them to save buffers.

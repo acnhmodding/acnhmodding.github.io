@@ -1,0 +1,38 @@
+---
+title: Setting up Ghidra
+description: "Learn how to install and set up Ghidra."
+sidebar:
+    order: 2
+---
+
+Ghidra is a powerful open-source reverse engineering tool developed by the National Security Agency (NSA). It allows you to analyze and decompile executable files, making it easier to understand how a game works and how to modify it.
+
+### Prerequisites
+- [JDK 21](https://adoptium.net/temurin/releases?version=21)
+
+### Installing Ghidra
+
+import { Steps } from '@astrojs/starlight/components';
+
+<Steps>
+1. Go to the [latest GitHub release](https://github.com/NationalSecurityAgency/ghidra/releases/latest).
+2. Download the `.zip` file.
+3. Extract the downloaded file to a location of your choice.
+4. Open the extracted folder.
+5. Run `./ghidraRun` (macOS/Linux) or double-click `ghidraRun.bat` (Windows).
+</Steps>
+
+### Installing Switch Loader
+To analyze *Animal Crossing: New Horizons* or *any Nintendo Switch game*, you will need to install the Switch Loader plugin for Ghidra. This plugin allows Ghidra to understand and analyze Nintendo Switch executable files.
+
+<Steps>
+1. Go to the [Switch Loader releases](https://github.com/Adubbz/Ghidra-Switch-Loader/releases).
+2. Download the `.zip` built for your Ghidra version. The version is in the release name, for example `Ghidra_12.1.2`.
+3. Start Ghidra and use the "Install Extensions" dialog (`File` -> `Install Extensions`).
+4. Click on the `+` button in the upper right corner.
+5. Select the downloaded `.zip` and reopen Ghidra.
+</Steps>
+
+:::tip
+**dt12345**'s [fork of Switch Loader](https://github.com/dt-12345/Ghidra-Switch-Loader) is more up to date and has some extra features, but it has no releases, so you have to build it yourself (with JDK 21). Install the built `.zip` with the same steps.
+:::

@@ -1,0 +1,24 @@
+---
+title: Dumping ExeFS
+description: "Learn how to dump the ExeFS from your Nintendo Switch game."
+sidebar:
+    order: 1
+---
+
+To reverse engineer a Nintendo Switch game, you first need to dump its ExeFS (Executable File System). The ExeFS contains the game's executable code and other essential files.
+
+### Using an Emulator
+The easiest way to dump the ExeFS is with the Ryujinx emulator, which can extract the RomFS and ExeFS from your game.
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+  <TabItem label="Ryujinx/Ryubing">
+    <Steps>
+    1. Open Ryujinx.
+    2. Right click your game.
+    3. Select `Extract Data` -> `ExeFS`.
+    4. Choose the destination folder and wait for the process to finish. 
+    </Steps>
+  </TabItem>
+</Tabs>

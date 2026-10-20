@@ -1,0 +1,76 @@
+---
+title: Creating Skyline Plugins
+description: "Learn how to create mods using Skyline."
+sidebar:
+    order: 4
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+[Skyline](https://github.com/skyline-dev/skyline) is an environment for linking, runtime hooking and code patching originally designed for **Super Smash Bros Ultimate** but can be used with other Nintendo Switch games.
+
+This is a great tool for modders who want to create mods that require code changes, as it allows you to write your mods in **Rust** or **C++**.
+
+:::note
+This guide is for advanced users who are already familiar with reverse engineering and coding in general, if you don't know what reverse engineering is or don't know how to code we recommend starting with a more introductory guide.
+:::
+
+## Installing Skyline
+
+ACNH needs its own Skyline build: [skyline-acnh](https://github.com/acnhmodding/skyline-acnh), a Skyline fork made for *Animal Crossing: New Horizons*.
+
+<Steps>
+1. Go to the [latest skyline-acnh release](https://github.com/acnhmodding/skyline-acnh/releases/latest).
+2. Download `skyline.zip`.
+3. Extract it and copy the `exefs` directory to `atmosphere/contents/01006F8002326000/` on your Switch SD card.
+</Steps>
+
+:::tip
+If you are testing your mods on an emulator instead of hardware, the path structure inside `atmosphere/` remains identical, but starts from the emulator's virtual SD card root:
+
+- Ryujinx: `Ryujinx/sdcard/atmosphere/contents/01006F8002326000/`.
+- Eden: `eden/sdmc/atmosphere/contents/01006F8002326000/`.
+:::
+
+## Logging
+
+<Tabs>
+  <TabItem label="Skyline">
+    <Steps>
+    1. Set your Switch's IP address with `cargo skyline set-ip <SWITCH_IP_ADDRESS>`.
+    2. Run `cargo skyline listen` to start listening for logs.
+    </Steps>
+    :::note
+    Replace `<SWITCH_IP_ADDRESS>` with your Nintendo Switch's actual local IP address (found in your console's Internet Settings). If you are using an emulator on the same computer, you can use localhost.
+    :::
+    </TabItem>
+  <TabItem label="Netcat (Linux)">
+    <Steps>
+    1. Run the following command in your terminal while the game is running:
+    
+        ```bash
+        nc <SWITCH_IP_ADDRESS> 6969
+        ``` 
+    2. Look for the logs in the console output.
+    </Steps>
+    :::note
+    Replace `<SWITCH_IP_ADDRESS>` with your Nintendo Switch's actual local IP address (found in your console's Internet Settings). If you are using an emulator on the same computer, you can use localhost.
+    :::
+  </TabItem>
+  <TabItem label="PuTTY (Windows)">
+    <Steps>
+    1. Open PuTTY.
+    2. Enter your Switch/PC IP address and set the Port to `6969`.
+    3. Select `Raw` as the Connection Type and click **Open**.
+    </Steps>
+  </TabItem>
+</Tabs>
+
+## Writing mods with Rust
+
+<Steps>
+1. Install `cargo-skyline` with `cargo install cargo-skyline`.
+2. Create a new project with `cargo skyline new <project_name>`.
+3. To build a project simply run `cargo skyline build`.
+4. Once built, your compiled plugin will be located in the `target/aarch64-skyline-switch` directory. This is to be copied over to `atmosphere/contents/01006F8002326000/romfs/skyline/plugins/`
+</Steps>
