@@ -336,9 +336,26 @@ def field_names(fields):
 
 ACCESSOR_SIZE = 0x300
 LISTED_FIELDS = 16
+FIELD_COMMENT = "Reads BCSV fields: "
+FINDER_COMMENT = "Finds a field in a "
+FINDER_SCAN = 0x60
 
 
-def plan_accessors(uses, sizes, excluded=()):
+def is_field_finder(code):
+    """True for a table's FindField(row, slot, hash) helper, from its first instructions.
+
+    It bounds-checks the slot in w1 (`cmp w1, #n`, then within a few
+    instructions `csel xd, xzr, xs, hi`) and indexes the offset cache with it,
+    so it reads any field. Ghidra only sees its reference to the cache's first
+    slot, which looks like an accessor.
+    """
+    words = struct.unpack("<%dI" % (len(code) // 4), code[:len(code) // 4 * 4])
+    return any(word & 0xFF8003FF == 0x7100003F and
+               any(later & 0xFFE0FFE0 == 0x9A8083E0 for later in words[index + 1:index + 5])
+               for index, word in enumerate(words))
+
+
+def plan_accessors(uses, sizes, excluded=(), finders=()):
     """Return ({entry: (reader, name)}, {entry: comment}) for field readers.
 
     `uses` maps a function entry to {reader: set(field names)}, recovered from
@@ -346,10 +363,18 @@ def plan_accessors(uses, sizes, excluded=()):
     read (check the slot, else search the row header for the field's CRC32), so
     a small function that touches one slot is that field's accessor. Only those
     are named; every other function gets a comment listing the fields it reads.
+    `finders` are FindField helpers, named after their table instead.
     """
-    single, comments = defaultdict(list), {}
+    single, found, comments = defaultdict(list), defaultdict(list), {}
     for entry, readers in uses.items():
         if entry in excluded:
+            continue
+        if entry in finders:
+            if len(readers) == 1:
+                reader = next(iter(readers))
+                comments[entry] = (FINDER_COMMENT + "row of %s.bcsv: w1 is the field's offset-cache slot and w2 its "
+                                   "CRC32 hash. Returns the field's address, or null." % reader)
+                found[reader].append(entry)
             continue
         fields = sorted("%s.%s" % (reader, name) for reader, names in readers.items() for name in names)
         if not fields:
@@ -357,7 +382,7 @@ def plan_accessors(uses, sizes, excluded=()):
         listed = ", ".join(fields[:LISTED_FIELDS])
         if len(fields) > LISTED_FIELDS:
             listed += " and %d more" % (len(fields) - LISTED_FIELDS)
-        comments[entry] = "Reads BCSV fields: " + listed + "."
+        comments[entry] = FIELD_COMMENT + listed + "."
         if len(fields) == 1 and sizes.get(entry, ACCESSOR_SIZE + 1) <= ACCESSOR_SIZE:
             reader = next(iter(readers))
             single[(reader, next(iter(readers[reader])))].append(entry)
@@ -365,4 +390,7 @@ def plan_accessors(uses, sizes, excluded=()):
     for (reader, field), entries in single.items():
         for entry in entries:
             names[entry] = (reader, "Read_" + field if len(entries) == 1 else "Read_%s_%X" % (field, entry))
+    for reader, entries in found.items():
+        for entry in entries:
+            names[entry] = (reader, "FindField" if len(entries) == 1 else "FindField_%X" % entry)
     return names, comments

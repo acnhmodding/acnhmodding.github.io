@@ -6,8 +6,6 @@ import os
 import re
 import struct
 from collections import defaultdict
-from java.lang import String
-from java.nio import ByteBuffer
 from ghidra.app.emulator import EmulatorHelper
 from ghidra.app.decompiler import DecompInterface
 from ghidra.program.model.data import (
@@ -16,12 +14,23 @@ from ghidra.program.model.data import (
     UnsignedCharDataType, UnsignedIntegerDataType, UnsignedLongLongDataType,
     VoidDataType,
 )
-from ghidra.program.model.listing import CodeUnit
+from ghidra.program.model.listing import CodeUnit, GhidraClass
 from ghidra.program.model.symbol import SourceType
 from ghidra.util.exception import CancelledException
-from .bcsv import read_blocks
-from .bcsv_core import identifier
-from .image import Image, address_getter, fingerprint, rtti_candidates, signed
+from .bcsv import got_blocks, make_thiscall, read_blocks
+from .bcsv_core import identifier, scan_readers
+from .image import (
+    Image, address_constants, address_getter, class_identity, class_layouts, constructed_type, destructors, fingerprint,
+    reader_type_names, rtti_candidates, signed, size_getter, type_names, virtual_methods, vptr_stores, vtable_bounds,
+)
+
+# Names that earlier runs gave to unnamed type-infos; later runs may improve them.
+FALLBACK_NAME = re.compile(r'^ACNH_TypeInfo_[0-9A-F]+_')
+# Deleting destructors tail-call one of these; the game folds operator delete into free.
+DELETE_NAMES = ('free', 'operator.delete', '_ZdlPv', '_ZdlPvm')
+# Methods this script names; vtable structure fields drop the class part.
+METHOD_NAME = re.compile(r'^ACNH_\w+_(GetClassName|GetClassSize|IsDerivedFrom|GetTypeInfo|Destructor|DeletingDestructor)$')
+CLASSES = '/ACNH/Classes'
 
 
 class AnalysisFailure(Exception):
@@ -42,18 +51,10 @@ def image_for(program, monitor):
     if program.getDefaultPointerSize() != 8 or program.getLanguage().isBigEndian():
         raise ValueError('Expected a little-endian 64-bit program.')
     image = Image(*read_blocks(program, monitor))
-    try:
-        text_type = unicode
-    except NameError:
-        text_type = str
     # Some getter variants load their return address through the GOT.
-    for block in program.getMemory().getBlocks():
-        if str(block.getName()) in ('.got', '.got.plt') and block.isInitialized():
-            buffer = ByteBuffer.allocate(int(block.getSize())).array()
-            program.getMemory().getBytes(block.getStart(), buffer)
-            pair = (int(block.getStart().getOffset()), text_type(String(buffer, 'ISO-8859-1')).encode('latin-1'))
-            image.constants.append(pair)
-            image.blocks.append(pair)
+    for pair in got_blocks(program):
+        image.constants.append(pair)
+        image.blocks.append(pair)
     return image
 
 
@@ -154,23 +155,59 @@ class Annotations:
     def address(self, value):
         return self.space.getAddress(value)
 
-    def label(self, address, name):
+    def label(self, address, name, replace=None):
+        """Label a default address; `replace` also matches our own earlier analysis names."""
         address = self.address(address)
         current = self.symbols.getPrimarySymbol(address)
         if current is not None and not current.isDynamic() and not str(current.getName()).startswith(('DAT_', 'PTR_', 'UNK_')):
+            if replace is not None and current.getSource() == SourceType.ANALYSIS and replace.match(str(current.getName())):
+                current.setName(name, SourceType.ANALYSIS)
             return
         self.symbols.createLabel(address, name, self.program.getGlobalNamespace(), SourceType.ANALYSIS)
 
-    def function(self, address, name):
+    def function(self, address, name, replace=None):
         function = self.program.getFunctionManager().getFunctionAt(self.address(address))
-        if function is not None and str(function.getName()).startswith(('FUN_', 'sub_')):
+        if function is None:
+            return
+        current = str(function.getName())
+        if current.startswith(('FUN_', 'sub_')) or (replace is not None and function.getSymbol().getSource() == SourceType.ANALYSIS
+                                                    and replace.match(current)):
             function.setName(name, SourceType.ANALYSIS)
 
-    def comment(self, address, message):
+    def klass(self, name):
+        """The class `name` in the global namespace, converting a plain namespace or creating it."""
+        symbols, root = self.symbols, self.program.getGlobalNamespace()
+        value = symbols.getNamespace(name, root)
+        if value is None:
+            return symbols.createClass(root, name, SourceType.ANALYSIS)
+        return value if isinstance(value, GhidraClass) else symbols.convertNamespaceToClass(value)
+
+    def member(self, address, owner, name=None, old=None):
+        """Move a function into class `owner` and return it, or None when it belongs elsewhere.
+
+        Only functions in the global namespace with a default name, or with the
+        name `old` that this script gave them, move; they are then renamed to
+        `name` when one is given.
+        """
+        function = self.program.getFunctionManager().getFunctionAt(self.address(address))
+        if function is None or function.isThunk():
+            return None
+        current = str(function.getName())
+        ours = function.getSymbol().getSource() == SourceType.ANALYSIS and current == old
+        if function.getParentNamespace().isGlobal() and (current.startswith(('FUN_', 'sub_')) or ours):
+            function.setParentNamespace(owner)
+            if name is not None:
+                function.setName(name, SourceType.ANALYSIS)
+        return function if function.getParentNamespace().getID() == owner.getID() else None
+
+    def comment(self, address, message, replace=None):
+        """Append a pre-comment; `replace` drops earlier paragraphs that start with that prefix."""
         listing, address = self.program.getListing(), self.address(address)
         old = listing.getComment(CodeUnit.PRE_COMMENT, address)
         if old and message in str(old):
             return
+        if old and replace:
+            old = '\n\n'.join(part for part in str(old).split('\n\n') if not part.startswith(replace))
         listing.setComment(address, CodeUnit.PRE_COMMENT, str(old) + '\n\n' + message if old else message)
 
     def structure(self, name, size, fields, category='/ACNH/Actors'):
@@ -268,7 +305,8 @@ def rtti_hierarchy(program, monitor, image, config, emit=print):
             finally:
                 emulator.close()
         if cache[key]:
-            accepted.append(dict(row, chain=cache[key], name=config['rttiGetterNames'].get(fingerprint(image, row['getter']))))
+            accepted.append(dict(row, chain=cache[key], name=config['rttiGetterNames'].get(fingerprint(image, row['getter'])),
+                                 identity=class_identity(image, row['vtable'])))
         if index % 100 == 0:
             emit('RTTI candidates: %d / %d; accepted %d' % (index + 1, len(candidates), len(accepted)))
     # A type-info address must describe one consistent linear ancestry.
@@ -455,7 +493,14 @@ def run_actors(program, monitor, directory, emit=print):
             annotations.structure('ACNH_Actor_' + name, row['size'], actor_fields)
             if 'vtable' in row:
                 annotations.label(row['vtable'], 'ACNH_Actor_' + name + '_vtable')
-                annotations.comment(row['vtable'], '%s actor vtable; factory root-object assignment and class-name getter at +0x10 agree.' % row['className'])
+                message = '%s actor vtable; factory root-object assignment and class-name getter at +0x10 agree.' % row['className']
+                getter = image.pointer(row['vtable'] + 24)
+                size = size_getter(image, getter) if getter is not None else None
+                if size is not None:
+                    # The allocation size and getClassSize are independent evidence for the same class.
+                    message += ' Class-size getter at +0x18 returns 0x%X, %s the allocation size.' % (
+                        size, 'matching' if size == row['size'] else 'unlike')
+                annotations.comment(row['vtable'], message, '%s actor vtable;' % row['className'])
             factories[row['factory']].append(row)
         annotations.function(target, 'ACNH_ActorProfile_Register')
         for factory, rows in factories.items():
@@ -477,36 +522,204 @@ def run_rtti(program, monitor, directory, emit=print):
     if not rows:
         raise AnalysisFailure('No validated custom RTTI chains found; no changes applied.')
     annotations = Annotations(program, monitor)
-    names, parents, methods = defaultdict(set), {}, defaultdict(set)
+    parents, methods = {}, defaultdict(set)
+    infos = set(info for row in rows for info in row['chain'])
     for row in rows:
-        if row['name']:
-            names[row['info']].add(row['name'])
         for child, parent in zip(row['chain'], row['chain'][1:]):
             parents[child] = parent
-    resolved = {info: next(iter(values)) for info, values in names.items() if len(values) == 1}
+    monitor.setMessage('Identifying BCSV reader vtables')
+    readers = reader_type_names(rows, scan_readers(image.texts, image.constants, image.tables, monitor.checkCancelled))
+    users = user_names(program, annotations, infos)
+    # A reader class you named yourself keeps your name.
+    readers = dict((info, name) for info, name in readers.items() if info not in users)
+    resolved, conflicts = type_names(rows, readers, users)
+    failures.extend(conflicts)
+    deletes = delete_functions(program)
+    pairs = dict((row['vtable'], destructors(image, row['vtable'], deletes)) for row in rows)
+    layouts, types = class_layouts(image, rows), {}
+    monitor.setMessage('Finding constructors')
+    constructors = find_constructors(program, image, annotations, rows, pairs)
+    # Each getter initializes its type-info once, behind a guard variable just after it.
+    guards = set(row['info'] for row in rows if row['info'] + 8 in address_constants(image, row['getter']))
+    monitor.setMessage('Finding virtual methods')
+    virtuals, typed = virtual_methods(image, rows, set(layouts)), defaultdict(int)
     def name(info):
         return resolved.get(info, 'TypeInfo_%X' % info)
     def apply():
-        infos = set(info for row in rows for info in row['chain'])
         for info in sorted(infos):
             monitor.checkCancelled()
-            annotations.label(info, 'ACNH_' + identifier(name(info)) + '_typeInfo')
+            annotations.label(info, 'ACNH_' + identifier(name(info)) + '_typeInfo', FALLBACK_NAME)
+            if info in guards:
+                annotations.label(info + 8, 'ACNH_' + identifier(name(info)) + '_typeInfoGuard', FALLBACK_NAME)
             if info in parents:
-                annotations.comment(info, 'Custom RTTI parent: %s (0x%X).' % (name(parents[info]), parents[info]))
+                annotations.comment(info, 'Custom RTTI parent: %s (0x%X).' % (name(parents[info]), parents[info]), 'Custom RTTI parent:')
         for row in rows:
             monitor.checkCancelled()
             label = identifier(name(row['info']))
-            annotations.label(row['vtable'], 'ACNH_' + label + '_vtable_%X' % row['vtable'])
-            annotations.comment(row['vtable'], 'Custom RTTI: ' + ' -> '.join('%s (0x%X)' % (name(info), info) for info in row['chain']) + '.')
-            methods[row['predicate']].add('ACNH_' + label + '_IsDerivedFrom')
-            methods[row['getter']].add('ACNH_' + label + '_GetTypeInfo')
+            annotations.label(row['vtable'], 'ACNH_' + label + '_vtable_%X' % row['vtable'], FALLBACK_NAME)
+            message = 'Custom RTTI: ' + ' -> '.join('%s (0x%X)' % (name(info), info) for info in row['chain']) + '.'
+            identity = row.get('identity')
+            if identity:
+                # The size getter may be shared through identical-code folding; methods
+                # are only named when a single class uses them.
+                message += ' Class-name getter at -0x10 returns "%s"; class-size getter at -0x8 returns 0x%X.' % (identity['name'], identity['size'])
+                methods[identity['nameGetter']].add((row['info'], 'GetClassName'))
+                methods[identity['sizeGetter']].add((row['info'], 'GetClassSize'))
+            pair = pairs[row['vtable']]
+            if pair:
+                message += ' Destructors at +0x10 (complete) and +0x18 (deleting).'
+                methods[pair[0]].add((row['info'], 'Destructor'))
+                methods[pair[1]].add((row['info'], 'DeletingDestructor'))
+            annotations.comment(row['vtable'], message, 'Custom RTTI:')
+            methods[row['predicate']].add((row['info'], 'IsDerivedFrom'))
+            methods[row['getter']].add((row['info'], 'GetTypeInfo'))
+        for address, info in constructors.items():
+            methods[address].add((info, 'Constructor'))
         for address, choices in methods.items():
             if len(choices) == 1:
-                annotations.function(address, next(iter(choices)))
+                info, short = next(iter(choices))
+                annotations.function(address, 'ACNH_' + identifier(name(info)) + '_' + short, FALLBACK_NAME)
+        # Structures come after the names, so vtable fields pick them up.
+        for info in sorted(layouts):
+            monitor.checkCancelled()
+            class_structure(program, image, annotations, layouts, types, info, lambda i: 'ACNH_' + identifier(name(i)))
+        # Then the methods of each class with a structure move into it, with short names, and take a typed this.
+        members = dict((address, (info, None)) for address, info in virtuals.items())
+        for address, choices in methods.items():
+            info, short = next(iter(choices))
+            if len(choices) == 1 and (short == 'Constructor' or virtuals.get(address) == info):
+                members[address] = (info, short)
+        for address, (info, short) in sorted(members.items()):
+            monitor.checkCancelled()
+            if types.get(info) is None:
+                continue
+            label = 'ACNH_' + identifier(name(info))
+            try:
+                function = annotations.member(address, annotations.klass(label), short and (label if short == 'Constructor' else short),
+                                              short and label + '_' + short)
+                outcome = make_thiscall(function)
+            except Exception as error:
+                annotations.skipped.append('%X: cannot make it a method of %s (%s)' % (address, label, error))
+                continue
+            if outcome is not None:
+                typed[outcome] += 1
     transaction(program, 'Recover ACNH custom RTTI hierarchy', monitor, apply)
     # Print each type once, without recursive traversal or unbounded trees.
-    for info in sorted(set(info for row in rows for info in row['chain'])):
+    for info in sorted(infos):
         emit('%s [0x%X]%s' % (name(info), info, ' -> ' + name(parents[info]) if info in parents else ''))
-    emit('Finished. %d validated vtables; %d type-info nodes; %d rejected candidates.' %
-         (len(rows), len(set(info for row in rows for info in row['chain'])), len(failures)))
+    named = dict(fingerprint=set(row['info'] for row in rows if row['name']),
+                 classNameGetter=set(row['info'] for row in rows if row.get('identity')))
+    emit('Finished. %d validated vtables; %d type-info nodes, %d named (%d from getter fingerprints, %d from class-name '
+         'getters, %d BCSV readers); %d type-info guards; %d vtables with destructors; %d constructors; %d class structures; %d methods and '
+         'constructors given a typed this; %d signatures an earlier run locked restored; %d rejected candidates or name conflicts; %d type conflicts.' %
+         (len(rows), len(infos), len(infos.intersection(resolved)), len(named['fingerprint']), len(named['classNameGetter']),
+          len(readers), len(guards), sum(1 for pair in pairs.values() if pair), len(constructors), sum(1 for t in types.values() if t is not None),
+          typed['typed'], typed['unlocked'], len(failures), len(annotations.skipped)))
+    if not deletes:
+        emit('Skipped destructors: no free or operator delete symbol found.')
+    for message in annotations.skipped:
+        emit('Skipped ' + message)
     return rows, failures
+
+
+def class_structure(program, image, annotations, layouts, types, info, label_of):
+    """Create the class structure of `info`, embedding its parent's as `super` when it has one."""
+    if info in types:
+        return types[info]
+    layout, manager, label = layouts[info], annotations.manager, label_of(info)
+    pointer = PointerDataType(VoidDataType.dataType, 8, manager)
+    table = None
+    if layout['vtable'] is not None:
+        start, slots = layout['vtable']
+        fields, used = [], set()
+        for index in range(slots):
+            field = slot_name(program, annotations.address(image.pointer(start + 8 * index)), index)
+            if field in used:
+                field += '_%X' % (8 * index)
+            used.add(field)
+            fields.append((8 * index, pointer, field))
+        table = annotations.structure(label + '_vtable', 8 * slots, fields, CLASSES)
+    parent = layout['parent']
+    parent_type = None
+    if parent is not None:
+        parent_type = class_structure(program, image, annotations, layouts, types, parent, label_of)
+    first = (0, parent_type, 'super') if parent_type is not None else (0, PointerDataType(table or pointer, 8, manager), 'vtable')
+    types[info] = annotations.structure(label, layout['size'], [first], CLASSES)
+    return types[info]
+
+
+def find_constructors(program, image, annotations, rows, pairs):
+    """Map constructor addresses to the type they construct.
+
+    Candidates are the functions that refer to a primary vtable, directly or
+    through its GOT entry. A constructor stores the vtable at offset 0 of `this`.
+    A lone store could also be a destructor, so it is only trusted when the type's
+    virtual destructor is known; otherwise the parent's vtable must be stored first.
+    """
+    chains, owners = {}, defaultdict(set)
+    for row in rows:
+        chains[row['info']] = row['chain']
+        bounds = vtable_bounds(image, row['vtable'])
+        if bounds is not None:
+            owners[bounds[0]].add(row['info'])
+    points = dict((point, next(iter(infos))) for point, infos in owners.items() if len(infos) == 1)
+    known = set(row['info'] for row in rows if pairs[row['vtable']])
+    skip = set(address for pair in pairs.values() if pair for address in pair)
+    references, functions, writers = program.getReferenceManager(), program.getFunctionManager(), {}
+    for point in points:
+        for target in (point, point - 16):
+            for reference in references.getReferencesTo(annotations.address(target)):
+                sources = [reference.getFromAddress()]
+                if functions.getFunctionContaining(sources[0]) is None:
+                    sources = [r.getFromAddress() for r in references.getReferencesTo(sources[0])]
+                for source in sources:
+                    function = functions.getFunctionContaining(source)
+                    if function is not None:
+                        entry = function.getEntryPoint()
+                        end = function.getBody().getRangeContaining(entry).getMaxAddress()
+                        writers[int(entry.getOffset())] = int(end.getOffset())
+    result = {}
+    for address, end in writers.items():
+        if address in skip:
+            continue
+        stores = vptr_stores(image, address, end, points)
+        info = constructed_type(stores, points, chains)
+        if info is not None and (info in known or len(stores) > 1):
+            result[address] = info
+    return result
+
+
+def slot_name(program, address, index):
+    function = program.getFunctionManager().getFunctionAt(address)
+    name = str(function.getName()) if function is not None else ''
+    if not name or name.startswith(('FUN_', 'sub_')):
+        return 'vfunc_%X' % (8 * index)
+    match = METHOD_NAME.match(name)
+    return match.group(1) if match else identifier(name)
+
+
+def delete_functions(program):
+    result = set()
+    for name in DELETE_NAMES:
+        for symbol in program.getSymbolTable().getSymbols(name):
+            if not symbol.isExternal():
+                result.add(int(symbol.getAddress().getOffset()))
+    return result
+
+
+def user_names(program, annotations, infos):
+    """Names the user already gave type-infos, such as `Foo::sTypeInfo`, `Foo::sStaticTypeInfo` or `ACNH_Foo_typeInfo`.
+
+    A name given to several type-infos is ambiguous and ignored.
+    """
+    result, counts = {}, defaultdict(int)
+    for info in infos:
+        symbol = annotations.symbols.getPrimarySymbol(annotations.address(info))
+        if symbol is None or symbol.getSource() != SourceType.USER_DEFINED:
+            continue
+        name = re.sub(r'(?:::sTypeInfo|::sStaticTypeInfo|_typeInfo)$', '', str(symbol.getName(True)))
+        name = identifier(re.sub(r'^ACNH_', '', name))
+        if name != 'Field':
+            result[info] = name
+            counts[name] += 1
+    return dict((info, name) for info, name in result.items() if counts[name] == 1)

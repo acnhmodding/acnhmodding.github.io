@@ -9,15 +9,21 @@ based at 0x7100000000 and test fixtures based at 0.
 import hashlib
 import json
 import os
+import re
 import struct
 from collections import Counter, defaultdict
 
-from .image import signed
+from .image import address_getter, pointer_chunks, reader_classes, signed
 from .state_core import words_of
 
 DT_PLTRELSZ, DT_STRTAB, DT_SYMTAB, DT_STRSZ, DT_JMPREL = 2, 5, 6, 10, 23
 R_AARCH64_JUMP_SLOT = 1026
 RET = 0xd65f03c0
+# `Class::method` names given to delegates and threads. State names such as
+# `Class::cIdle` name a nested state class instead, so they are left out.
+DELEGATE_NAME = re.compile(r'^((?:[A-Z]\w*::)*[A-Z]\w*)::(?!c[A-Z])[A-Za-z_]\w*$')
+GET_FILE_NAME = 0x30
+READER_SLOTS = 9
 # x0-x18 do not survive a call.
 CALL_CLOBBERED = range(19)
 
@@ -480,7 +486,306 @@ def singletons(image, header, ranges, disposer_ctor, known=(), check_cancel=lamb
         if row is not None:
             rows.append(row)
     counts = Counter(row['instance'] for row in rows)
-    return [row for row in rows if counts[row['instance']] == 1]
+    rows = [row for row in rows if counts[row['instance']] == 1]
+    # A constructor that was not inlined stores the vtable itself. A constructor
+    # or vtable two singletons share is a base class's.
+    ends, shared, found = dict(ranges), Counter(row['constructor'] for row in rows), {}
+    for row in rows:
+        start = row['constructor']
+        if row['vtable'] is None and row['disposerOffset'] and start in ends and shared[start] == 1:
+            found[row['instance']] = constructor_vtable(image, start, ends[start])
+    tables = Counter(row['vtable'] or found.get(row['instance']) for row in rows)
+    for row in rows:
+        table = found.get(row['instance'])
+        if table is not None and tables[table] == 1:
+            row['vtable'] = table
+    return rows
+
+
+def constructor_vtable(image, start, end):
+    """Return the vtable a constructor stores last at offset 0 of `this`, or None.
+
+    Parent constructors, called or inlined, store their vtables first, so the
+    class's own comes last. `this` arrives in x0 and may be copied to a
+    callee-saved register. The vtable address is built with ADRP; ADD, or
+    loaded from a GOT slot and moved to its address point with ADD.
+    """
+    raw = image.read(start, end - start)
+    if raw is None:
+        return None
+    this, addresses, found = set([0]), {}, None
+    for i, w in enumerate(words_of(raw)):
+        pc = start + i * 4
+        rd, rn = w & 31, (w >> 5) & 31
+        stored = None
+        if w & 0x3b200400 == 0x38000400 or w & 0x3a800000 == 0x28800000:  # pre- or post-index: Xn moves
+            for register in (rn,) + ((rd, (w >> 10) & 31) if w & 0x00400000 else ()):
+                this.discard(register)
+                addresses.pop(register, None)
+            continue
+        if w & 0x9f000000 == 0x90000000:  # ADRP
+            value = adrp_target(pc, w)
+        elif w & 0xff800000 == 0x91000000:  # ADD Xd, Xn, #imm
+            base = addresses.get(rn)
+            value = base + (((w >> 10) & 4095) << (12 if w & 0x00400000 else 0)) if base is not None else None
+        elif w & 0xffc00000 == 0xf9400000:  # LDR Xt, [Xn, #imm]
+            base = addresses.get(rn)
+            value = image.pointer(base + ((w >> 10) & 4095) * 8) if base is not None else None
+            value = value if value is not None and image.table(value, 8) else None
+        elif w & 0x7fe0ffe0 == 0x2a0003e0 and w >> 31:  # MOV Xd, Xm
+            rm = (w >> 16) & 31
+            if rm in this:
+                this.add(rd)
+                addresses.pop(rd, None)
+                continue
+            value = addresses.get(rm)
+        elif w & 0xffc00000 == 0xf9000000:  # STR Xt, [Xn, #imm]
+            if (w >> 10) & 4095:
+                continue
+            stored = rd
+        elif w & 0xffff8000 == 0xa9000000:  # STP Xt, Xt2, [Xn] with no offset
+            stored = rd
+        elif w & 0xfc000000 == 0x94000000 or w & 0xfffffc1f == 0xd63f0000:  # BL, BLR
+            for register in CALL_CLOBBERED:
+                this.discard(register)
+                addresses.pop(register, None)
+            continue
+        elif w & 0x7c000000 == 0x14000000 or w == RET or w & 0x7e000000 == 0x34000000 or w & 0xff000010 == 0x54000000:
+            continue  # branches leave registers unchanged
+        elif is_store(w) or w & 0x7e400000 in (0x28000000, 0x2c000000):
+            continue  # other stores and STP leave registers unchanged
+        else:
+            value = None
+            if w & 0x7e400000 in (0x28400000, 0x2c400000):  # LDP also writes Rt2
+                this.discard((w >> 10) & 31)
+                addresses.pop((w >> 10) & 31, None)
+        if stored is not None:
+            value = addresses.get(stored)
+            if rn in this and value is not None and image.executable(image.pointer(value) or 0):
+                found = value
+            continue
+        this.discard(rd)
+        if value is None:
+            addresses.pop(rd, None)
+        else:
+            addresses[rd] = value
+    return found
+
+
+def instance_calls(image, ranges, instances, check_cancel=lambda: None):
+    """Classify what x0 holds at every direct call and tail call by linear register tracking.
+
+    Returns (calls, escaped). calls maps each target to the set of what its
+    call sites pass in x0: ('instance', sInstance) when the value loaded from
+    a singleton's sInstance, directly or through its GOT slot; ('entry',
+    caller) when the caller's own x0, unchanged or copied; None for anything
+    else. escaped holds function starts whose address the code builds, so
+    they may also be called through a pointer.
+    """
+    starts = set(start for start, end in ranges)
+    calls, escaped = defaultdict(set), set()
+    for index, (start, end) in enumerate(ranges):
+        if index % 4096 == 0:
+            check_cancel()
+        raw = image.read(start, end - start)
+        if raw is None:
+            continue
+        regs, slots = {0: ('entry', start)}, {}
+        for i, w in enumerate(words_of(raw)):
+            pc = start + i * 4
+            rd, rn = w & 31, (w >> 5) & 31
+            top = w & 0xfc000000
+            slot = stack_slot(w)
+            if slot is not None:  # spills and reloads through sp or x29
+                kind, offset, pair = slot
+                registers = (rd, (w >> 10) & 31) if pair else (rd,)
+                for index, register in enumerate(registers):
+                    if kind == 'store':
+                        value = regs.get(register) if register != 31 else None
+                        if value:
+                            slots[(rn, offset + index * 8)] = value
+                        else:
+                            slots.pop((rn, offset + index * 8), None)
+                    elif slots.get((rn, offset + index * 8)):
+                        regs[register] = slots[(rn, offset + index * 8)]
+                    else:
+                        regs.pop(register, None)
+                continue
+            if top == 0x94000000 or top == 0x14000000:  # BL, B
+                target = branch_target(pc, w)
+                if top == 0x94000000 or target in starts and not start <= target < end:
+                    calls[target].add(regs.get(0))
+                if top == 0x94000000:
+                    for register in CALL_CLOBBERED:
+                        regs.pop(register, None)
+                continue
+            if w & 0x3b200400 == 0x38000400 or w & 0x3a800000 == 0x28800000:  # pre- or post-index: Xn moves
+                for register in (rn,) + ((rd, (w >> 10) & 31) if w & 0x00400000 else ()):
+                    regs.pop(register, None)
+                continue
+            if w & 0x9f000000 == 0x90000000:  # ADRP
+                regs[rd] = ('page', adrp_target(pc, w))
+                continue
+            if w & 0x9f000000 == 0x10000000:  # ADR
+                value = pc + signed(((w >> 29) & 3) | (((w >> 5) & 0x7ffff) << 2), 21)
+                if value in starts:
+                    escaped.add(value)
+                regs[rd] = ('addr', value)
+                continue
+            if w & 0xff800000 == 0x91000000:  # ADD Xd, Xn, #imm
+                kind = regs.get(rn)
+                if kind and kind[0] in ('page', 'addr'):
+                    value = kind[1] + (((w >> 10) & 4095) << (12 if w & 0x00400000 else 0))
+                    if value in starts:
+                        escaped.add(value)
+                    regs[rd] = ('addr', value)
+                else:
+                    regs.pop(rd, None)
+                continue
+            if w & 0xffe0ffe0 == 0xaa0003e0:  # MOV Xd, Xm
+                kind = regs.get((w >> 16) & 31)
+                if kind:
+                    regs[rd] = kind
+                else:
+                    regs.pop(rd, None)
+                continue
+            if w & 0xffc00000 == 0xf9400000:  # LDR Xt, [Xn, #imm]
+                kind = regs.get(rn)
+                where = kind[1] + ((w >> 10) & 4095) * 8 if kind and kind[0] in ('page', 'addr') else None
+                regs.pop(rd, None)
+                if where in instances:
+                    regs[rd] = ('instance', where)
+                elif where is not None:
+                    value = image.pointer(where)
+                    if value in instances:
+                        regs[rd] = ('addr', value)  # GOT slot of an sInstance
+                continue
+            if w & 0xfffffc1f == 0xd63f0000:  # BLR
+                for register in CALL_CLOBBERED:
+                    regs.pop(register, None)
+                continue
+            if w & 0x7e000000 == 0x34000000 or w & 0xff000010 == 0x54000000 or w & 0xfffffc1f in (0xd65f0000, 0xd61f0000):
+                continue  # conditional branches, RET and BR leave registers unchanged
+            if is_store(w) or w & 0x7e400000 in (0x28000000, 0x2c000000):
+                continue  # stores and STP leave registers unchanged
+            regs.pop(rd, None)
+            if rd == 31:  # sp moved
+                slots = dict((key, value) for key, value in slots.items() if key[0] != 31)
+            if w & 0x7e400000 in (0x28400000, 0x2c400000):  # LDP also writes Rt2
+                regs.pop((w >> 10) & 31, None)
+    return calls, escaped
+
+
+def stack_slot(w):
+    """Return ('store' or 'load', offset, pair) for a 64-bit STR/LDR/STUR/LDUR/STP/LDP at [sp or x29, #offset], or None."""
+    if (w >> 5) & 31 not in (29, 31):
+        return None
+    if w & 0xff800000 == 0xf9000000:  # STR/LDR Xt, [Xn, #imm]
+        return ('load' if w & 0x00400000 else 'store', ((w >> 10) & 4095) * 8, False)
+    if w & 0xffa00c00 == 0xf8000000:  # STUR/LDUR Xt, [Xn, #simm]
+        return ('load' if w & 0x00400000 else 'store', signed((w >> 12) & 511, 9), False)
+    if w & 0xff800000 == 0xa9000000:  # STP/LDP Xt, Xt2, [Xn, #simm] with no write-back
+        return ('load' if w & 0x00400000 else 'store', signed((w >> 15) & 127, 7) * 8, True)
+    return None
+
+
+def reads_first_argument(image, start, end):
+    """True when the function reads x0 before anything writes it, walking linearly.
+
+    A call or tail call passes x0 on, so it counts as a read. Instructions it
+    does not recognize are skipped.
+    """
+    raw = image.read(start, end - start)
+    if raw is None:
+        return False
+    for i, w in enumerate(words_of(raw)):
+        rd, rn = w & 31, (w >> 5) & 31
+        if w & 0xfc000000 == 0x14000000 and start <= branch_target(start + i * 4, w) < end:
+            continue  # a branch within the function
+        if w & 0x7c000000 == 0x14000000 or w & 0xfffffc1f in (0xd63f0000, 0xd61f0000):  # tail call, BL, BLR, BR
+            return True
+        if w & 0xfffffc1f == 0xd65f0000:  # RET
+            return False
+        if w & 0x7e000000 == 0x34000000 or w & 0x7e000000 == 0x36000000:  # CBZ/CBNZ, TBZ/TBNZ
+            if rd == 0:
+                return True
+            continue
+        if w & 0x0a000000 == 0x08000000:  # loads and stores
+            vector, load = w & 0x04000000, w & 0x00400000
+            pair = w & 0x38000000 == 0x28000000
+            if rn == 0 or not vector and not load and (rd == 0 or pair and (w >> 10) & 31 == 0):
+                return True
+            if w & 0x3b000000 == 0x38000000 and w & 0x00200c00 == 0x00200800 and (w >> 16) & 31 == 0:
+                return True  # register offset
+            if not vector and load and (rd == 0 or pair and (w >> 10) & 31 == 0):
+                return False
+            continue
+        if w & 0x1f000000 == 0x11000000 or w & 0x1f800000 == 0x12000000:  # ADD/SUB (immediate), logical (immediate)
+            if rn == 0:
+                return True
+            if rd == 0:
+                return False
+            continue
+        if w & 0x1f000000 in (0x0a000000, 0x0b000000) or w & 0x1fe00000 == 0x1a000000:  # logical, add/sub (register), adc/csel family
+            if rn == 0 or (w >> 16) & 31 == 0:
+                return True
+            if rd == 0:
+                return False
+            continue
+        if w & 0x1f000000 == 0x10000000 or wide_move(w) or w & 0x9f800000 == 0x92800000:  # ADR, ADRP, MOVZ/MOVN
+            if rd == 0:
+                return False
+    return False
+
+
+def instance_methods(image, ranges, rows, excluded=(), check_cancel=lambda: None):
+    """Return {function: sInstance} for functions every caller passes that singleton as x0.
+
+    Each direct call or tail call must pass the singleton's sInstance, or the
+    x0 of a function already found to belong to it. The function must read
+    x0, and its address must not be taken in code or stored in data, where a
+    vtable or callback could pass it another object. excluded holds
+    functions never moved, such as library code and the singletons' own
+    createInstance and constructors.
+    """
+    instances = set(row['instance'] for row in rows)
+    calls, escaped = instance_calls(image, ranges, instances, check_cancel)
+    ends = dict(ranges)
+    candidates = dict((target, sources) for target, sources in calls.items()
+                      if target in ends and target not in excluded and target not in escaped and None not in sources)
+    code = set(base for base, raw in image.texts)
+    rejected = stored(((base, raw) for base, raw in image.blocks if base not in code), candidates)
+    result = {}
+    changed = True
+    while changed:
+        changed = False
+        for target, sources in candidates.items():
+            if target in result or target in rejected:
+                continue
+            owners = set()
+            for kind, value in sources:
+                if kind == 'instance':
+                    owners.add(value)
+                elif value in result:
+                    owners.add(result[value])
+                elif value != target:
+                    owners.add(None)  # passed on by a caller not known to be a method
+            if len(owners) != 1 or None in owners:
+                continue
+            if not reads_first_argument(image, target, ends[target]):
+                rejected.add(target)
+                continue
+            result[target] = owners.pop()
+            changed = True
+    return result
+
+
+def stored(blocks, addresses):
+    """Return the addresses stored as 8-byte aligned pointers in the (base, raw) data blocks."""
+    addresses, found = set(addresses), set()
+    for chunk in pointer_chunks(blocks):
+        found.update(addresses.intersection(chunk))
+    return found
 
 
 def instance_getter(image, start, end):
@@ -504,3 +809,75 @@ def instance_getter(image, start, end):
     if words[2] != 0xf9400000 | ((load & 31) << 5):
         return None
     return image.pointer(where)
+
+
+def string_references(image, start, end):
+    """Return the strings whose address the code builds with ADRP; ADD, in order."""
+    raw = image.read(start, end - start)
+    if raw is None:
+        return []
+    pages, result = {}, []
+    for i, w in enumerate(words_of(raw)):
+        if w & 0x9f000000 == 0x90000000:
+            pages[w & 31] = adrp_target(start + i * 4, w)
+        elif w & 0xffc00000 == 0x91000000 and (w >> 5) & 31 in pages:
+            value = image.string(pages[(w >> 5) & 31] + ((w >> 10) & 4095))
+            if value:
+                result.append(value)
+    return result
+
+
+def delegate_class(image, ranges):
+    """Return the class that most `Class::method` strings in these functions name, or None on a tie."""
+    counts = Counter()
+    for start, end in ranges:
+        for value in string_references(image, start, end):
+            match = DELEGATE_NAME.match(value)
+            if match:
+                counts[match.group(1)] += 1
+    top = counts.most_common(2)
+    if not top or len(top) == 2 and top[0][1] == top[1][1]:
+        return None
+    return top[0][0]
+
+
+def bcsv_file_name(image, getter):
+    """Return the file a reader's GetFileName returns, without `.bcsv`, or None."""
+    value = address_getter(image, getter) if getter is not None else None
+    value = image.string(value) if value is not None else None
+    return value[:-5] if value and re.match(r'^\w+\.bcsv$', value) else None
+
+
+def reader_singletons(image, rows):
+    """Return {sInstance: class parts} for singletons whose vtable is a BCSV reader's.
+
+    The parts are ('bcsv', file) for the reader itself and ('bcsv', file,
+    'Derived') for a class derived from it, `Derived_<type-info>` when the file
+    has several, the same names the BCSV script gives these classes.
+    """
+    files = {}
+    for row in rows:
+        if row['vtable'] is not None:
+            getter = image.pointer(row['vtable'] + GET_FILE_NAME)
+            name = bcsv_file_name(image, getter)
+            if name is not None:
+                files[row['instance']] = (row['vtable'], getter, name)
+    getters = set(getter for table, getter, name in files.values())
+    tables = defaultdict(list)
+    for base, raw in image.tables:
+        for offset in range(GET_FILE_NAME, len(raw) - 7, 8):
+            value = struct.unpack_from('<Q', raw, offset)[0]
+            table = base + offset - GET_FILE_NAME
+            if value in getters and all(image.executable(image.pointer(table + 8 * slot) or 1) for slot in range(READER_SLOTS)):
+                tables[value].append(table)
+    result = {}
+    for instance, (table, getter, name) in files.items():
+        base, infos = reader_classes(image, tables[getter])
+        if base is None or infos.get(table) is None:
+            continue
+        derived = sorted(set(info for info in infos.values() if info != base))
+        if infos[table] == base:
+            result[instance] = ('bcsv', name)
+        else:
+            result[instance] = ('bcsv', name, 'Derived' if len(derived) == 1 else 'Derived_%X' % infos[table])
+    return result

@@ -12,18 +12,19 @@ Ghidra scripts based on [CylindricalEarth](https://github.com/Treeki/Cylindrical
 | Script | What it does |
 | ------ | ------------ |
 | `RecoverActors.py` | Finds every actor, imports the actor ID enum, and names actor factories and vtables. |
-| `RecoverRTTIHierarchy.py` | Labels the game's custom RTTI type-info objects and vtables, and comments each type's parents. |
-| `NameLibraryFunctions.py` | Names imports, exports, common sead functions and singletons. |
+| `RecoverRTTIHierarchy.py` | Labels the game's custom RTTI type-info objects, vtables, RTTI methods, constructors and destructors, and comments each type's parents. Classes with a known size get a structure and methods with a typed `this`. Names come from known EventFlow getters, class-name getters in actor and component vtables, and BCSV reader file names. |
+| `NameLibraryFunctions.py` | Names imports, exports and common sead functions, and gives each sead singleton a class, a structure, typed globals and the functions always called on it. |
 | `NameStateCallbacks.py` | Names state-machine callbacks after their states, for example `NpcAIState::cTalk_Exec`, and imports state index enums. |
-| `AnnotateBCSV.py` | Names BCSV reader classes, imports row layouts, field-offset caches and enums, and names functions that read a single field. |
+| `AnnotateBCSV.py` | Names BCSV reader classes and their methods, imports row layouts, field-offset caches and enums, and names functions that read a single field. |
 | `ImportSaveTypes.py` | Imports the 3.0 save data structures. |
+| `FillClassFields.py` | Adds the fields that class methods read and write to the class structures, so the decompiler shows `this->field_0x94` instead of `*(int *)&this->field_0x94`. |
 
 ### Installation
 
 <Steps>
     1. Download all scripts by [clicking here](/downloads/ghidra-acnh-scripts.zip).
     2. Extract the ZIP to a folder of your choice. Keep the `cylindrical_earth` folder beside the scripts inside `ghidra_scripts`.
-    3. Open the analyzed game executable in [Ghidra](/reverse-engineering/ghidra-setup), with Python scripting support enabled.
+    3. Open the analyzed game executable in [Ghidra](/reverse-engineering/ghidra-setup), with Python scripting support enabled. The scripts work with both PyGhidra (Python 3) and Jython.
     4. Open **Window → Script Manager**, then **Manage Script Directories**, and add the extracted `ghidra_scripts` folder.
     5. Run the scripts under **ACNH → CylindricalEarth** in the order below.
     6. Check the console summary and save the program.
@@ -41,8 +42,9 @@ Each script works on its own, but this order gives the best names:
 | 4 | `NameStateCallbacks.py` | Run before the BCSV script so callbacks get state names. |
 | 5 | `AnnotateBCSV.py` | Needs the `memset` import named, by the loader or step 3. |
 | 6 | `ImportSaveTypes.py` | Only imports types, so it can run at any time. |
+| 7 | `FillClassFields.py` | Reads the methods that steps 2, 3 and 5 gave a typed `this`. It decompiles thousands of functions, so it takes several minutes. |
 
-The scripts only rename functions that still have default names such as `FUN_`, so running one again never overwrites your own names.
+The scripts only rename functions that still have default names such as `FUN_`, and only change default signatures, so running one again keeps your own work. Placeholder names are the exception: a rerun replaces `ACNH_Singleton_<address>` and `ACNH_TypeInfo_<address>_*` names once a real name is found. `AnnotateBCSV.py` also replaces the `VirtualMethod_*` and `<Name>_at_<address>` names that other tools give BCSV reader methods, and replaces its own comments instead of adding new ones.
 
 ### Results
 
@@ -51,10 +53,99 @@ New data types appear in the **Data Type Manager** under **ACNH**:
 | Category | Contents |
 | -------- | -------- |
 | **ACNH → Actors** | Actor ID enum and actor profile layout. |
+| **ACNH → Classes** | Class structures (`ACNH_<Class>`) and their vtables (`ACNH_<Class>_vtable`), for classes with a class-size getter. Structures for singletons and BCSV readers, sorted by namespace. |
 | **ACNH → States** | State index enums (`ACNH_State_*`) and the state manager layout. |
 | **ACNH → BCSV** | Row layouts (`ACNH_BcsvRow_*`), field-offset caches (`ACNH_BcsvOffsets_*`) and enum index types. |
 | **ACNH → Save** | Save data structures. |
 
-BCSV fields are not read through a shared getter: the game inlines every read. `AnnotateBCSV.py` adds a comment to each function that reads BCSV fields, such as `Reads BCSV fields: ItemParam.Height, ItemParam.Width.` Small functions that read a single field are named after it, for example `Bcsv::ItemParam::Read_CarpetMaterial`.
+BCSV fields are not read through a shared getter: the game inlines every read. `AnnotateBCSV.py` adds a comment to each function that reads BCSV fields, such as `Reads BCSV fields: ItemParam.Height, ItemParam.Width.` Small functions that read a single field are named after it, for example `bcsv::ItemParam::Read_CarpetMaterial`.
+
+Some tables also have a shared lookup function that takes the field's cache slot and its CRC32 hash and returns the field's address. It can read any field, so it is named `FindField` in the table's class, for example `bcsv::FgMainParam::FindField`, instead of after a field.
 
 The save structures describe the save file data, not the game's objects in memory. Apply them to save buffers.
+
+### Singleton classes
+
+sead singletons are created by a `createInstance` function. It allocates the object, constructs a disposer inside it that destroys the object with its heap, and stores the object in a global `sInstance`. `NameLibraryFunctions.py` finds every `createInstance` and turns each singleton into a Ghidra class. The class is named after the first of these that gives a name:
+
+- **BCSV reader.** A singleton whose vtable is a BCSV reader's takes the reader's class name, such as `bcsv::ItemFilter::Derived`, the same name `AnnotateBCSV.py` gives it.
+- **Your own label.** A vtable you have labelled `<Class>::vtable`.
+- **Constructor.** A constructor named after its class, such as `AppSys::AppSys`.
+- **`Class::method` strings.** Names such as `AppSys::PreCalc` that `createInstance` or the constructor pass to delegates and debug output. The class named most often wins, and a tie gives no name. State names such as `AppSys::cIdle` are not counted.
+
+A constructor or vtable that several singletons share belongs to a base class, so it is not used for naming. A singleton without a unique name keeps a placeholder, `ACNH_Singleton_<address>`. Rerun the script after labelling a vtable or running `AnnotateBCSV.py` to rename it.
+
+Each singleton class gets:
+
+- **A structure** under **ACNH → Classes**, sized from the allocation in `createInstance`. It starts with a `vtable` pointer when the vtable is known, and holds the disposer as `mSingletonDisposerBuf_`, of type `sead::IDisposer`. The other fields are left undefined for you to fill in. An existing structure, such as a BCSV reader's, keeps its fields and only grows to the allocation size.
+- **Typed globals.** `sInstance` becomes a pointer to the structure, and `sSingletonDisposer_` a pointer to `sead::IDisposer`, so the decompiler shows `ACNH_Singleton_71059E7790::sInstance->field_0x68` instead of a raw offset from an untyped pointer.
+- **Typed functions.** `createInstance` takes a `heap` and returns a pointer to the structure. The constructor takes the class's name and becomes `__thiscall`, so `this` is typed too.
+- **Methods.** Functions always called with `sInstance` as their first argument move into the class and become `__thiscall`, so their accesses read `this->field_0x68`. They keep their `FUN_` names. A function is left alone if any caller passes another object, or if its address is stored, for example in a vtable or callback table.
+- **A comment** on `createInstance` with the addresses of `sInstance`, `sSingletonDisposer_`, the constructor and the vtable, the allocation size, and what the name came from.
+
+Only undefined data, untyped pointers and default signatures are changed, so your own types and signatures are kept.
+
+### BCSV reader classes
+
+Each BCSV table has a reader class, named after its file in the `bcsv` namespace, such as `bcsv::ItemParam`. `AnnotateBCSV.py` labels its vtable `bcsv::ItemParam::vtable` and names the nine methods every reader has:
+
+| Offset | Method | What it does |
+| ------ | ------ | ------------ |
+| `+0x00` | `IsDerivedFrom` | Custom RTTI check. |
+| `+0x08` | `GetTypeInfo` | Returns the class's type-info. |
+| `+0x10` | `Destructor` | Complete destructor. |
+| `+0x18` | `DeletingDestructor` | Destroys and frees the reader. |
+| `+0x20` | `Load` | Loads the file. |
+| `+0x28` | `Reload` | Drops the loaded file, calls `Clear` and loads it again. |
+| `+0x30` | `GetFileName` | Returns the file name, such as `ItemParam.bcsv`. |
+| `+0x38` | `Clear` | Frees the buffers and resets the field-offset cache. |
+| `+0x40` | `SetupRows` | Goes through the rows after loading. |
+
+Many tables also have a class derived from their reader. It goes in `bcsv::<File>::Derived`, or `Derived_<type-info address>` when a file has several. Only the methods it overrides are named there. It inherits `Load`, `Reload` and `GetFileName`, which keep the base reader's names, and its `SetupRows` calls the base reader's first.
+
+Each reader is a Ghidra class with a structure of the same name under **ACNH → Classes → bcsv**, so its methods take a typed `this`:
+
+- **`bcsv::ItemParam`** starts with a `vtable` pointer to `ItemParam_vtable`, which has one field per method.
+- **`bcsv::ItemParam::Derived`** lives in **bcsv → ItemParam** and starts with the base reader's structure as `super`.
+- **Size.** Readers have no `getClassSize`, so each structure ends after the highest field the class's own methods use: `0x1D8` for most readers. The real object may be larger. Readers that are also singletons grow to their allocation size.
+- **Calling convention.** The nine methods become `__thiscall`, which makes Ghidra add `this` as a pointer to the class's structure.
+- **What is left alone.** Signatures you set yourself and existing structures keep their contents. The `Read_<Field>` accessors take a row rather than the reader, so they keep their signatures.
+
+### Custom RTTI names
+
+ACNH uses sead's own RTTI rather than C++ RTTI. Each class has a static type-info object, and its vtable holds an `IsDerivedFrom` check and a `GetTypeInfo` getter. `RecoverRTTIHierarchy.py` emulates both functions to confirm every vtable and its chain of parent types. It then names each type from:
+
+- **Known getters.** The EventFlow action and query classes, matched by a fingerprint of their `GetTypeInfo` getter.
+- **Class-name getters.** Actor, component and some other vtables start with `getClassName` and `getClassSize`, just before the RTTI entries. Their string gives the type its name, for example `ACNH_ActorXLinkFish_typeInfo`. The getters are named `ACNH_<Class>_GetClassName` and `ACNH_<Class>_GetClassSize`.
+- **BCSV readers.** Each BCSV table has a reader class whose vtable returns the table's file name. That class is named after the file, for example `ACNH_Bcsv_ItemParam_typeInfo`. Classes derived from a reader inherit its file-name getter, so they are named after the base reader: `ACNH_Bcsv_ItemParam_Derived_typeInfo`, with the type-info address appended when a file has several.
+- **Your own labels.** A type-info you have labelled `<Class>::sTypeInfo` or `<Class>::sStaticTypeInfo` names its vtable and methods, and takes priority over a BCSV reader name.
+
+Each `GetTypeInfo` sets up its type-info the first time it runs, behind a guard variable 8 bytes after it. The script labels it `ACNH_<Class>_typeInfoGuard`.
+
+Most vtables keep the class's virtual destructor right after `GetTypeInfo`: first the complete destructor, then the deleting destructor, which also frees the object. The script only trusts that pair when the second function ends by calling `free` or `operator delete`. It names them `ACNH_<Class>_Destructor` and `ACNH_<Class>_DeletingDestructor`.
+
+Constructors are found by the vtable pointer they write at the start of the object, `ACNH_<Class>_Constructor`. A constructor writes its parent classes' vtables first, from inlined parent constructors, and its own last. A function that writes a single vtable could also be a destructor, so the script only names it when the class's virtual destructor is known. Constructors that the compiler inlined into another function are not named.
+
+Some nested classes share a short name, such as several classes called `Body`. These names get the type-info address appended, for example `ACNH_Body_7104B8D1F8_typeInfo`. Types without a name keep `ACNH_TypeInfo_<address>_typeInfo`.
+
+For every class with a `getClassSize`, the script also creates a structure of that size under **ACNH → Classes**. It starts with the parent class's structure as `super` when the parent's size is known too, otherwise with a pointer to the class's vtable structure. Each vtable field takes its function's name, such as `Destructor`, or `vfunc_<offset>` while the function is still unnamed. The other fields start undefined, and `FillClassFields.py` fills them in. Rerunning the script reuses existing structures, so fields you add are kept.
+
+Each class with a structure also becomes a Ghidra class, and its methods move into it as `__thiscall`, so the decompiler shows `this->field_0x68` instead of `param_1 + 0x68`:
+
+- **Named methods** drop the class part of their name: `ACNH_ActorXLinkFish::Destructor`, `ACNH_ActorXLinkFish::GetTypeInfo`. The constructor is named after the class, `ACNH_ActorXLinkFish::ACNH_ActorXLinkFish`.
+- **Other virtual methods** keep their `FUN_` names. A method that several vtables share belongs to their closest common parent class.
+- **What is left alone.** Functions you named or moved yourself, and functions whose address is also stored somewhere other than a vtable of the class, such as a callback, because they could be called with another object. Classes without a structure keep names such as `ACNH_<Class>_Destructor`.
+
+`RecoverActors.py` also reads each actor vtable's `getClassSize`, and its vtable comment says whether that size matches the allocation size in the actor profile.
+
+### Structure fields
+
+`FillClassFields.py` reads every method whose `this` is a structure under **ACNH**: the RTTI classes, the singletons and the BCSV readers. It decompiles each method, collects the loads and stores it makes through `this`, and adds a field where they all agree:
+
+- **Same size and type.** Every access at that offset has the same size and kind of type. Integers that differ only in sign take the most common one. Code often reads a pointer as an integer, so a pointer to a known type stays a pointer even where other code reads it as an integer. Otherwise the more common reading wins.
+- **Pointer targets.** A pointer field points to the type the code uses, such as another class's structure, or to `void` when the accesses point to different types.
+- **No overlap.** An access that overlaps another one, such as a 16-byte copy over two fields, leaves those bytes undefined.
+
+A field inside the parent class's part of the object goes into the parent's structure, so every class derived from it gets the field too. New fields are named `field_0x<offset>`, as the decompiler already showed them, for you to rename once you know what they hold.
+
+Only undefined bytes are filled, so fields you added or renamed are kept. Running the script again can add a few more fields, because the fields it added give the decompiler more types to work with.
